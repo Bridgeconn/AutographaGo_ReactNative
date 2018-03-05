@@ -1,0 +1,3 @@
+rootProject.name = 'AutographaGo_ReactNative'
+
+include ':app'
