@@ -5,64 +5,55 @@ import {
   View,
   Button
 } from 'react-native';
-import BookItem from '../models/BookItem'
-import ChapterItem from '../models/ChapterItem'
-
-const Realm = require('realm');
+import DbQueries from '../utils/dbQueries'
+import DbHelper from '../utils/dbHelper';
 
 type Props = {};
+
 export default class Home extends Component<Props> {
 
   constructor(props) {
     super(props);
 
-    // This is a Results object, which will live-update.
-    this.chapterLists = realm.objects('ChapterItem');
-    if (this.chapterLists.length < 1) {
-        realm.write(() => {
-            realm.create('ChapterItem', { chapterNumber: 1, numberOfVerses: 5 });
-        });
+    DbHelper.setRealm();
+
+    let models = DbQueries.getSomeDataFromModelA() // make this asynchoronous call
+
+    // let modelAData = DbQueries.getSomeDataFromModelA()
+
+    this.state = {
+        modelData: models
     }
-    this.chapterLists.addListener((chapterNumber, changes) => {
-        console.log("changed: " + JSON.stringify(changes));
-    });
-    console.log("registered listener");
-
-    // Bind all the methods that we will be passing as props.
-    this._addNewChapterList = this._addNewChapterList.bind(this);
-
-    this.state = {};
   }
 
   render() {
     return (
       <View style={styles.container}>
+        <Text>
+        Hello there
+        </Text>
         <Button
-          onPress={this.onPressLearnMore}
-          title="Learn More"
+          onPress={this.addRow}
+          title="Add"
+          color="#841584"
+        />
+        <Button
+          onPress={this.showRows}
+          title="Show"
           color="#841584"
         />
       </View>
     );
   }
 
-  onPressLearnMore() {
-    console.log("Pressed button learn more")
-    this._addNewChapterItem
+  showRows() {
+    console.log("Pressed button SHOW")
+    DbQueries.getSomeDataFromModelA()
   }
 
-  _addNewChapterItem(list) {
-    let items = list.items;
-    realm.write(() => {
-        items.push({ text: '' });
-    });
-  }
-
-  _addNewChapterList() {
-    let items = this.chapterLists;
-    realm.write(() => {
-        // realm.create('ChapterItem', { name: '', creationDate: new Date() });
-    });
+  addRow() {
+    console.log("Pressed button ADD")
+    DbQueries.addNewChapter(Math.floor(Math.random() * (20)) + 1, 12);
   }
 
 }
