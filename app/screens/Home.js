@@ -26,7 +26,9 @@ export default class Home extends Component<Props> {
 
   async componentWillMount() {
     let models = await DbQueries.getSomeDataFromModel()
-    this.setState({modelData: models})
+    if (models) {
+      this.setState({modelData: models})
+    }
   }
 
   render() {
@@ -49,8 +51,13 @@ export default class Home extends Component<Props> {
           color="#841584"
         />
         <Button
+          onPress={this.showBooks}
+          title="Book Show"
+          color="#841584"
+        />
+        <Button
           onPress={this.addBook}
-          title="Book"
+          title="Book Add"
           color="#841584"
         />
       </View>
@@ -58,8 +65,10 @@ export default class Home extends Component<Props> {
   }
 
   async showRows() {
-    let result = await DbQueries.getSomeDataFromModel();
-    this.setState({modelData: result})
+    let models = await DbQueries.getSomeDataFromModel();
+    if (models) {
+      this.setState({modelData: models})
+    }
   }
 
   addRow() {
@@ -73,8 +82,12 @@ export default class Home extends Component<Props> {
     var value3 = [];
     value3.push(value1)
     value3.push(value2)
-    var value4 = {bookId: 'BO1', bookName: 'Book 1', bookNumber: 1, section: 'OT', chapterItems: value3}
+    var value4 = {bookId: 'BO1', bookName: 'Book 1', bookNumber: 2, section: 'OT', chapterItems: value3}
     DbQueries.addNewBook(value4)
+  }
+
+  showBooks() {
+    DbQueries.getLinks();
   }
 
 }

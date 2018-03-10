@@ -10,6 +10,7 @@ ChapterItem.schema = {
       // chapterId: 'string',
       chapterNumber: 'int',
       numberOfVerses: 'int',
+      bookOwner: {type: 'linkingObjects', objectType: 'BookItem', property:'chapterItems' },
     },
 
     // List<VerseComponentsModel> verseComponentsModels

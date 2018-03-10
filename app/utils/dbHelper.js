@@ -7,7 +7,7 @@ import BookItem from '../models/BookItem'
 class DbHelper {
 
     setRealm() {
-		new Realm({schema: [ChapterItem, BookItem] });
+		new Realm({deleteRealmIfMigrationNeeded: true, schema: [ChapterItem, BookItem] });
     }
 
     async getRealm() {
@@ -39,6 +39,15 @@ class DbHelper {
 				console.log("write complete..")
 			});
 	  	}
+	}
+
+	async queryLinks() {
+		let realm = await this.getRealm();
+    	if (realm) {
+			let results = realm.objects('ChapterItem').filtered('bookOwner.bookId = "BO2"');;
+			console.log("result == " + results.length)
+			return results;
+		}
 	}
 }
 

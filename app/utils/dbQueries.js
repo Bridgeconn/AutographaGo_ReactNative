@@ -15,6 +15,10 @@ class DbQueries {
         DbHelper.insert('BookItem', value);
     }
 
+    getLinks() {
+        DbHelper.queryLinks();
+    }
+
 }
 
 export default new DbQueries();
