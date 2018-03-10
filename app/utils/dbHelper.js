@@ -31,22 +31,15 @@ class DbHelper {
 		return null;
 	}
 
-	async insert(model: string, chapterNumber, numberOfVerses) {
+	async insert(model: string, value) {
 		let realm = await this.getRealm();
 		if (realm) {
 	  		realm.write(() => {
-				realm.create(model, { chapterNumber: chapterNumber, numberOfVerses: numberOfVerses });
-				console.log("write complete: " + chapterNumber)
+				realm.create(model, value);
+				console.log("write complete..")
 			});
 	  	}
 	}
-
-	close() {
-
-	}
-
-	createRealm() {
-
-	}
 }
+
 export default new DbHelper();

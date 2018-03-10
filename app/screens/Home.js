@@ -17,13 +17,16 @@ export default class Home extends Component<Props> {
 
     DbHelper.setRealm();
 
-    let models = DbQueries.getSomeDataFromModelA() // make this asynchoronous call
-
-    // let modelAData = DbQueries.getSomeDataFromModelA()
-
     this.state = {
-        modelData: models
+        modelData: []
     }
+
+    this.showRows = this.showRows.bind(this);
+  }
+
+  async componentWillMount() {
+    let models = await DbQueries.getSomeDataFromModel()
+    this.setState({modelData: models})
   }
 
   render() {
@@ -31,6 +34,9 @@ export default class Home extends Component<Props> {
       <View style={styles.container}>
         <Text>
         Hello there
+        </Text>
+        <Text>
+        {this.state.modelData.length}
         </Text>
         <Button
           onPress={this.addRow}
@@ -42,18 +48,33 @@ export default class Home extends Component<Props> {
           title="Show"
           color="#841584"
         />
+        <Button
+          onPress={this.addBook}
+          title="Book"
+          color="#841584"
+        />
       </View>
     );
   }
 
-  showRows() {
-    console.log("Pressed button SHOW")
-    DbQueries.getSomeDataFromModelA()
+  async showRows() {
+    let result = await DbQueries.getSomeDataFromModel();
+    this.setState({modelData: result})
   }
 
   addRow() {
-    console.log("Pressed button ADD")
-    DbQueries.addNewChapter(Math.floor(Math.random() * (20)) + 1, 12);
+    var value = {chapterNumber: Math.floor(Math.random() * (20)) + 1, numberOfVerses: 12}
+    DbQueries.addNewChapter(value);
+  }
+
+  addBook() {
+    var value1 = {chapterNumber: Math.floor(Math.random() * (20)) + 1, numberOfVerses: 10}
+    var value2 = {chapterNumber: Math.floor(Math.random() * (20)) + 1, numberOfVerses: 11}
+    var value3 = [];
+    value3.push(value1)
+    value3.push(value2)
+    var value4 = {bookId: 'BO1', bookName: 'Book 1', bookNumber: 1, section: 'OT', chapterItems: value3}
+    DbQueries.addNewBook(value4)
   }
 
 }
