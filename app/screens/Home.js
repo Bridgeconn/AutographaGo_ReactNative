@@ -15,7 +15,7 @@ export default class Home extends Component<Props> {
   constructor(props) {
     super(props);
 
-    DbHelper.setRealm();
+    // DbHelper.setRealm();
 
     this.state = {
         modelData: []
@@ -24,12 +24,12 @@ export default class Home extends Component<Props> {
     this.showRows = this.showRows.bind(this);
   }
 
-  async componentWillMount() {
-    let models = await DbQueries.getSomeDataFromModel()
-    if (models) {
-      this.setState({modelData: models})
-    }
-  }
+  // async componentWillMount() {
+  //   let models = await DbQueries.getSomeDataFromModel()
+  //   if (models) {
+  //     this.setState({modelData: models})
+  //   }
+  // }
 
   render() {
     return (
@@ -66,6 +66,13 @@ export default class Home extends Component<Props> {
 
   async showRows() {
     let models = await DbQueries.getSomeDataFromModel();
+    for (i=0; i<models.length; i++) {
+      console.log("models : " + i + " == "+models[i].chapterNumber);
+      console.log("models : " + i + " == "+models[i].bookOwner.length);
+      for (j=0;j<models[i].bookOwner.length; j++) {
+      console.log("models : " + i + " == "+models[i].bookOwner[j].bookName);
+      }
+    }
     if (models) {
       this.setState({modelData: models})
     }
@@ -73,7 +80,7 @@ export default class Home extends Component<Props> {
 
   addRow() {
     var value = {chapterNumber: Math.floor(Math.random() * (20)) + 1, numberOfVerses: 12}
-    DbQueries.addNewChapter(value);
+    DbQueries.addSpecificLinking();
   }
 
   addBook() {
@@ -82,7 +89,7 @@ export default class Home extends Component<Props> {
     var value3 = [];
     value3.push(value1)
     value3.push(value2)
-    var value4 = {bookId: 'BO1', bookName: 'Book 1', bookNumber: 2, section: 'OT', chapterItems: value3}
+    var value4 = {bookId: 'BO2', bookName: 'Book 2', bookNumber: 2, section: 'OT', chapterModels: value3}
     DbQueries.addNewBook(value4)
   }
 

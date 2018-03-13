@@ -3,20 +3,24 @@ import DbHelper from './dbHelper';
 class DbQueries {
 
     getSomeDataFromModel() {
-        let results = DbHelper.query('ChapterItem');
+        let results = DbHelper.query('ChapterModel');
         return results;
     }
 
     addNewChapter(value) {
-        DbHelper.insert('ChapterItem', value);
+        DbHelper.insert('ChapterModel', value);
     }
 
     addNewBook(value) {
-        DbHelper.insert('BookItem', value);
+        DbHelper.insert('BookModel', value);
     }
 
     getLinks() {
         DbHelper.queryLinks();
+    }
+
+    addSpecificLinking() {
+        DbHelper.insertSpecificLinking();
     }
 
 }
