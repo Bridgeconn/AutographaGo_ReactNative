@@ -136,6 +136,8 @@ android {
 }
 
 dependencies {
+    compile project(':realm')
+    compile project(':react-native-vector-icons')
     implementation project(':realm')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     api "com.android.support:appcompat-v7:27.1.0"
