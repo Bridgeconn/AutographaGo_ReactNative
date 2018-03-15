@@ -119,13 +119,33 @@ static navigationOptions = {
 constructor(){
   super()
   this.state = {
-    activeTab: 'Old Testment',
-     number:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],
+    activeTab1:true,
+    activeTab2:false,
+     number:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,996,97,98,99],
   }
 }
 
-  toggleButton=(tab)=>{
-    this.setState({ activeTab: tab });
+  toggleButton1(){
+  this.setState({activeTab1:true,activeTab2:false})
+  this.ScrollViewPosition.scrollTo({x: 0, y: 0, animated: true})
+  }
+  toggleButton2(){
+    this.setState({activeTab1:false,activeTab2:true})
+    this.ScrollViewPosition.scrollTo({x: 0, y: 569, animated: false})
+  }
+  
+  handleScroll = (event)=>{
+  console.log("handleScroll"+ Math.round(event.nativeEvent.contentOffset.y));
+  console.log("maxHeight of window "+height)
+  if(Math.round(event.nativeEvent.contentOffset.y)>568){
+    console.log("height is more than 568")
+    this.setState({activeTab1:false,activeTab2:true})
+  }
+  else{
+    console.log("height is less than 568")
+    this.setState({activeTab1:true,activeTab2:false})
+  }
+
   }
   render() {
     const iconName = ['local-library','history','search','note','bookmark','border-color','settings']
@@ -139,11 +159,16 @@ constructor(){
         }
         </View>
         <View style={{flexDirection:'column',width:width*4/5}}>
+
             <Segment style={{borderColor:'#3F51B5',borderBottomWidth:1}}>
-              <Button first active={this.state.activeTab === 'Old Testment'} style={{backgroundColor:this.state.activeTab === 'Old Testment' ?"#3F51B5" :"#fff", padding: 0,height: 45,width:width*2/5}} onPress={()=>this.toggleButton('Old Testment')}><Text active={this.state.activeTab === 'Old Testment'} >Old Testment</Text></Button>
-              <Button last active={this.state.activeTab === 'New Testment'} style={{backgroundColor:this.state.activeTab === 'New Testment' ?"#3F51B5" :"#fff",  padding: 0,height: 45,width:width*2/5}} onPress={()=>this.toggleButton('New Testment')}><Text active={this.state.activeTab === 'New Testment'} >New Testment</Text></Button>
+              <Button first active={this.state.activeTab1} style={{backgroundColor:this.state.activeTab1==false ? "#fff" : "#3F51B5", padding: 0,height: 45,width:width*2/5}} onPress={this.toggleButton1.bind(this)}><Text active={this.state.activeTab1} >Old Testment</Text></Button>
+              <Button last active={this.state.activeTab2} style={{backgroundColor:this.state.activeTab2==false ?  "#fff" : "#3F51B5",  padding: 0,height: 45,width:width*2/5}} onPress={this.toggleButton2.bind(this)}><Text active={this.state.activeTab2} >New Testment</Text></Button>
             </Segment>
-              <ScrollView>
+             <ScrollView
+              onScroll = {this.handleScroll}
+              scrollEventThrottle={10}
+              ref = {refs => this.ScrollViewPosition =refs }
+              >
               {
                 this.state.number.map((item)=><View><Text>{item}</Text></View>)
               }
