@@ -106,7 +106,8 @@ import {
   Text,
   View,
   Dimensions,
-  ScrollView
+  ScrollView,
+  TouchableOpacity
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import {Segment,Button,Tab,Tabs} from 'native-base'
@@ -161,17 +162,15 @@ constructor(){
         <View style={{flexDirection:'column',width:width*4/5}}>
 
             <Segment style={{borderColor:'#3F51B5',borderBottomWidth:1}}>
-              <Button first active={this.state.activeTab1} style={{backgroundColor:this.state.activeTab1==false ? "#fff" : "#3F51B5", padding: 0,height: 45,width:width*2/5}} onPress={this.toggleButton1.bind(this)}><Text active={this.state.activeTab1} >Old Testment</Text></Button>
-              <Button last active={this.state.activeTab2} style={{backgroundColor:this.state.activeTab2==false ?  "#fff" : "#3F51B5",  padding: 0,height: 45,width:width*2/5}} onPress={this.toggleButton2.bind(this)}><Text active={this.state.activeTab2} >New Testment</Text></Button>
+              <Button first active={this.state.activeTab1} style={{backgroundColor:this.state.activeTab1==false ? "#fff" : "#3F51B5", padding: 0,height: 45,width:width*2/5}} onPress={this.toggleButton1.bind(this)}><Text active={this.state.activeTab1} style={{color:this.state.activeTab1==false ? "#000" : "#fff"}}>Old Testment</Text></Button>
+              <Button last active={this.state.activeTab2} style={{backgroundColor:this.state.activeTab2==false ?  "#fff" : "#3F51B5",  padding: 0,height: 45,width:width*2/5}} onPress={this.toggleButton2.bind(this)}><Text active={this.state.activeTab2} style={{color:this.state.activeTab2==false ? "#000" : "#fff"}}>New Testment</Text></Button>
             </Segment>
              <ScrollView
               onScroll = {this.handleScroll}
               scrollEventThrottle={10}
               ref = {refs => this.ScrollViewPosition =refs }
               >
-              {
-                this.state.number.map((item)=><View><Text>{item}</Text></View>)
-              }
+                {this.state.number.map((item)=><View><TouchableOpacity onPress={()=>this.props.navigation.navigate('Book')}><Text>{item}</Text></TouchableOpacity></View>)}
               </ScrollView>
         </View> 
       </View>
