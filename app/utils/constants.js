@@ -5,7 +5,7 @@ export const UserToken = "token";
 module.exports = {
     BASE_URL: 'http://someurl.com',
     MarkerConstants: {
-        MARKER_BOOK_NAME : "\id",
+        MARKER_BOOK_NAME : "\\id",
         MARKER_CHAPTER_NUMBER : "\\c",
         MARKER_VERSE_NUMBER : "\\v",
         MARKER_NEW_PARAGRAPH : "\\p",
@@ -21,8 +21,8 @@ module.exports = {
         NEW_LINE : "\n",
         NEW_LINE_WITH_TAB_SPACE : "\n    ",
         MARKER_Q : "\\q",
-        REGEX_NOT_NUMBERS : "/[^0-9]/g",
-        REGEX_NUMBERS : "/[0-9]/g",
+        REGEX_NOT_NUMBERS : "[^0-9]",
+        REGEX_NUMBERS : "[0-9]",
         TAB_SPACE : "    ",
         REGEX_ESCAPE : "\\",
         CHAR_COLON : ":",

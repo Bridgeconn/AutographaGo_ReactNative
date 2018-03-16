@@ -13,14 +13,6 @@ export default class USFMParser {
         this.chapterList = [];
         this.verseList = [];
     }
-    
-    getBookId() {
-        return this.bookId;
-    }
-    
-    setBookId(value) {
-        this.bookId = value;
-    }
 
     parseFile() {
         console.log("CONTENTS :: " );
@@ -49,42 +41,44 @@ export default class USFMParser {
     }
 
     parseFileContents(result) {
-        var lines = result.split('\n');
-        console.log("len = " + lines.length);
         var languageName = "English", languageCode = "ENG", versionCode = "UDB", 
                 versionName = "Unlocked Literal Bible", source = "BridgeConn", 
                 license = "OPEN", year = 2015;
-
-        for(var i = 0; i < lines.length; i++){
-            console.log("lll = :: " + lines[i])
-            //code here using lines[i] which will give you each line
-            if (!this.processLine(lines[i], languageName, languageCode, versionCode)) {
-                return false;
+        try {
+            var lines = result.split('\n');
+            console.log("len = " + lines.length);
+            for(var i = 0; i < lines.length; i++) {
+                console.log("lll = :: " + lines[i])
+                //code here using lines[i] which will give you each line
+                if (!this.processLine(lines[i])) {
+                    return false;
+                }
             }
+            this.addComponentsToChapter();
+            this.addChaptersToBook();
+            this.addBookToContainer(languageName, languageCode, versionCode, versionName, source, license, year);
+        } catch(exception) {
+            console.log("error in parsing file : " + exception)
         }
-        this.addComponentsToChapter();
-        this.addChaptersToBook();
-        // addBookToContainer(languageName, languageCode, versionCode, versionName, source, license, year);
     }
 
-    processLine(line, languageName, languageCode, versionCode) {
+    processLine(line) {
         var splitString = line.split(" ");
         if (splitString.length == 0) {
             return true;
         }
+        // for (var i=0; i<splitString.length; i++) {
+        //     console.log("i = " + i + "   :: text = " + splitString[i]);
+        // }
         switch (splitString[0]) {
             case Constants.MarkerConstants.MARKER_BOOK_NAME: {
                 if (!this.addBook(splitString[1])) {
-                    console.log("Skip book, already exist in db, " + splitString[1] + "  lan=" + languageName + versionCode);
+                    console.log("Skip book, already exist in db, " + splitString[1]);
                     return false;
                 }
                 break;
             }
             case Constants.MarkerConstants.MARKER_CHAPTER_NUMBER: {
-                console.log("chapter num = " + line)
-                for (var i=0;i<splitString.length;i++) {
-                    console.log("line " + i + "  ==" + splitString[i])
-                }
                 this.addChapter(splitString[1]);
                 break;
             }
@@ -136,125 +130,145 @@ export default class USFMParser {
         return true;
     }
 
-    addBook(bookId) {
-        this.bookId = bookId;
+    addBook(value) {
+        this.bookId = value;
         // todo check if book already exists in db and return ! present??
         return true;
     }
 
     addChapter(num) {
+        console.log("in addChapter: " + num);
         this.addComponentsToChapter();
-        var number = parseInt(num , 10 );
-        var chapterModel = {chapterNumber: number, numberOfVerses: 0};
+        var number = parseInt(num , 10);
+        // todo see what to init as numberOfVerses
+        var chapterModel = {chapterNumber: number, numberOfVerses: 0, verseComponentsModels: []};
         this.chapterList.push(chapterModel);
     }
 
     addChunk() {
-        var verseComponentsModel = {type: Constants.MarkerTypes.CHUNK, verseNumber: 0, 
-            text: null, highlighted: false};
+        console.log("in addChunk: ");        
+        // todo see what to init text
+        var verseComponentsModel = {type: Constants.MarkerTypes.CHUNK, verseNumber: null, 
+            text: null, highlighted: false, added: true};
         this.verseList.push(verseComponentsModel);
     }
 
     addSection(markerType, line, splitString) {
-        var res = null;
+        console.log("in addSection: " + line);        
+        var res = "";
         if (splitString.length > 1) {
             var res = line.slice(4);
         }
-        var verseComponentsModel = {type: markerType, verseNumber: 0, 
-            text: res, highlighted: false};
+        var verseComponentsModel = {type: markerType, verseNumber: null, 
+            text: res, highlighted: false, added: true};
         this.verseList.push(verseComponentsModel);
     }
 
-    // spliceSlice(str, index, count, add) {
-    //     // We cannot pass negative indexes dirrectly to the 2nd slicing operation.
-    //     if (index < 0) {
-    //       index = str.length + index;
-    //       if (index < 0) {
-    //         index = 0;
-    //       }
-    //     }
-      
-    //     return str.slice(0, index) + (add || "") + str.slice(index + count);
-    // }
-
     addParagraph(splitString, line) {
-        var res = null;
+        console.log("in addParagraph: " + line);        
+        var res = "";
         if (splitString.length > 1) {
             res = line.slice(3);
         }
-        var verseComponentsModel = {type: Constants.MarkerTypes.PARAGRAPH, verseNumber: 0, 
-            text: res, highlighted: false};
+        var verseComponentsModel = {type: Constants.MarkerTypes.PARAGRAPH, verseNumber: null, 
+            text: res, highlighted: false, added: true};
         this.verseList.push(verseComponentsModel);
     }
 
     addVerse(splitString) {
+        console.log("in addVerse: " + splitString[1]);        
+        var chapterId = null;
+        if (this.chapterList.length > 0) {
+            chapterId = this.bookId + "_" + this.chapterList[this.chapterList.length - 1].chapterNumber;
+        }
+        var tempRes = [];
+        for (var i=0; i<this.verseList.length; i++) {
+            var verseModel = this.verseList[i];
+            if (!verseModel.added) {
+                tempRes.push(verseModel.text);
+            }
+        }
+        var res = tempRes.join("");
+        var j = this.verseList.length;
+        while (j--) {
+            if (!this.verseList[j].added) {
+                this.verseList.splice(j, 1);
+            }
+        }
         var verseNum = splitString[1];
-        var intString = verseNum.replace(Constants.StylingConstants.REGEX_NOT_NUMBERS, "");
-        var notIntString = verseNum.replace(Constants.StylingConstants.REGEX_NUMBERS, "");
+        var intString = verseNum.replace(/[^0-9]/g, "");
+        var notIntString = verseNum.replace(/[0-9]/g, "");
+        console.log("verseNUm = " + verseNum + "  :: intString = " + intString + "  :  notIntStr = " + notIntString)
         if (intString == "") {
             return;
         }
         if (!(notIntString == "" || notIntString == "-")) {
             return;
         }
-        var stringBuilder = [];
+        console.log("in adding verse in progress");        
+        tempRes = [];
         for (var i=2; i<splitString.length; i++) {
-            stringBuilder.push(splitString[i]);
+            tempRes.push(splitString[i]);
         }
-        var result = stringBuilder.join(" ");
-
+        var result = res + tempRes.join(" ");
         var verseComponentsModel = {type: Constants.MarkerTypes.VERSE, verseNumber: splitString[1], 
-            text: result, highlighted: false};
-
-        // for (var i=verseComponentsModelList.size()-1; i>=0; i--) {
-        //     if (verseComponentsModelList.get(i).getVerseNumber() != null) {//.equals("") ) {
-        //         break;
-        //     }
-        //     verseComponentsModelList.get(i).setVerseNumber(splitString[1]);
-        //     if (chapterModelList.size() > 0) { // dont really need this check, but still
-        //         verseComponentsModelList.get(i).setChapterId(bookModel.getBookId() + "_" + chapterModelList.get(chapterModelList.size() - 1).getChapterNumber());
-        //     }
-        // }
-        // verseComponentsModel.setAdded(true);
-        // verseComponentsModel.setMarker(Constants.ParagraphMarker.V);
-        // verseComponentsModel.setLanguageCode(languageCode);
-        // verseComponentsModel.setVersionCode(versionCode);
+            text: result, highlighted: false, added: true};
         this.verseList.push(verseComponentsModel);
     }
 
     addComponentsToChapter() {
+        console.log("in add verses to Chapter");        
         if (this.chapterList.length > 0) {
             if (this.verseList.length > 0) {
-                var size = 0;
-                for (var i=0; i< this.verseList.length; i++) {
-                    if (i == 0 || !this.verseList[i].verseNumber == this.verseList[i-1].verseNumber) {
-                        size++;
-                    } else {
-                        break;
+                for (var i=0; i<this.verseList.length; i++) {
+                    if (this.verseList[i].verseNumber != null) {
+                        this.chapterList[this.chapterList.length - 1].verseComponentsModels.push(this.verseList[i]);
                     }
                 }
+                var size = 0;
+                for (var i=0; i< this.verseList.length; i++) {
+                    if (this.verseList[i].verseNumber != null) {
+                        if (i == 0 || this.verseList[i].verseNumber != this.verseList[i-1].verseNumber) {
+                            size = size + 1;
+                        }
+                    }
+                }
+                console.log("size = " + size);
                 this.chapterList[this.chapterList.length - 1].numberOfVerses = size;
+                var j = this.verseList.length;
+                while (j--) {
+                    if (this.verseList[j].verseNumber != null) {
+                        this.verseList.splice(j, 1);
+                    }
+                }
             }
         }
     }
 
     addChaptersToBook() {
-        var bookModel = {bookId: 'GEN', bookName: 'Book 2', bookNumber: 2, section: 'OT', chapterModels: this.chapterList}
+        // var bookModel = {bookId: this.bookId, bookName: 'Genesis', bookNumber: 1, 
+        //     section: 'OT', chapterModels: this.chapterList}
+        // this.insert('BookModel', bookModel);
+    }
+
+    addBookToContainer(languageName, languageCode, versionCode, versionName, source, license, year) {
+        console.log("in add BOOK to db");        
+        var bookModel = {bookId: this.bookId, bookName: 'Genesis', bookNumber: 1, 
+            section: 'OT', chapterModels: this.chapterList}
         this.insert('BookModel', bookModel);
     }
 
-    addFormattingToNextVerse(line) {
+    addFormattingToLastVerse(line) {
         if (this.verseList.length > 0) {
-            var stringBuilder = [];
-            stringBuilder.push(this.verseList[this.verseList.length - 1].text);
-            stringBuilder.push(" \n " + line + " ");
-            this.verseList[this.verseList.length - 1].text = stringBuilder.join("");
+            var res = this.verseList[this.verseList.length - 1].text + " \n " + line + " ";
+            this.verseList[this.verseList.length - 1].text = res;
         }
     }
 
-    addFormattingToLastVerse(line) {
-        var verseComponentsModel = {type: null, verseNumber: 0, 
-            text: " " + line + " ", highlighted: false};
+    addFormattingToNextVerse(line) {
+        // todo what to init type ??
+        var verseComponentsModel = {type: null, verseNumber: null, 
+            text: " " + line + " ", highlighted: false, added: false};
         this.verseList.push(verseComponentsModel);
     }
 }
