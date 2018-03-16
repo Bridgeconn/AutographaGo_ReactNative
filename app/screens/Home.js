@@ -8,9 +8,9 @@ import {
 import DbQueries from '../utils/dbQueries'
 import DbHelper from '../utils/dbHelper';
 
-type Props = {};
+import USFMParser from '../utils/USFMParser';
 
-export default class Home extends Component<Props> {
+export default class Home extends Component {
 
   constructor(props) {
     super(props);
@@ -60,6 +60,11 @@ export default class Home extends Component<Props> {
           title="Book Add"
           color="#841584"
         />
+        <Button
+          onPress={this.startParse}
+          title="START PARSE"
+          color="#841584"
+        />
       </View>
     );
   }
@@ -95,6 +100,10 @@ export default class Home extends Component<Props> {
 
   showBooks() {
     DbQueries.getLinks();
+  }
+
+  startParse() {
+    new USFMParser().parseFile();
   }
 
 }
