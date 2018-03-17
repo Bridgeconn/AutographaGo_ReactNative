@@ -5,7 +5,7 @@ import Realm from 'realm'
 export default class ChapterModel extends Realm.Object {}
 ChapterModel.schema = {
     name: 'ChapterModel',
-    // primaryKey: 'chapterId',
+    // primaryKey: 'chapterNumber',
     properties: {
       chapterNumber: 'int',
       // chapterId: 'string',

@@ -1,6 +1,3 @@
-//     private long timeStamp;
-//     private String searchId;
-
 'use strict';
 
 import Realm from 'realm'

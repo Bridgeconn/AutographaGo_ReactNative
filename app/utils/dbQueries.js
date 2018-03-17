@@ -15,6 +15,10 @@ class DbQueries {
         DbHelper.insert('BookModel', value);
     }
 
+    insert(model, value) {
+        DbHelper.insert(model, value);
+    }
+
     getLinks() {
         DbHelper.queryLinks();
     }
