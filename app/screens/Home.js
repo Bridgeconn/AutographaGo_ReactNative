@@ -149,18 +149,26 @@ constructor(){
 
   }
   render() {
-    const iconName = ['local-library','history','search','note','bookmark','border-color','settings']
+    const iconName = [
+      {icon:'local-library',pressIcon:'EditNote'},
+      {icon:'history',pressIcon:'History'},
+      {icon:'search',pressIcon:'Search'},
+      {icon:'note',pressIcon:'Notes'},
+      {icon:'bookmark',pressIcon:'Bookmarks'},
+      {icon:'border-color',pressIcon:'Highlights'},
+      {icon:'settings',pressIcon:'Settings'}
+    ]
+    const iconPress = ['EditNote',' history','Search','Note','Bookmarks','Highlights','Settings']
     return (
       <View style={{flex:1,flexDirection:'row'}}>
         <View style={{flexDirection:'column',width:width/5,backgroundColor:'black', }}>
         {
           iconName.map((iconName)=>
-            <Icon name={iconName} color="white" size={32} style={{alignSelf:'center',padding:16}} />
+            <Icon name={iconName.icon} color="white" size={32} style={{alignSelf:'center',padding:16}} onPress={() =>this.props.navigation.navigate(iconName.pressIcon)}/>
           )
         }
         </View>
         <View style={{flexDirection:'column',width:width*4/5}}>
-
             <Segment style={{borderColor:'#3F51B5',borderBottomWidth:1}}>
               <Button first active={this.state.activeTab1} style={{backgroundColor:this.state.activeTab1==false ? "#fff" : "#3F51B5", padding: 0,height: 45,width:width*2/5}} onPress={this.toggleButton1.bind(this)}><Text active={this.state.activeTab1} style={{color:this.state.activeTab1==false ? "#000" : "#fff"}}>Old Testment</Text></Button>
               <Button last active={this.state.activeTab2} style={{backgroundColor:this.state.activeTab2==false ?  "#fff" : "#3F51B5",  padding: 0,height: 45,width:width*2/5}} onPress={this.toggleButton2.bind(this)}><Text active={this.state.activeTab2} style={{color:this.state.activeTab2==false ? "#000" : "#fff"}}>New Testment</Text></Button>

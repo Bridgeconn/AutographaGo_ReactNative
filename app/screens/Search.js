@@ -9,7 +9,6 @@ import {
 export default class Search extends Component {
   static navigationOptions = {
     headerTitle: 'Search',
-    headerTintColor: '#F44336'
   };
   render() {
     return (

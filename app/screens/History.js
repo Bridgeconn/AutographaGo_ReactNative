@@ -9,7 +9,6 @@ import {
 export default class History extends Component {
   static navigationOptions = {
     headerTitle: 'History',
-    headerTintColor: '#F44336'
   };
   render() {
     return (

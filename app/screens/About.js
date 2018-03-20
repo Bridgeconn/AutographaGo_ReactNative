@@ -9,7 +9,6 @@ import {
 export default class About extends Component {
   static navigationOptions = {
     headerTitle: 'About',
-    headerTintColor: '#F44336'
   };
   render() {
     return (

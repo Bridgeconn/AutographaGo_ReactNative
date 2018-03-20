@@ -9,7 +9,6 @@ import {
 export default class BookMarks extends Component {
   static navigationOptions = {
     headerTitle: 'BookMarks',
-    headerTintColor: '#F44336'
   };
   render() {
     return (

@@ -9,7 +9,6 @@ import {
 export default class EditNote extends Component {
   static navigationOptions = {
     headerTitle: 'EditNote',
-    headerTintColor: '#F44336'
   };
   render() {
     return (
