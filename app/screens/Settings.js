@@ -10,7 +10,7 @@ import {
 import { Container, Header, Content, Card, CardItem, Right, Left } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 const width = Dimensions.get('window').width;
-
+import {dimens} from '../utils/dimens.js'
 export default class Setting extends Component {
   static navigationOptions = {
     headerTitle: 'Setting',
@@ -18,27 +18,41 @@ export default class Setting extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: 50,
+      value: 0,
       day:true,
       night:false,
     };
   }
   change(value) {
-    this.setState(() => {
-      return {
-        value: parseFloat(value),
-      };
-    });
+    console.log("slider value "+value)
+    switch(value) {
+      case 1:{
+        return this.setState({value:dimens.extraSmallFont.fontSize});
+      }
+      case 2:{
+      return  this.setState({value:dimens.smallFont.fontSize});
+      }
+      case 3:{
+       return this.setState({value:dimens.mediumFont.fontSize});
+      }
+      case 4:{
+      return  this.setState({value:dimens.largeFont.fontSize});
+      }
+      case 5:{
+      return  this.setState({value:dimens.extraLargeFont.fontSize});
+      }
+  }
   }
 
   render() {
+      console.log("render value "+this.state.value)
     return (
       <View style={{flex:1,margin:8}}>
          <Content>
           <Card>
             <CardItem style={{paddingTop:16,paddingBottom:16}}>
               <Left>
-                <Text style={{fontSize:18}}>
+                <Text style={{fontSize:this.state.value}}>
                   Reading Mode
                 </Text>
               </Left>
@@ -63,17 +77,16 @@ export default class Setting extends Component {
               <Right style={{alignItems:'flex-start'}}>
               <View style={{flexDirection:'row'}}>
               <Icon name='format-size' size={24} style={{marginRight:8}}/>
-              <Text style={{textAlign:'left',fontSize:18}}>Text Size</Text>
+              <Text style={dimens.largeFont}>Text Size</Text>
               </View>
               <Slider
                style={{width:width-50, height: 30, borderRadius: 50}}
                 step={1}
                 minimumValue={0}
-                maximumValue={100}
+                maximumValue={5}
                 thumbTintColor="#f62459"
                 minimumTrackTintColor="#f62459"
                 onValueChange={this.change.bind(this)}
-                value={this.state.value}
               />
               </Right>
              </CardItem>
@@ -81,25 +94,25 @@ export default class Setting extends Component {
            <Card>
             <CardItem style={{paddingTop:16,paddingBottom:16,flexDirection:'row'}}>
             <Icon name='settings-backup-restore' size={24} style={{marginRight:8}}/>
-              <Text style={{textAlign:'left',fontSize:18}}>Backup and Restore</Text>
+              <Text style={dimens.largeFont}>Backup and Restore</Text>
              </CardItem>
            </Card>
            <Card>
             <CardItem style={{paddingTop:16,paddingBottom:16,flexDirection:'row'}}>
             <Icon name='cloud-download' size={24} style={{marginRight:8}}/>
-              <Text style={{textAlign:'left',fontSize:18}}>Download More Bibles</Text>
+              <Text style={dimens.largeFont}>Download More Bibles</Text>
              </CardItem>
            </Card>
            <Card>
             <CardItem style={{paddingTop:16,paddingBottom:16,flexDirection:'row'}}>
             <Icon name='help' size={24} style={{marginRight:8}}/>
-              <Text style={{textAlign:'left',fontSize:18}}>Open Hints</Text>
+              <Text style={dimens.largeFont}>Open Hints</Text>
              </CardItem>
            </Card>
            <Card>
             <CardItem style={{paddingTop:16,paddingBottom:16,flexDirection:'row'}}>
             <Icon name='info' size={24} style={{marginRight:8}}/>
-              <Text style={{textAlign:'left',fontSize:18}}>About</Text>
+              <Text style={dimens.largeFont}>About</Text>
              </CardItem>
            </Card>
         </Content>
