@@ -6,8 +6,7 @@ import {
   Button
 } from 'react-native';
 import DbQueries from '../utils/dbQueries'
-
-import USFMParser from '../utils/USFMParser';
+import USFMParser from '../utils/USFMParser'
 
 export default class Home extends Component {
 
@@ -21,13 +20,6 @@ export default class Home extends Component {
     this.showRows = this.showRows.bind(this);
   }
 
-  // async componentWillMount() {
-  //   let models = await DbQueries.getSomeDataFromModel()
-  //   if (models) {
-  //     this.setState({modelData: models})
-  //   }
-  // }
-
   render() {
     return (
       <View style={styles.container}>
@@ -38,60 +30,119 @@ export default class Home extends Component {
         {this.state.modelData.length}
         </Text>
         <Button
-          onPress={this.addRow}
-          title="Add"
+          onPress={this.queryLanguage}
+          title="queryLanguage"
           color="#841584"
         />
         <Button
+          onPress={this.queryLanguageWithCode}
+          title="queryLanguageWithCode"
+          color="#841584"
+        />
+        <Button
+          onPress={this.queryVersionWithCode}
+          title="queryVersionWithCode"
+          color="#841584"
+        />
+        <Button
+          onPress={this.queryBooksWithCode}
+          title="queryBooksWithCode"
+          color="#841584"
+        />
+        <Button
+          onPress={this.queryBookWithId}
+          title="queryBookWithId"
+          color="#841584"
+        />
+        <Button
+          onPress={this.querySearchBookWithName}
+          title="querySearchBookWithName"
+          color="#841584"
+        />
+        {/* <Button
+          onPress={this.querySearchVerse}
+          title="querySearchVerse"
+          color="#841584"
+        /> */}
+        <Button
+          onPress={this.querySearchBookWithName}
+          title="querySearchBookWithName"
+          color="#841584"
+        />
+        <Button
+          onPress={this.querySearchBookWithName}
+          title="querySearchBookWithName"
+          color="#841584"
+        />
+        <Button
+          onPress={this.querySearchBookWithName}
+          title="querySearchBookWithName"
+          color="#841584"
+        />
+        {/* <Button
           onPress={this.showRows}
           title="Show"
           color="#841584"
-        />
-        <Button
-          onPress={this.showBooks}
-          title="Book Show"
-          color="#841584"
-        />
-        <Button
-          onPress={this.addBook}
-          title="Book Add"
-          color="#841584"
-        />
+        /> */}
       </View>
     );
   }
 
+  async queryLanguage() {
+    let models = await DbQueries.queryLanguages();
+    console.log("Num = " + models.length)
+    for (i=0; i<models.length; i++) {
+      console.log("code " + i + " = " + models[i].languageCode + "  vers = " + models[i].versionModels.length)
+    }
+  }
+  async queryLanguageWithCode() {
+    let models = await DbQueries.queryLanguageWithCode("ENG");
+    console.log("Num = " + models.length)
+    for (i=0; i<models.length; i++) {
+      console.log("code " + i + " = " + models[i].languageName + "  vers = " + models[i].versionModels.length)
+    }
+  }
+  async queryVersionWithCode() {
+    let models = await DbQueries.queryVersionWithCode("UDB", "ENG");
+    console.log("Num = " + models.length)
+    for (i=0; i<models.length; i++) {
+      console.log("code " + i + " = " + models[i].versionName + "  vers = " + models[i].bookModels.length)
+    }
+  }
+  async queryBooksWithCode() {
+    let models = await DbQueries.queryBooksWithCode("UDB", "ENG");
+    console.log("Num = " + models.length)
+    for (i=0; i<models.length; i++) {
+      console.log("code " + i + " = " + models[i].bookName + "  vers = " + models[i].chapterModels.length)
+    }
+  }
+  async queryBookWithId() {
+    let models = await DbQueries.queryBookWithId("GEN", "UDB", "ENG");
+    console.log("Num = " + models.length)
+    for (i=0; i<models.length; i++) {
+      console.log("code " + i + " = " + models[i].bookName + "  vers = " + models[i].chapterModels.length)
+    }
+  }
+  async querySearchBookWithName() {
+    let models = await DbQueries.querySearchBookWithName("El", "UDB", "ENG");
+    console.log("Num = " + models.length)
+    for (i=0; i<models.length; i++) {
+      console.log("code " + i + " = " + models[i].bookName + "  vers = " + models[i].chapterModels.length)
+    }
+  }
+  // async querySearchVerse() {
+  //   let models = await DbQueries.querySearchVerse("god", "UDB", "ENG");
+  //   console.log("Num = " + models.length)
+  //   for (i=0; i<models.length; i++) {
+  //     console.log("code " + i + " = " + models[i].verseNumber + "  vers = " + models[i].type)
+  //   }
+  // }
+
   async showRows() {
     let models = await DbQueries.getSomeDataFromModel();
-    for (i=0; i<models.length; i++) {
-      console.log("models : " + i + " == "+models[i].chapterNumber);
-      console.log("models : " + i + " == "+models[i].bookOwner.length);
-      for (j=0;j<models[i].bookOwner.length; j++) {
-      console.log("models : " + i + " == "+models[i].bookOwner[j].bookName);
-      }
-    }
     if (models) {
       this.setState({modelData: models})
     }
-  }
-
-  addRow() {
-    var value = {chapterNumber: Math.floor(Math.random() * (20)) + 1, numberOfVerses: 12}
-    DbQueries.addSpecificLinking();
-  }
-
-  addBook() {
-    var value1 = {chapterNumber: Math.floor(Math.random() * (20)) + 1, numberOfVerses: 10}
-    var value2 = {chapterNumber: Math.floor(Math.random() * (20)) + 1, numberOfVerses: 11}
-    var value3 = [];
-    value3.push(value1)
-    value3.push(value2)
-    var value4 = {bookId: 'BO2', bookName: 'Book 2', bookNumber: 2, section: 'OT', chapterModels: value3}
-    DbQueries.addNewBook(value4)
-  }
-
-  showBooks() {
-    DbQueries.getLinks();
   }
 
   // async startParse() {

@@ -1,5 +1,3 @@
-var RNFS = require('react-native-fs');
-import Realm from 'realm'
 import LanguageModel from '../models/LanguageModel'
 import VersionModel from '../models/VersionModel'
 import BookModel from '../models/BookModel'
@@ -8,6 +6,8 @@ import VerseComponentsModel from '../models/VerseComponentsModel'
 import DbQueries from './dbQueries'
 import id_name_map from '../assets/mappings.json'
 const Constants = require('./constants')
+
+var RNFS = require('react-native-fs');
 
 export default class USFMParser {
 
@@ -246,67 +246,7 @@ export default class USFMParser {
         var languageModel = {languageCode: this.languageCode, languageName: this.languageName, versionModels: []}
         languageModel.versionModels.push(versionModel);
         
-        this.insertLanguage('LanguageModel', bookModel, versionModel, languageModel);
-
-        // realm.write(() => {
-        //     realm.create('Book', {id: 1, title: 'Recipes', price: 35});
-        //     // Update book with new price keyed off the id
-        //     realm.create('Book', {id: 1, price: 55}, true);
-        //   });
-        //   let hondas = realm.objects('Car').filtered('make = "Honda"');
-        //     realm.write(() => {
-        //     realm.create('Car', {make: 'Honda', model: 'RSX'});
-        //     });
-    }
-
-    async insertLanguage(model: string, bookModel, versionModel, languageModel) {
-		let realm = await this.getRealm();
-		if (realm) {
-            var ls = realm.objectForPrimaryKey('LanguageModel', this.languageCode);
-            if (ls) {
-                var pos = -1;
-                for (var i=0; i<ls.versionModels.length; i++) {
-                    var vModel = ls.versionModels[i];
-                    if (vModel.versionCode == this.versionCode) {
-                        pos = i;
-                        break;
-                    }
-                }
-                if (pos > -1) {
-                    var bModels = ls.versionModels[pos].bookModels;
-                    // need to push bookmodel
-                    for (var j=0; j<bModels.length; j++) {
-                        if (bModels[j].bookId == this.bookId) {
-                            console.log("book already present -- " + this.bookId)
-                            return;
-                        }
-                    }
-                    realm.write(() => {
-                        ls.versionModels[pos].bookModels.push(bookModel);
-                        console.log("write complete.. new book..")
-                    });
-                } else {
-                    realm.write(() => {
-                        ls.versionModels.push(versionModel);     
-                        console.log("write complete.. new version..")                    
-                    });
-                }
-            } else {
-                realm.write(() => {
-                    realm.create('LanguageModel', languageModel);
-                    console.log("write complete.. new language..")
-                });
-            }
-	  	}
-    }
-    
-    async getRealm() {
-    	try {
-    		return await Realm.open({schema: [LanguageModel, VersionModel, BookModel, ChapterModel, VerseComponentsModel] });
-    	} catch (err) {
-            console.log("erro in realm"+err)
-    		return null;
-    	}
+        DbQueries.addNewBook(bookModel, versionModel, languageModel);
     }
 
     addFormattingToLastVerse(line) {
