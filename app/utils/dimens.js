@@ -1,5 +1,4 @@
 
-import {StyleSheet} from 'react-native';
 
 //fontSize extra small
 export   const dimens = {
