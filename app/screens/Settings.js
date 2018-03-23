@@ -63,7 +63,7 @@ export default class Setting extends Component {
       <View style={[styles.container,this.state.day ? primaryColor.backgroundColorPrimary : darkColor.backgroundColorDark]}>
       <View style={{flex:1,margin:8}}>
          <Content>
-          <Card>
+          <Card >
             <CardItem style={[{paddingTop:16,paddingBottom:16},this.state.day ? primaryColor.cardBackgroundColor : darkColor.cardBackgroundColor]}>
               <Left>
                 <Text style={[this.state.value,this.state.day ? primaryColor.textColor : darkColor.textColor,]}>

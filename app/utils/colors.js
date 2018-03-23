@@ -3,7 +3,7 @@ import { Icon } from "native-base";
 //color
 export const darkColor = {
     backgroundColorDark:{
-        backgroundColor:'#161616'
+        backgroundColor:'#000'
     },
     textColor:{
         color:'#fff'
