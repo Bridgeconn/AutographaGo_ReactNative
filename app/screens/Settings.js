@@ -90,7 +90,7 @@ export default class Setting extends Component {
             <CardItem style={[{paddingTop:16,paddingBottom:16},this.state.day ? primaryColor.cardBackgroundColor : darkColor.cardBackgroundColor]}>
               <Right style={{alignItems:'flex-start'}}>
               <View style={{flexDirection:'row'}}>
-              <Icon name='format-size' size={24} style={{marginRight:8}}/>
+              <Icon name='format-size' size={24} style={{marginRight:8}} color={this.state.day ? primaryColor.settingsIconColor.color : darkColor.settingsIconColor.color}/>
               <Text style={[this.state.value,this.state.day ? primaryColor.textColor : darkColor.textColor]}>Text Size</Text>
               </View>
               <Slider
@@ -108,25 +108,25 @@ export default class Setting extends Component {
            </Card>
            <Card>
             <CardItem style={[{paddingTop:16,paddingBottom:16},this.state.day ? primaryColor.cardBackgroundColor : darkColor.cardBackgroundColor]}>
-            <Icon name='settings-backup-restore' size={24} style={{marginRight:8}}/>
+            <Icon name='settings-backup-restore' size={24} style={{marginRight:8}} color={this.state.day ? primaryColor.settingsIconColor.color : darkColor.settingsIconColor.color}/>
               <Text style={[this.state.value,this.state.day ? primaryColor.textColor : darkColor.textColor]}>Backup and Restore</Text>
              </CardItem>
            </Card>
            <Card>
             <CardItem style={[{paddingTop:16,paddingBottom:16},this.state.day ? primaryColor.cardBackgroundColor : darkColor.cardBackgroundColor]}>
-            <Icon name='cloud-download' size={24} style={{marginRight:8}}/>
+            <Icon name='cloud-download' size={24} style={{marginRight:8}} color={this.state.day ? primaryColor.settingsIconColor.color : darkColor.settingsIconColor.color}/>
               <Text style={[this.state.value,this.state.day ? primaryColor.textColor : darkColor.textColor]}>Download More Bibles</Text>
              </CardItem>
            </Card>
            <Card>
             <CardItem style={[{paddingTop:16,paddingBottom:16},this.state.day ? primaryColor.cardBackgroundColor : darkColor.cardBackgroundColor]}>
-            <Icon name='help' size={24} style={{marginRight:8}}/>
+            <Icon name='help' size={24} style={{marginRight:8}} color={this.state.day ? primaryColor.settingsIconColor.color : darkColor.settingsIconColor.color} style={{marginRight:8}}/>
               <Text style={[this.state.value,this.state.day ? primaryColor.textColor : darkColor.textColor]}>Open Hints</Text>
              </CardItem>
            </Card>
            <Card>
             <CardItem style={[{paddingTop:16,paddingBottom:16},this.state.day ? primaryColor.cardBackgroundColor : darkColor.cardBackgroundColor]}>
-            <Icon name='info' size={24} style={{marginRight:8}}/>
+            <Icon name='info' size={24} color={this.state.day ? primaryColor.settingsIconColor.color : darkColor.settingsIconColor.color} style={{marginRight:8}}/>
               <Text style={[this.state.value,this.state.day ? primaryColor.textColor : darkColor.textColor]}>About</Text>
              </CardItem>
            </Card>

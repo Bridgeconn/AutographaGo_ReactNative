@@ -10,6 +10,9 @@ export const darkColor = {
     },
     cardBackgroundColor:{
         backgroundColor:'#161616'
+    },
+    settingsIconColor:{
+        color:'#fff'
     }
 
 };
@@ -23,6 +26,8 @@ export const primaryColor = {
     },
     cardBackgroundColor:{
         backgroundColor:'#fff'
+    },
+    settingsIconColor:{
+        color:'gray'
     }
-
 };
