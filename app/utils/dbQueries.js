@@ -42,6 +42,10 @@ class DbQueries {
         return DbHelper.queryInVerseText(verCode, langCode, text);
     }
 
+    queryHighlights(verCode: string, langCode: string) {
+        return DbHelper.queryHighlights(verCode, langCode);
+    }
+
     // queryNotes(verCode: string, langCode: string) {
     //     RealmQuery<NotesModel> query = realm.where(NotesModel.class);
     //     query = query.equalTo("languageCode", language, Case.INSENSITIVE);

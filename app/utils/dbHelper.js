@@ -76,25 +76,17 @@ class DbHelper {
 			result1 = result1.filtered('languageCode ==[c] "' + langCode + '" && versionCode ==[c] "' + verCode + '"');
 			result1 = result1.filtered('text CONTAINS[c] "' + text + '"');
 			return result1.distinct('verseNumber', 'chapterNumber', 'bookId');
+		}
+		return null;
+	}
 
-			// let result = realm.objectForPrimaryKey("LanguageModel", langCode);
-			// let resultsA = result.versionModels;
-			// resultsA = resultsA.filtered('versionCode ==[c] "' + verCode + '"');
-			// if (resultsA.length > 0) {
-			// 	let resultsB = resultsA[0].bookModels;
-			// 	let res = [];
-			// 	for (var book in resultsB) {
-			// 		book.chapterModels
-			// 	}
-				// if (bookId) {
-				// 	return resultsB.filtered('bookId ==[c] "' + bookId + '"');
-				// }
-				// if (text) {
-				// 	return resultsB.filtered('bookName CONTAINS[c] "' + text + '"').sorted("bookNumber");
-				// }
-				// return resultsB.sorted("bookNumber");
-			// }
-			// return null;
+	async queryHighlights(verCode: string, langCode: string) {
+		let realm = await this.getRealm();
+    	if (realm) {
+			let result1 = realm.objects("VerseComponentsModel");
+			result1 = result1.filtered('languageCode ==[c] "' + langCode + '" && versionCode ==[c] "' + verCode + '"');
+			result1 = result1.filtered('highlighted == true');
+			return result1.distinct('verseNumber', 'chapterNumber', 'bookId');
 		}
 		return null;
 	}

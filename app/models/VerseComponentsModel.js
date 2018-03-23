@@ -12,8 +12,10 @@ VerseComponentsModel.schema = {
     	verseNumber: 'string', // index
     	text: 'string', // index
     	highlighted: 'bool',
-    	// languageCode: 'string',
-    	// versionCode: 'string',
+    	languageCode: 'string',
+		versionCode: 'string',
+		bookId: 'string',
+		chapterNumber: 'int',
         
         verseComponentOwner: {type: 'linkingObjects', objectType: 'ChapterModel', property: 'verseComponentsModels' }
     }

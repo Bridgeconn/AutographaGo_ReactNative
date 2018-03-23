@@ -131,7 +131,9 @@ export default class USFMParser {
 
     addChunk() {
         var verseComponentsModel = {type: Constants.MarkerTypes.CHUNK, verseNumber: null, 
-            text: null, highlighted: false, added: true};
+            text: null, highlighted: false, added: true, 
+            languageCode: this.languageCode, versionCode: this.versionCode, bookId: this.bookId, 
+            chapterNumber: null};
         this.verseList.push(verseComponentsModel);
     }
 
@@ -141,7 +143,9 @@ export default class USFMParser {
             var res = line.slice(4);
         }
         var verseComponentsModel = {type: markerType, verseNumber: null, 
-            text: res, highlighted: false, added: true};
+            text: res, highlighted: false, added: true, 
+            languageCode: this.languageCode, versionCode: this.versionCode, bookId: this.bookId, 
+            chapterNumber: this.chapterList[this.chapterList.length - 1].chapterNumber};
         this.verseList.push(verseComponentsModel);
     }
 
@@ -151,7 +155,9 @@ export default class USFMParser {
             res = line.slice(3);
         }
         var verseComponentsModel = {type: Constants.MarkerTypes.PARAGRAPH, verseNumber: null, 
-            text: res, highlighted: false, added: true};
+            text: res, highlighted: false, added: true, 
+            languageCode: this.languageCode, versionCode: this.versionCode, bookId: this.bookId, 
+            chapterNumber: this.chapterList[this.chapterList.length - 1].chapterNumber};
         this.verseList.push(verseComponentsModel);
     }
 
@@ -189,7 +195,9 @@ export default class USFMParser {
         }
         var result = res + tempRes.join(" ");
         var verseComponentsModel = {type: Constants.MarkerTypes.VERSE, verseNumber: splitString[1], 
-            text: result, highlighted: false, added: true};
+            text: result, highlighted: false, added: true, 
+            languageCode: this.languageCode, versionCode: this.versionCode, bookId: this.bookId, 
+            chapterNumber: this.chapterList[this.chapterList.length - 1].chapterNumber};
         this.verseList.push(verseComponentsModel);
     }
 
@@ -258,7 +266,9 @@ export default class USFMParser {
 
     addFormattingToNextVerse(line) {
         var verseComponentsModel = {type: null, verseNumber: null, 
-            text: " " + line + " ", highlighted: false, added: false};
+            text: " " + line + " ", highlighted: false, added: false, 
+            languageCode: this.languageCode, versionCode: this.versionCode, bookId: this.bookId, 
+            chapterNumber: this.chapterList[this.chapterList.length - 1].chapterNumber};
         this.verseList.push(verseComponentsModel);
     }
 }
