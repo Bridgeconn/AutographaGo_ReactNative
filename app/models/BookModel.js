@@ -5,12 +5,8 @@ import Realm from 'realm'
 export default class BookModel extends Realm.Object {}
 BookModel.schema = {
     name: 'BookModel',
-    // primaryKey: 'bookId',
     properties: {
       bookId: 'string',
-      // bookPrimaryId: 'string',
-      // languageCode: 'string',
-      // versionCode: 'string',
       bookName: 'string',
       chapterModels: 'ChapterModel[]',
       bookmarksList: 'int?[]',

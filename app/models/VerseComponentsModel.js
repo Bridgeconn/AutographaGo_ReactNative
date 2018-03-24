@@ -5,17 +5,15 @@ import Realm from 'realm'
 export default class VerseComponentsModel extends Realm.Object {}
 VerseComponentsModel.schema = {
     name: 'VerseComponentsModel',
-    // primaryKey: 'languageCode',
     properties: {
-    	// chapterId: 'string', // index, non null
     	type: 'string',
-    	verseNumber: 'string', // index
-    	text: 'string', // index
+    	verseNumber: {type: 'string', indexed: true},
+    	text: {type: 'string', indexed: true},
     	highlighted: 'bool',
     	languageCode: 'string',
 		versionCode: 'string',
-		bookId: 'string',
-		chapterNumber: 'int',
+		bookId: {type: 'string', indexed: true},
+		chapterNumber: {type: 'int', indexed: true},
         
         verseComponentOwner: {type: 'linkingObjects', objectType: 'ChapterModel', property: 'verseComponentsModels' }
     }

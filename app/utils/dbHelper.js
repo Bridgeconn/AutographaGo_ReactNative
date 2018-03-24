@@ -75,7 +75,7 @@ class DbHelper {
 			let result1 = realm.objects("VerseComponentsModel");
 			result1 = result1.filtered('languageCode ==[c] "' + langCode + '" && versionCode ==[c] "' + verCode + '"');
 			result1 = result1.filtered('text CONTAINS[c] "' + text + '"');
-			return result1.distinct('verseNumber', 'chapterNumber', 'bookId');
+			return result1;
 		}
 		return null;
 	}
@@ -86,7 +86,7 @@ class DbHelper {
 			let result1 = realm.objects("VerseComponentsModel");
 			result1 = result1.filtered('languageCode ==[c] "' + langCode + '" && versionCode ==[c] "' + verCode + '"');
 			result1 = result1.filtered('highlighted == true');
-			return result1.distinct('verseNumber', 'chapterNumber', 'bookId');
+			return result1;//.distinct('verseNumber', 'chapterNumber', 'bookId');
 		}
 		return null;
 	}
