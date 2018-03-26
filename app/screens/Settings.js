@@ -5,7 +5,8 @@ import {
   View,
   Button,
   Slider,
-  Dimensions
+  Dimensions,
+  TouchableOpacity
 } from 'react-native';
 import { Container, Header, Content, Card, CardItem, Right, Left } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -119,10 +120,12 @@ export default class Setting extends Component {
              </CardItem>
            </Card>
            <Card>
+             <TouchableOpacity onPress={()=>this.props.navigation.navigate('OpenHints')}>
             <CardItem style={[{paddingTop:16,paddingBottom:16},this.state.day ? primaryColor.cardBackgroundColor : darkColor.cardBackgroundColor]}>
             <Icon name='help' size={24} style={{marginRight:8}} color={this.state.day ? primaryColor.settingsIconColor.color : darkColor.settingsIconColor.color} style={{marginRight:8}}/>
               <Text style={[this.state.value,this.state.day ? primaryColor.textColor : darkColor.textColor]}>Open Hints</Text>
              </CardItem>
+             </TouchableOpacity>
            </Card>
            <Card>
             <CardItem style={[{paddingTop:16,paddingBottom:16},this.state.day ? primaryColor.cardBackgroundColor : darkColor.cardBackgroundColor]}>

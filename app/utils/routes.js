@@ -12,10 +12,13 @@ import History from '../screens/History'
 import Notes from '../screens/Notes'
 import Search from '../screens/Search'
 import Settings from '../screens/Settings'
-
+import OpenHints from '../screens/OpenHints'
 
 export const stackNav = StackNavigator(
 {
+	OpenHints: {
+    	screen: OpenHints,
+  	},  
 	Home: {
     	screen: Home,
   	},
@@ -45,7 +48,8 @@ export const stackNav = StackNavigator(
   	},
   	Settings: {
     	screen: Settings,
-  	},
+	},
+	
 },
 {
 	navigationOptions: {
