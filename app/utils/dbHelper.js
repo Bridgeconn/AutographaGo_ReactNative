@@ -6,16 +6,29 @@ import VersionModel from '../models/VersionModel'
 import BookModel from '../models/BookModel'
 import ChapterModel from '../models/ChapterModel'
 import VerseComponentsModel from '../models/VerseComponentsModel'
+var RNFS = require('react-native-fs');
 
 class DbHelper {
 
-    setRealm() {
-		new Realm({deleteRealmIfMigrationNeeded: true, schema: [LanguageModel, VersionModel, BookModel, ChapterModel, VerseComponentsModel] });
-    }
+    // setRealm() {
+	// 	new Realm({
+	// 		path: '/app/assets/default.realm',
+	// 		deleteRealmIfMigrationNeeded: true, 
+	// 		schema: [LanguageModel, VersionModel, BookModel, ChapterModel, VerseComponentsModel] });
+    // }
 
     async getRealm() {
+		console.log("path==" + RNFS.DocumentDirectoryPath)
     	try {
-    		return await Realm.open({schema: [LanguageModel, VersionModel, BookModel, ChapterModel, VerseComponentsModel] });
+    		return await Realm.open({
+				// deleteRealmIfMigrationNeeded: true, 
+				path:
+					Platform.OS === 'ios'
+					? RNFS.MainBundlePath + '/autographa.realm'
+					: 
+					RNFS.DocumentDirectoryPath + '/autographa.realm',
+				readOnly: true,
+				schema: [LanguageModel, VersionModel, BookModel, ChapterModel, VerseComponentsModel] });
     	} catch (err) {
     		return null;
     	}
@@ -52,11 +65,13 @@ class DbHelper {
 		let realm = await this.getRealm();
     	if (realm) {
 			let result = realm.objectForPrimaryKey("LanguageModel", langCode);
+			console.log("res- " + result)
 			let resultsA = result.versionModels;
 			resultsA = resultsA.filtered('versionCode ==[c] "' + verCode + '"');
 			if (resultsA.length > 0) {
 				let resultsB = resultsA[0].bookModels;				
 				if (bookId) {
+					console.log("length = " + resultsB.length);
 					return resultsB.filtered('bookId ==[c] "' + bookId + '"');
 				}
 				if (text) {

@@ -7,11 +7,14 @@ import {
 } from 'react-native';
 import DbQueries from '../utils/dbQueries'
 import USFMParser from '../utils/USFMParser'
+import Realm from 'realm'
 
 export default class Home extends Component {
 
   constructor(props) {
     super(props);
+
+    Realm.copyBundledRealmFiles();
 
     this.state = {
         modelData: [] // array of chapters in a book
