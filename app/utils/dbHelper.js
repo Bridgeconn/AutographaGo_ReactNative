@@ -6,27 +6,21 @@ import VersionModel from '../models/VersionModel'
 import BookModel from '../models/BookModel'
 import ChapterModel from '../models/ChapterModel'
 import VerseComponentsModel from '../models/VerseComponentsModel'
+import {
+	Platform,
+} from 'react-native';
 var RNFS = require('react-native-fs');
 
 class DbHelper {
 
-    // setRealm() {
-	// 	new Realm({
-	// 		path: '/app/assets/default.realm',
-	// 		deleteRealmIfMigrationNeeded: true, 
-	// 		schema: [LanguageModel, VersionModel, BookModel, ChapterModel, VerseComponentsModel] });
-    // }
-
     async getRealm() {
-		console.log("path==" + RNFS.DocumentDirectoryPath)
     	try {
     		return await Realm.open({
 				// deleteRealmIfMigrationNeeded: true, 
 				path:
 					Platform.OS === 'ios'
 					? RNFS.MainBundlePath + '/autographa.realm'
-					: 
-					RNFS.DocumentDirectoryPath + '/autographa.realm',
+					: RNFS.DocumentDirectoryPath + '/autographa.realm',
 				readOnly: true,
 				schema: [LanguageModel, VersionModel, BookModel, ChapterModel, VerseComponentsModel] });
     	} catch (err) {
@@ -65,13 +59,11 @@ class DbHelper {
 		let realm = await this.getRealm();
     	if (realm) {
 			let result = realm.objectForPrimaryKey("LanguageModel", langCode);
-			console.log("res- " + result)
 			let resultsA = result.versionModels;
 			resultsA = resultsA.filtered('versionCode ==[c] "' + verCode + '"');
 			if (resultsA.length > 0) {
 				let resultsB = resultsA[0].bookModels;				
 				if (bookId) {
-					console.log("length = " + resultsB.length);
 					return resultsB.filtered('bookId ==[c] "' + bookId + '"');
 				}
 				if (text) {
@@ -106,28 +98,6 @@ class DbHelper {
 		return null;
 	}
 
-	testFilteredLinkingObjects(){
-        var realm = new Realm({schema: [schemas.PersonObject]});
-        var christine, olivier, oliviersParents;
-        realm.write(function() {
-            olivier = realm.create('PersonObject', {name: 'Olivier', age: 0});
-            christine = realm.create('PersonObject', {name: 'Christine', age: 25, children: [olivier]});
-            realm.create('PersonObject', {name: 'JP', age: 28, children: [olivier]});
-            oliviersParents = olivier.parents;
-        });
-        // Three separate queries so that accessing a property on one doesn't invalidate testing of other properties.
-        var resultsA = oliviersParents.filtered('age > 25');
-        var resultsB = oliviersParents.filtered('age > 25');
-        var resultsC = oliviersParents.filtered('age > 25');
-        realm.write(function() {
-            var removed = christine.children.splice(0);
-            TestCase.assertEqual(removed.length, 1);
-        });
-        TestCase.assertEqual(resultsA.length, 1);
-        TestCase.assertEqual(resultsB.filtered("name = 'Christine'").length, 0);
-        TestCase.assertArraysEqual(names(resultsC), ['JP']);
-    }
-
 	async insert(model: string, value) {
 		let realm = await this.getRealm();
 		if (realm) {
@@ -137,42 +107,7 @@ class DbHelper {
 			});
 	  	}
 	}
-
-	async insertSpecificLinking() {
-		let realm = await this.getRealm();
-        var chapter, chaptersBooks, checkParents;
-
-		if (realm) {
-	  		realm.write(() => {
-
-				// realm.create(model, value);
-
-				chapter = realm.create('ChapterModel', {chapterNumber: 3, numberOfVerses: 17});
-	            realm.create('BookModel', {bookId: 'BO9', bookName: 'Christine 9', bookNumber: 9, section: 'OT', chapterModels: [chapter]});
-	            chaptersBooks = chapter.bookOwner;
-	            console.log("book owner = " + chaptersBooks.bookName);
-	            console.log("book owner = " + chaptersBooks[0]);
-	            console.log("book owner = " + chaptersBooks[0].bookName);
-
-	            // realm.create('BookModel', {bookId: 'BO8', bookName: 'JP 6', bookNumber: 6, section: 'OT', chapterModels: [chapter]});
-
-	            var resultsA = chaptersBooks.filtered('bookNumber > 5');
-	            console.log("bookNumber> 5 :: " + resultsA);
-				console.log("write complete..");
-			});
-	  	}
-	}
-
-	async queryLinks() {
-		let realm = await this.getRealm();
-    	if (realm) {
-			let results = realm.objects('ChapterModel');//.filtered('bookOwner[0].bookId = "BO2"');
-			let newRes = results.filtered('results.bookOwner[0].bookId = "BO2"');
-			console.log("result == " + results.length)
-			return results;
-		}
-	}
-
+	
 	async insertNewBook(bookModel, versionModel, languageModel) {
 		let realm = await this.getRealm();
 		if (realm) {
