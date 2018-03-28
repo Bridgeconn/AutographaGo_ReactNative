@@ -14,7 +14,21 @@ export const darkColor = {
     settingsIconColor:{
         color:'#fff'
     }
+};
 
+export const nightColors = {
+    backgroundColor: 'black',
+    settingsIconColor: 'gray',
+    iconColor: 'white',
+    textColor: 'darkgray',
+    accentColor: 'pink',
+    primaryColor: 'blue',
+    primaryDarkColor: 'darkblue',
+    
+
+};
+export const dayColors = {
+    backgroundColor: 'white',
 };
 
 export const primaryColor = {

@@ -16,9 +16,7 @@ import OpenHints from '../screens/OpenHints'
 
 export const stackNav = StackNavigator(
 {
-	OpenHints: {
-    	screen: OpenHints,
-  	},  
+  
 	Home: {
     	screen: Home,
   	},
@@ -49,7 +47,9 @@ export const stackNav = StackNavigator(
   	Settings: {
     	screen: Settings,
 	},
-	
+	OpenHints: {
+    	screen: OpenHints,
+  	},
 },
 {
 	navigationOptions: {
