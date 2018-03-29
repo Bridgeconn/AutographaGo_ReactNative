@@ -11,7 +11,7 @@ import Highlights from '../screens/Highlights'
 import History from '../screens/History'
 import Notes from '../screens/Notes'
 import Search from '../screens/Search'
-import Settings from '../screens/Settings'
+import Settings from '../screens/settings/Settings'
 import OpenHints from '../screens/OpenHints'
 
 export const stackNav = StackNavigator(

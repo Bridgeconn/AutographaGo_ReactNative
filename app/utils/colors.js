@@ -1,20 +1,4 @@
-import { Icon } from "native-base";
-
-//color
-export const darkColor = {
-    backgroundColorDark:{
-        backgroundColor:'#000'
-    },
-    textColor:{
-        color:'#fff'
-    },
-    cardBackgroundColor:{
-        backgroundColor:'#161616'
-    },
-    settingsIconColor:{
-        color:'#fff'
-    }
-};
+import * as AsyncStorageConstant from './AsyncStorageConstant'
 
 export const nightColors = {
     backgroundColor: 'black',
@@ -29,19 +13,11 @@ export const nightColors = {
 };
 export const dayColors = {
     backgroundColor: 'white',
+    settingsIconColor:'white',
+    iconColor:'black',
+    textColor:'white',
+    accentColor:'green',
+    primaryColor:'darkBlue',
+    primaryDarkColor:'darkblue'
 };
 
-export const primaryColor = {
-    backgroundColorPrimary:{
-        background:'#fff'
-    },
-    textColor:{
-        color:'gray'
-    },
-    cardBackgroundColor:{
-        backgroundColor:'#fff'
-    },
-    settingsIconColor:{
-        color:'gray'
-    }
-};

@@ -6,27 +6,31 @@ import {
   Button,
   Slider,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  AsyncStorage
 } from 'react-native';
 import { Container, Header, Content, Card, CardItem, Right, Left } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 const width = Dimensions.get('window').width;
-import {dimens} from '../utils/dimens.js'
-import {primaryColor, darkColor} from '../utils/colors.js'
-import {styles} from '../utils/styles.js'
+import {dimens} from '../../utils/dimens.js'
+import {value,settingsPageStyle} from './styles.js'
+import {nightColors, dayColors} from '../../utils/colors.js'
+import * as AsyncStorageConstant from '../../utils/AsyncStorageConstant'
+
+// import settingsPageStylestyles from 'style.js'
 
 export default class Setting extends Component {
   static navigationOptions = {
     headerTitle: 'Setting',
   };
   constructor(props) {
+    console.log('style value2 '+value)
     super(props);
+    console.log("progps settings"+JSON.stringify(this.props))
     this.state = {
       value: '',
       day:true,
       night:false,
-      backgroundDark:'',
-      backgroundPrimary:''
     };
   }
   change(value) {
@@ -49,37 +53,58 @@ export default class Setting extends Component {
       }
   }
   }
-  onNightMode(){
+   async onNightMode(){
     this.setState({night:true,day:false})
+    try {
+      await AsyncStorage.setItem(AsyncStorageConstant.nightModeBackgroundColor,JSON.stringify(true));
+      await AsyncStorage.setItem(AsyncStorageConstant.dayModeBackgroundColor,JSON.stringify(false));
+      } catch (error) {
+        console.error('AsyncStorage error: ' + error);
+      }
+    // var value = await AsyncStorage.getItem(AsyncStorageConstant.nightModeBackgroundColor)
+    // console.log("night asyncstorage "+value)
+    // var value = await AsyncStorage.getItem(AsyncStorageConstant.dayModeBackgroundColor)
+    // console.log("day asyncstorage "+value)
   }
-  onDayMode(){
+  async onDayMode(){
     this.setState({night:false,day:true})
+    try {
+    await AsyncStorage.setItem(AsyncStorageConstant.nightModeBackgroundColor,JSON.stringify(false));
+    await AsyncStorage.setItem(AsyncStorageConstant.dayModeBackgroundColor,JSON.stringify(true));
+    } catch (error) {
+      console.error('AsyncStorage error: ' + error);
+    }
+    // var value = await AsyncStorage.getItem(AsyncStorageConstant.nightModeBackgroundColor)
+    // console.log("night asyncstorage "+value)
+    // var value = await AsyncStorage.getItem(AsyncStorageConstant.dayModeBackgroundColor)
+    // console.log("day asyncstorage "+value)
   }
+
   componentDidMount(){
     this.setState({value:dimens.mediumFont})
   }
   render() {
       console.log("render value "+this.state.value)
     return (
-      <View style={[styles.container,this.state.day ? primaryColor.backgroundColorPrimary : darkColor.backgroundColorDark]}>
+      <View style={settingsPageStyle.container}>
       <View style={{flex:1,margin:8}}>
          <Content>
           <Card >
-            <CardItem style={[{paddingTop:16,paddingBottom:16},this.state.day ? primaryColor.cardBackgroundColor : darkColor.cardBackgroundColor]}>
+            <CardItem style={[{paddingTop:16,paddingBottom:16}]}>
               <Left>
-                <Text style={[this.state.value,this.state.day ? primaryColor.textColor : darkColor.textColor,]}>
+                <Text style={[this.state.value,]}>
                   Reading Mode
                 </Text>
               </Left>
               <Right>
                 <View style={{flexDirection:'row'}}>
-                <Text style={[{marginRight:8,marginBottom:20},this.state.day ? primaryColor.textColor : darkColor.textColor]}>  
+                <Text style={[{marginRight:8,marginBottom:20},]}>  
                   Night
                 </Text>
                 <Icon name="brightness-7" size={24} color={this.state.night ? '#26A65B' : "gray"} onPress={this.onNightMode.bind(this)}/>
                 </View>
                 <View style={{flexDirection:'row'}}>
-                <Text style={[{marginRight:8},this.state.day ? primaryColor.textColor : darkColor.textColor]}>
+                <Text style={[{marginRight:8}]}>
                   Day
                 </Text>
                 <Icon name="brightness-5" size={24} color={this.state.day ? '#F62459' : "gray"}  onPress={this.onDayMode.bind(this)}/>
@@ -88,11 +113,11 @@ export default class Setting extends Component {
              </CardItem>
            </Card>
            <Card>
-            <CardItem style={[{paddingTop:16,paddingBottom:16},this.state.day ? primaryColor.cardBackgroundColor : darkColor.cardBackgroundColor]}>
+            <CardItem style={[{paddingTop:16,paddingBottom:16},]}>
               <Right style={{alignItems:'flex-start'}}>
               <View style={{flexDirection:'row'}}>
-              <Icon name='format-size' size={24} style={{marginRight:8}} color={this.state.day ? primaryColor.settingsIconColor.color : darkColor.settingsIconColor.color}/>
-              <Text style={[this.state.value,this.state.day ? primaryColor.textColor : darkColor.textColor]}>Text Size</Text>
+              <Icon name='format-size' size={24} style={{marginRight:8}} />
+              <Text style={[this.state.value]}>Text Size</Text>
               </View>
               <Slider
                style={{width:width-50, height: 30, borderRadius: 50}}
@@ -108,29 +133,29 @@ export default class Setting extends Component {
              </CardItem>
            </Card>
            <Card>
-            <CardItem style={[{paddingTop:16,paddingBottom:16},this.state.day ? primaryColor.cardBackgroundColor : darkColor.cardBackgroundColor]}>
-            <Icon name='settings-backup-restore' size={24} style={{marginRight:8}} color={this.state.day ? primaryColor.settingsIconColor.color : darkColor.settingsIconColor.color}/>
-              <Text style={[this.state.value,this.state.day ? primaryColor.textColor : darkColor.textColor]}>Backup and Restore</Text>
+            <CardItem style={[{paddingTop:16,paddingBottom:16}]}>
+            <Icon name='settings-backup-restore' size={24} style={{marginRight:8}} />
+              <Text style={[this.state.value,]}>Backup and Restore</Text>
              </CardItem>
            </Card>
            <Card>
-            <CardItem style={[{paddingTop:16,paddingBottom:16},this.state.day ? primaryColor.cardBackgroundColor : darkColor.cardBackgroundColor]}>
-            <Icon name='cloud-download' size={24} style={{marginRight:8}} color={this.state.day ? primaryColor.settingsIconColor.color : darkColor.settingsIconColor.color}/>
-              <Text style={[this.state.value,this.state.day ? primaryColor.textColor : darkColor.textColor]}>Download More Bibles</Text>
+            <CardItem style={[{paddingTop:16,paddingBottom:16}]}>
+            <Icon name='cloud-download' size={24} style={{marginRight:8}} />
+              <Text style={[this.state.value,]}>Download More Bibles</Text>
              </CardItem>
            </Card>
            <Card>
              <TouchableOpacity onPress={()=>this.props.navigation.navigate('OpenHints')}>
-            <CardItem style={[{paddingTop:16,paddingBottom:16},this.state.day ? primaryColor.cardBackgroundColor : darkColor.cardBackgroundColor]}>
-            <Icon name='help' size={24} style={{marginRight:8}} color={this.state.day ? primaryColor.settingsIconColor.color : darkColor.settingsIconColor.color} style={{marginRight:8}}/>
-              <Text style={[this.state.value,this.state.day ? primaryColor.textColor : darkColor.textColor]}>Open Hints</Text>
+            <CardItem style={[{paddingTop:16,paddingBottom:16},{backgroundColor:dayColors.backgroundColor ? this.state.day : nightColors.backgroundColor}]}>
+            <Icon name='help' size={24} style={{marginRight:8}} />
+              <Text style={[this.state.value]}>Open Hints</Text>
              </CardItem>
              </TouchableOpacity>
            </Card>
            <Card>
-            <CardItem style={[{paddingTop:16,paddingBottom:16},this.state.day ? primaryColor.cardBackgroundColor : darkColor.cardBackgroundColor]}>
-            <Icon name='info' size={24} color={this.state.day ? primaryColor.settingsIconColor.color : darkColor.settingsIconColor.color} style={{marginRight:8}}/>
-              <Text style={[this.state.value,this.state.day ? primaryColor.textColor : darkColor.textColor]}>About</Text>
+            <CardItem style={[{paddingTop:16,paddingBottom:16}]}>
+            <Icon name='info' size={24} style={{marginRight:8}}/>
+              <Text style={[this.state.value]}>About</Text>
              </CardItem>
            </Card>
         </Content>

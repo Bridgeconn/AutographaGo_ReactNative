@@ -4,18 +4,19 @@
 export   const dimens = {
     extraSmallFont:{
         fontSize:12
+        
     },
     smallFont:{
-        fontSize:14
-    },
-    mediumFont:{
         fontSize:16
     },
+    mediumFont:{
+        fontSize:20
+    },
     largeFont:{
-        fontSize:18
+        fontSize:24
     },
     extraLargeFont:{
-        fontSize:20
+        fontSize:28
     }
 
 };
