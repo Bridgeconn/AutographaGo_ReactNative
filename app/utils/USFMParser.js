@@ -118,7 +118,6 @@ export default class USFMParser {
 
     addBook(value) {
         this.bookId = value;
-        // todo check if book already exists in db and return ! present??
         return true;
     }
 
@@ -130,10 +129,13 @@ export default class USFMParser {
     }
 
     addChunk() {
-        var verseComponentsModel = {type: Constants.MarkerTypes.CHUNK, verseNumber: null, 
-            text: null, highlighted: false, added: true, 
+        if (this.chapterList.length == 0) {
+            return;
+        }
+        var verseComponentsModel = {type: Constants.MarkerTypes.CHUNK, verseNumber: "", 
+            text: "", highlighted: false, added: true, 
             languageCode: this.languageCode, versionCode: this.versionCode, bookId: this.bookId, 
-            chapterNumber: null};
+            chapterNumber: this.chapterList[this.chapterList.length - 1].chapterNumber};
         this.verseList.push(verseComponentsModel);
     }
 
@@ -142,7 +144,7 @@ export default class USFMParser {
         if (splitString.length > 1) {
             var res = line.slice(4);
         }
-        var verseComponentsModel = {type: markerType, verseNumber: null, 
+        var verseComponentsModel = {type: markerType, verseNumber: "", 
             text: res, highlighted: false, added: true, 
             languageCode: this.languageCode, versionCode: this.versionCode, bookId: this.bookId, 
             chapterNumber: this.chapterList[this.chapterList.length - 1].chapterNumber};
@@ -154,7 +156,7 @@ export default class USFMParser {
         if (splitString.length > 1) {
             res = line.slice(3);
         }
-        var verseComponentsModel = {type: Constants.MarkerTypes.PARAGRAPH, verseNumber: null, 
+        var verseComponentsModel = {type: Constants.MarkerTypes.PARAGRAPH, verseNumber: "", 
             text: res, highlighted: false, added: true, 
             languageCode: this.languageCode, versionCode: this.versionCode, bookId: this.bookId, 
             chapterNumber: this.chapterList[this.chapterList.length - 1].chapterNumber};
@@ -162,10 +164,6 @@ export default class USFMParser {
     }
 
     addVerse(splitString) {
-        var chapterId = null;
-        if (this.chapterList.length > 0) {
-            chapterId = this.bookId + "_" + this.chapterList[this.chapterList.length - 1].chapterNumber;
-        }
         var tempRes = [];
         for (var i=0; i<this.verseList.length; i++) {
             var verseModel = this.verseList[i];
@@ -192,6 +190,13 @@ export default class USFMParser {
         tempRes = [];
         for (var i=2; i<splitString.length; i++) {
             tempRes.push(splitString[i]);
+        }
+        for (var i=this.verseList.length - 1; i>=0; i--) {
+            if (this.verseList[i].verseNumber == "") {
+                this.verseList[i].verseNumber = splitString[1];
+            } else {
+                break;
+            }
         }
         var result = res + tempRes.join(" ");
         var verseComponentsModel = {type: Constants.MarkerTypes.VERSE, verseNumber: splitString[1], 
@@ -265,7 +270,7 @@ export default class USFMParser {
     }
 
     addFormattingToNextVerse(line) {
-        var verseComponentsModel = {type: null, verseNumber: null, 
+        var verseComponentsModel = {type: null, verseNumber: "", 
             text: " " + line + " ", highlighted: false, added: false, 
             languageCode: this.languageCode, versionCode: this.versionCode, bookId: this.bookId, 
             chapterNumber: this.chapterList[this.chapterList.length - 1].chapterNumber};

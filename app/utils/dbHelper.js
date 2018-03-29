@@ -21,7 +21,6 @@ class DbHelper {
 					Platform.OS === 'ios'
 					? RNFS.MainBundlePath + '/autographa.realm'
 					: RNFS.DocumentDirectoryPath + '/autographa.realm',
-				readOnly: true,
 				schema: [LanguageModel, VersionModel, BookModel, ChapterModel, VerseComponentsModel] });
     	} catch (err) {
     		return null;
