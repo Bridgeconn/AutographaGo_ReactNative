@@ -270,7 +270,7 @@ export default class USFMParser {
     }
 
     addFormattingToNextVerse(line) {
-        var verseComponentsModel = {type: null, verseNumber: "", 
+        var verseComponentsModel = {type: "", verseNumber: "", 
             text: " " + line + " ", highlighted: false, added: false, 
             languageCode: this.languageCode, versionCode: this.versionCode, bookId: this.bookId, 
             chapterNumber: this.chapterList[this.chapterList.length - 1].chapterNumber};
