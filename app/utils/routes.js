@@ -13,8 +13,12 @@ import Notes from '../screens/Notes'
 import Search from '../screens/Search'
 import Settings from '../screens/settings/Settings'
 import OpenHints from '../screens/OpenHints'
+import {
+    AsyncStorage,
+} from 'react-native';
+const AsyncStorageConstants = require('./AsyncStorageConstants')
 
-export const stackNav = StackNavigator(
+const StackNav = StackNavigator(
 {
   
 	Home: {
@@ -45,7 +49,7 @@ export const stackNav = StackNavigator(
     	screen: Search,
   	},
   	Settings: {
-    	screen: Settings,
+		screen: Settings,
 	},
 	OpenHints: {
     	screen: OpenHints,
@@ -61,3 +65,48 @@ export const stackNav = StackNavigator(
 }
 
 )
+
+export default class App extends Component {
+    constructor(props){
+        super(props)
+        this.state = {
+			colorMode: null,
+			sizeMode: null,
+        }
+    }
+
+    render(){
+        return(
+            <StackNav screenProps={this.state}/>
+        );
+    }
+    async componentDidMount(){
+        try {
+            const value = await AsyncStorage.getItem(AsyncStorageConstants.Keys.ColorMode);
+            if (value !== null){
+                // We have data!!
+                console.log(value);
+                this.setState({colorMode: value})
+            } else {
+                this.setState({colorMode: AsyncStorageConstants.Values.DayMode})                
+            }
+        } catch (error) {
+            // Error retrieving data
+            this.setState({colorMode: AsyncStorageConstants.Values.DayMode})            
+		}
+		
+		try {
+            const value = await AsyncStorage.getItem(AsyncStorageConstants.Keys.SizeMode);
+            if (value !== null){
+                // We have data!!
+                console.log(value);
+                this.setState({sizeMode: value})
+            } else {
+                this.setState({sizeMode: AsyncStorageConstants.Values.SizeModeNormal})                
+            }
+        } catch (error) {
+            // Error retrieving data
+            this.setState({sizeMode: AsyncStorageConstants.Values.SizeModeNormal})            
+        }
+    }
+}

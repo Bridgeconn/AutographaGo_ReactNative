@@ -3,7 +3,8 @@
 //fontSize extra small
 export   const dimens = {
     extraSmallFont:{
-        fontSize:12
+        fontSize:12,
+        iconSize: 12
         
     },
     smallFont:{

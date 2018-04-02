@@ -13,9 +13,10 @@ import { Container, Header, Content, Card, CardItem, Right, Left } from 'native-
 import Icon from 'react-native-vector-icons/MaterialIcons';
 const width = Dimensions.get('window').width;
 import {dimens} from '../../utils/dimens.js'
-import {value,settingsPageStyle} from './styles.js'
+import {settingsPageStyle} from './styles.js'
 import {nightColors, dayColors} from '../../utils/colors.js'
-import * as AsyncStorageConstant from '../../utils/AsyncStorageConstant'
+const AsyncStorageConstants = require('../../utils/AsyncStorageConstants')
+
 
 // import settingsPageStylestyles from 'style.js'
 
@@ -24,14 +25,25 @@ export default class Setting extends Component {
     headerTitle: 'Setting',
   };
   constructor(props) {
-    console.log('style value2 '+value)
     super(props);
-    console.log("progps settings"+JSON.stringify(this.props))
+    console.log("SCREEN = " + JSON.stringify(this.props))
+    console.log("SCREEN PORPS = " + this.props.screenProps)
     this.state = {
       value: '',
       day:true,
       night:false,
     };
+    var colorFile = this.props.screenProps.colorMode == AsyncStorageConstants.Values.DayMode 
+      ? dayColors
+      : nightColors;
+    var sizeFile;
+    switch(this.props.screenProps.sizeMode) {
+      case AsyncStorageConstants.Values.SizeModeXSmall: {
+        sizeFile = nightColors;
+        break;
+      }
+    }
+    this.styleFile = settingsPageStyle(colorFile, sizeFile);
   }
   change(value) {
     console.log("slider value "+value)
@@ -55,12 +67,12 @@ export default class Setting extends Component {
   }
    async onNightMode(){
     this.setState({night:true,day:false})
-    try {
-      await AsyncStorage.setItem(AsyncStorageConstant.nightModeBackgroundColor,JSON.stringify(true));
-      await AsyncStorage.setItem(AsyncStorageConstant.dayModeBackgroundColor,JSON.stringify(false));
-      } catch (error) {
-        console.error('AsyncStorage error: ' + error);
-      }
+    // try {
+    //   await AsyncStorage.setItem(AsyncStorageConstant.nightModeBackgroundColor,JSON.stringify(true));
+    //   await AsyncStorage.setItem(AsyncStorageConstant.dayModeBackgroundColor,JSON.stringify(false));
+    //   } catch (error) {
+    //     console.error('AsyncStorage error: ' + error);
+    //   }
     // var value = await AsyncStorage.getItem(AsyncStorageConstant.nightModeBackgroundColor)
     // console.log("night asyncstorage "+value)
     // var value = await AsyncStorage.getItem(AsyncStorageConstant.dayModeBackgroundColor)
@@ -69,8 +81,10 @@ export default class Setting extends Component {
   async onDayMode(){
     this.setState({night:false,day:true})
     try {
-    await AsyncStorage.setItem(AsyncStorageConstant.nightModeBackgroundColor,JSON.stringify(false));
-    await AsyncStorage.setItem(AsyncStorageConstant.dayModeBackgroundColor,JSON.stringify(true));
+    await AsyncStorage.setItem('keyday','1')
+    const  value = await AsyncStorage.getItem('keyday')
+    console.log('key day value '+value)
+    // await AsyncStorage.setItem(AsyncStorageConstant.dayModeBackgroundColor,JSON.stringify(true));
     } catch (error) {
       console.error('AsyncStorage error: ' + error);
     }
@@ -86,7 +100,7 @@ export default class Setting extends Component {
   render() {
       console.log("render value "+this.state.value)
     return (
-      <View style={settingsPageStyle.container}>
+      <View style={this.styleFile.container}>
       <View style={{flex:1,margin:8}}>
          <Content>
           <Card >
@@ -135,7 +149,7 @@ export default class Setting extends Component {
            <Card>
             <CardItem style={[{paddingTop:16,paddingBottom:16}]}>
             <Icon name='settings-backup-restore' size={24} style={{marginRight:8}} />
-              <Text style={[this.state.value,]}>Backup and Restore</Text>
+              <Text style={this.styleFile.textStyle}>Backup and Restore</Text>
              </CardItem>
            </Card>
            <Card>

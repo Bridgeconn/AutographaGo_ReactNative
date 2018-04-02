@@ -1,4 +1,3 @@
-import * as AsyncStorageConstant from './AsyncStorageConstant'
 
 export const nightColors = {
     backgroundColor: 'black',

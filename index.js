@@ -1,4 +1,13 @@
 import { AppRegistry } from 'react-native';
-import  { stackNav }  from './app/utils/routes';
+import App from './app/utils/routes'
+import React, {Component} from 'react'
 
-AppRegistry.registerComponent('AutographaGo_ReactNative', () => stackNav);
+
+export default class AutographaGo extends Component {
+    render(){
+        return(
+            <App/>
+        )
+    }
+}
+AppRegistry.registerComponent('AutographaGo_ReactNative', () => AutographaGo);
