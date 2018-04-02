@@ -9,6 +9,7 @@ import {
 import DbQueries from '../utils/dbQueries'
 import USFMParser from '../utils/USFMParser'
 import Realm from 'realm'
+import VerseViewBook from '../components/VerseViewBook'
 const Constants = require('../utils/constants')
 
 export default class Home extends Component {
@@ -37,38 +38,28 @@ export default class Home extends Component {
           Hello there
         </Text>
         {this.state.modelData.map((chapter) => 
-            // <Text>{chapter.chapterNumber}</Text>
-          chapter.verseComponentsModels.map((verse) =>
-            <Text>{verse.verseNumber} {verse.text}</Text>             
-          )
+            <Text>
+              <Text style={{fontSize:26}}> 
+                {chapter.chapterNumber}
+              </Text>
+              <Text onPress={() => {this.child.onPress();}} style={{}}> 
+                {chapter.verseComponentsModels.map((verse) =>
+                  <VerseViewBook 
+                    ref={instance => {this.child = instance;}} 
+                    verseComponent = {verse} />
+                )}
+              </Text>
+            </Text>
         )}
         </ScrollView>
       </View>
     );
   }
 
-  renderChapter(chapterItem) {
-    var res = "";
-    chapterItem.verseComponentsModels.map((verseItem) =>{
-      switch (verseItem.type){
-        case Constants.MarkerTypes.PARAGRAPH: {
-            res = res + "\n";
-            break;
-        }
-        case Constants.MarkerTypes.VERSE: {
-            res = res + " " + verseItem.verseNumber + " " + verseItem.text;
-            break;
-        }
-      }
-    });
-    console.log(res);
-  }
-
   async queryBookWithId() {
-    let models = await DbQueries.queryBookWithId("1jn", "UDB", "ENG");
+    let models = await DbQueries.queryBookWithId("1jn", "ULB", "ENG");
     if (models && models.length > 0) {
         this.setState({modelData: models[0].chapterModels})
-        this.renderChapter(this.state.modelData[0])
     }
   }
 

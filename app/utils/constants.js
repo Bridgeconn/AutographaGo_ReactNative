@@ -31,6 +31,7 @@ module.exports = {
         CLOSE_FOOT_NOTE : ")"
     },
     MarkerTypes: {
+        SECTION_HEADING : "s",        
         SECTION_HEADING_ONE : "s1",
         SECTION_HEADING_TWO : "s2",
         SECTION_HEADING_THREE : "s3",
