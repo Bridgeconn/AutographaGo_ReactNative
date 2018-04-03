@@ -5,12 +5,14 @@ import {
   View,
 } from 'react-native';
 const Constants = require('../utils/constants')
+import { TextWithLetterSpacing } from './TextWithLetterSpacing'
 
 export default class VerseViewBook extends Component {
 
   constructor(props) {
     super(props);
 
+    this.letterSpacing = 24;
     this.state = {
         verseData: this.props.verseComponent,
         isSelected: false,
@@ -28,13 +30,19 @@ export default class VerseViewBook extends Component {
         if (this.state.verseData.verseNumber == "1" || 
             this.state.verseData.verseNumber.startsWith("1-")) {
               return (
-                <Text style={{backgroundColor: 'yellow'}}> {this.state.verseData.text}</Text>          
+                <TextWithLetterSpacing spacing={this.letterSpacing} children={this.state.verseData.text} />
               );
         }
         return (
           <Text>
-          <Text style = {{fontSize:10}}> {this.state.verseData.verseNumber}</Text>
-          <Text style={{textDecorationLine: this.state.isSelected ? 'underline' : 'none'}}> {this.state.verseData.text}</Text>          
+            <TextWithLetterSpacing 
+              textStyle={{fontSize:10}}
+              spacing={this.letterSpacing} 
+              children={this.state.verseData.verseNumber} />
+            <TextWithLetterSpacing 
+              textStyle={{textDecorationLine: this.state.isSelected ? 'underline' : 'none'}}
+              spacing={this.letterSpacing} 
+              children={ this.state.verseData.text} />            
           </Text>
         );
       }
@@ -44,16 +52,17 @@ export default class VerseViewBook extends Component {
               return null;
         }
         return (
-          <Text>
-            {"\n"}
-          </Text>
+          <TextWithLetterSpacing 
+            spacing={this.letterSpacing} 
+            children={"\n"} />
         );
       }
       case Constants.MarkerTypes.SECTION_HEADING: {
         return (
-          <Text style = {{fontSize:20}}>
-            {this.state.verseData.text}
-          </Text>
+          <TextWithLetterSpacing 
+            textStyle={{fontSize:20}} 
+            spacing={this.letterSpacing} 
+            children={this.state.verseData.text} />
         );
       }
       case Constants.MarkerTypes.SECTION_HEADING_ONE: {

@@ -42,7 +42,7 @@ export default class Home extends Component {
               <Text style={{fontSize:26}}> 
                 {chapter.chapterNumber}
               </Text>
-              <Text onPress={() => {this.child.onPress();}} style={{}}> 
+              <Text onPress={() => {this.child.onPress();}}> 
                 {chapter.verseComponentsModels.map((verse) =>
                   <VerseViewBook 
                     ref={instance => {this.child = instance;}} 
