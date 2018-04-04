@@ -40,9 +40,9 @@ export default class Home extends Component {
         {this.state.modelData.map((chapter) => 
             <Text>
               <Text style={{fontSize:26}}> 
-                {chapter.chapterNumber}
+                {"\n"}{chapter.chapterNumber}
               </Text>
-              <Text onPress={() => {this.child.onPress();}}> 
+              <Text letterSpacing={24} onPress={() => {this.child.onPress();}} style={{lineHeight:26, textAlign:'justify'}}> 
                 {chapter.verseComponentsModels.map((verse) =>
                   <VerseViewBook 
                     ref={instance => {this.child = instance;}} 
