@@ -12,7 +12,7 @@ module.exports = {
         SizeModeXSmall: 0,
         SizeModeSmall: 1,
         SizeModeNormal: 2,
-        SizeModelLarge: 3,
+        SizeModeLarge: 3,
         SizeModeXLarge: 4,
 
         

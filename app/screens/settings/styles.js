@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native'
+import { Icon } from 'native-base';
 
 export const settingsPageStyle =(colorMode, sizeMode) =>{
     return StyleSheet.create({
@@ -7,7 +8,14 @@ export const settingsPageStyle =(colorMode, sizeMode) =>{
        backgroundColor:colorMode.backgroundColor 
    },
    textStyle: {
-       fontSize: 30,
-        color: colorMode.accentColor,   
-   }
-})}
+        // color: colorMode.accentColor,   
+        // fontSize:sizeMode.fontSize
+   },
+   IconCustom:{
+    // iconColor:colorMode.iconColor
+   },
+   cardItemStyle:{paddingTop:16,paddingBottom:16}
+
+})
+}
+
