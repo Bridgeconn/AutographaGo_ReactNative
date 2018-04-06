@@ -5,32 +5,16 @@
  */
 
 import React, { Component } from 'react';
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
 import Book from './app/screens/Book'
+import RV from './app/screens/RecyclerView'
 
 type Props = {};
 export default class App extends Component<Props> {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Book/>
-      </View>
+        <RV />
     );
   }
 
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  }
-});

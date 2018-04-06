@@ -71,9 +71,14 @@ export default class VerseViewBook extends Component {
         if (this.state.verseData.verseNumber == "1" || 
             this.state.verseData.verseNumber.startsWith("1-")) {
               return (
-                <Text style={{fontSize:16, backgroundColor: this.state.isSelected ? 'yellow' : 'none'}} >
-                  {this.getResultText(this.state.verseData.text)}
-                </Text>
+                // <Text>
+                //   <Text style={{fontSize:26}}> 
+                //     {"\n"}{this.state.verseData.chapterNumber}{' '}
+                //   </Text>
+                  <Text style={{fontSize:16, backgroundColor: this.state.isSelected ? 'yellow' : 'none'}} >
+                    {this.getResultText(this.state.verseData.text)}
+                  </Text>
+                // </Text>
               );
         }
         return (
