@@ -1,6 +1,6 @@
 // all of our routes
 
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import {StackNavigator} from 'react-navigation'
 import Home from '../screens/Home'
 import About from '../screens/About'

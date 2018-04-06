@@ -10,7 +10,7 @@ import {
   AsyncStorage,
   BackHandler,
 } from 'react-native';
-import { HeaderBackButton} from 'react-navigation'
+import { HeaderBackButton,NavigationActions} from 'react-navigation'
 import { Container, Header, Content, Card, CardItem, Right, Left } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 const width = Dimensions.get('window').width;
@@ -23,24 +23,26 @@ const AsyncStorageConstants = require('../../utils/AsyncStorageConstants')
 // import settingsPageStylestyles from 'style.js'
 
 export default class Setting extends Component {
-  static navigationOptions = {
+  static navigationOptions = ({ navigation }) => ({
     headerTitle: 'Settings',
     headerLeft: (
       <HeaderBackButton
-        color="white"
-         onPress={()=>console.log("hereee")}/>
+        onPress={()=>{
+        navigation.pop();
+        // navigation.state.handleThis;
+        console.log('navigationOptions param'+JSON.stringify(navigation.state));
+      }}/>
     )
-  };
-  
+});
   constructor(props) {
     super(props);
     console.log("SCREEN = " + JSON.stringify(this.props))
-    console.log("SCREEN PORPS = " + this.props.screenProps)
+    console.log("SCREEN PORPS = " +this.props.screenProps)
 
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
     
     this.state = {
-      value: null,
+      value: this.props.navigation.state.paramColorMode,
       isDayMode: this.props.screenProps.colorMode == AsyncStorageConstants.Values.DayMode ? true : false,
     };
 
@@ -76,6 +78,7 @@ export default class Setting extends Component {
     
   }
 
+
   handleBackPress = () => {
     console.log("on handle back press")
     return true;
@@ -85,19 +88,28 @@ export default class Setting extends Component {
     console.log("slider value "+value)
     switch(value) {
       case 0:{
-        return this.setState({value:extraSmallFont});
+        this.setState({value:extraSmallFont});
+        return this.props.navigation.setParams({paramSizeMode: this.state.value})
       }
       case 1:{
-        return  this.setState({value:smallFont});
+        this.setState({value:smallFont});
+        return this.props.navigation.setParams({paramSizeMode: this.state.value})
+        
       }
       case 2:{
-       return this.setState({value:mediumFont});
+      this.setState({value:mediumFont});
+      return this.props.navigation.setParams({paramSizeMode: this.state.value})
+       
       }
       case 3:{
-        return  this.setState({value:largeFont});
+      this.setState({value:largeFont});
+      return this.props.navigation.setParams({paramSizeMode: this.state.value})
+        
       }
       case 4:{
-        return  this.setState({value:extraLargeFont});
+      this.setState({value:extraLargeFont});
+      return this.props.navigation.setParams({paramSizeMode: this.state.value})
+        
       }
     }
   }
@@ -109,10 +121,12 @@ export default class Setting extends Component {
       value 
       ? AsyncStorageConstants.Values.DayMode 
       : AsyncStorageConstants.Values.NightMode);
-
+      
     this.props.screenProps.updateColor(value 
       ? AsyncStorageConstants.Values.DayMode 
       : AsyncStorageConstants.Values.NightMode);
+    this.props.navigation.setParams({paramColorMode: this.state.isDayMode ?  AsyncStorageConstants.Values.DayMode : AsyncStorageConstants.Values.NightMode})
+    console.log("updated or not check"+JSON.stringify(this.props.navigation))
   }
 
   render() {
