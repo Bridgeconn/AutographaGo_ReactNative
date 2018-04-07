@@ -52,6 +52,8 @@ export default class VerseViewBook extends Component {
           } else if (temp[i].startsWith(Constants.StylingConstants.FOOT_NOTE)) {
               footNote = true;
               tempRes.push(Constants.StylingConstants.OPEN_FOOT_NOTE);
+          } else if (temp[i] == ("\\b")) {
+            break;
           } else {
             tempRes.push(temp[i] + " ");
           }
@@ -60,7 +62,7 @@ export default class VerseViewBook extends Component {
       }
     }
     if (footNote) {
-      tempRes.push(Constants.StylingConstants.CLOSE_FOOT_NOTE);
+      tempRes.push(Constants.StylingConstants.CLOSE_FOOT_NOTE+" ");
     }
     return tempRes.join("");
   }
@@ -71,14 +73,14 @@ export default class VerseViewBook extends Component {
         if (this.state.verseData.verseNumber == "1" || 
             this.state.verseData.verseNumber.startsWith("1-")) {
               return (
-                // <Text>
-                //   <Text style={{fontSize:26}}> 
-                //     {"\n"}{this.state.verseData.chapterNumber}{' '}
-                //   </Text>
-                  <Text style={{fontSize:16, backgroundColor: this.state.isSelected ? 'yellow' : 'none'}} >
+                <Text>
+                  <Text style={{fontSize:26}}> 
+                    {"\n"}{this.state.verseData.chapterNumber}{' '}
+                  </Text>
+                  <Text style={{fontSize:16, backgroundColor: this.state.isSelected ? 'yellow' : 'transparent'}} >
                     {this.getResultText(this.state.verseData.text)}
                   </Text>
-                // </Text>
+                 </Text>
               );
         }
         return (

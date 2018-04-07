@@ -32,7 +32,7 @@ export default class RV extends Component {
 
     this.queryBookWithId = this.queryBookWithId.bind(this)
 
-    let { width } = Dimensions.get("window");
+    let { width, height } = Dimensions.get("window");
     
     this._layoutProvider = new LayoutProvider(
       index => {
@@ -42,7 +42,7 @@ export default class RV extends Component {
           switch (type) {
               case ViewTypes.FULL:
                   dim.width = width;
-                  dim.height = 75;
+                  dim.height = height;
                   break;
               default:
                   dim.width = 0;
@@ -60,8 +60,21 @@ export default class RV extends Component {
   }
 
   _rowRenderer(type, data) {
-    return (
-        <VerseViewBook verseComponent = {data} />
+    //   console.log("data::"+data.chapterNumber)
+      return (
+        <Text style={{marginLeft:16, marginRight:16}}>
+            {/* <Text style={{fontSize:26}}>
+                {"\n"}{data.chapterNumber}
+            </Text> */}
+            <Text letterSpacing={24} onPress={() => {this.child.onPress();}} 
+                style={{lineHeight:26, textAlign:'justify'}}>
+                {data.verseComponentsModels.map((verse) => 
+                    <VerseViewBook
+                        ref={instance => {this.child = instance;}}
+                        verseComponent = {verse} />
+                )}
+            </Text>
+        </Text>
     );
   }
 
@@ -76,6 +89,7 @@ export default class RV extends Component {
                 layoutProvider={this._layoutProvider} 
                 dataProvider={this.state.dataProvider} 
                 rowRenderer={this._rowRenderer}
+                forceNonDeterministicRendering={true}
             />
         );
     } else {
@@ -88,6 +102,7 @@ export default class RV extends Component {
         return r1 !== r2;
       });
     let models = await DbQueries.queryBookWithId("1jn", "ULB", "ENG");
+    console.log("calling query")
     let verseModels = []
     if (models && models.length > 0) {
       let chapters = models[0].chapterModels;      
@@ -99,7 +114,8 @@ export default class RV extends Component {
       }
       this.setState({modelData: chapters})
       this.setState({verseList: verseModels})
-      this.setState({dataProvider: dataProvider.cloneWithRows(verseModels)}) 
+      this.setState({dataProvider: dataProvider.cloneWithRows(chapters)}, () => {
+      })
     }
   }
 
@@ -107,15 +123,6 @@ export default class RV extends Component {
 
 {/*
 RecyclerListView.propTypes = {
-    //Refer the sample
-    layoutProvider: PropTypes.instanceOf(LayoutProvider).isRequired,
-
-    //Refer the sample
-    dataProvider: PropTypes.instanceOf(DataProvider).isRequired,
-
-    //Methods which returns react component to be rendered. You get type of view and data in the callback.
-    rowRenderer: PropTypes.func.isRequired,
-
     //Provides visible index, helpful in sending impression events etc, onVisibleIndexesChanged(all, now, notNow)
     onVisibleIndexesChanged: PropTypes.func,
 

@@ -6,6 +6,8 @@ import {
   Button,
   ScrollView,
   VirtualizedList,
+  FlatList,
+  ActivityIndicator
 } from 'react-native';
 import DbQueries from '../utils/dbQueries'
 import USFMParser from '../utils/USFMParser'
@@ -25,6 +27,7 @@ export default class Home extends Component {
     this.state = {
       modelData: [], // array of chapters in a book
       verseList: [], // array of all verses from all chapters
+      isLoading: false
     }
   }
 
@@ -33,43 +36,43 @@ export default class Home extends Component {
   }
 
   render() {
-    if (this.state.modelData.length == 0) {
-      return null;
-    }
+    // if (this.state.modelData.length == 0) {
+    //   return null;
+    // }
     return (
-      <View style={styles.container}>      
-        <ScrollView>
-          <Text>
-            Hello there
-          </Text>
-          {this.state.modelData.map((chapter) => 
-            <Text>
-              <Text style={{fontSize:26}}>
-                {"\n"}{chapter.chapterNumber}
-              </Text>
+      <View style={styles.container}>
+        <ActivityIndicator 
+          animating={this.state.isLoading ? true : false} 
+          size="large" 
+          color="#0000ff" />
+        <FlatList
+          data={this.state.modelData}
+          renderItem={({item}) => 
+            <Text style={{marginLeft:16, marginRight:16}}>
               <Text letterSpacing={24} onPress={() => {this.child.onPress();}} 
-                style={{lineHeight:26, textAlign:'justify'}}>
-                  {chapter.verseComponentsModels.map((verse) => 
-                    <VerseViewBook
-                      ref={instance => {this.child = instance;}}
-                      verseComponent = {verse} />
+                  style={{lineHeight:26, textAlign:'justify'}}>
+                  {item.verseComponentsModels.map((verse) => 
+                      <VerseViewBook
+                          ref={instance => {this.child = instance;}}
+                          verseComponent = {verse} />
                   )}
               </Text>
-            </Text>
-          )}
-        </ScrollView>
-        {/* <VirtualizedList
-          data={this.state.verseList}
-          renderItem={({item}) => <VerseViewBook verseComponent = {item} /> }
-          getItem={(data, index) => data[index]}
-          getItemCount={data => data.length} /> */}
+            </Text> 
+          }
+          // getItem={(data, index) => data[index]}
+          keyExtractor={(item, index) => {
+            return item.chapterNumber
+          }}
+          // getItemCount={data => data.length} 
+          />
       </View>
     );
   }
 
   async queryBookWithId() {
+    this.setState({isLoading: true})
     let models = await DbQueries.queryBookWithId("gen", "ULB", "ENG");
-    let verseModels = []
+    // let verseModels = []
     if (models && models.length > 0) {
       let chapters = models[0].chapterModels;      
       // for (var i=0; i<chapters.length; i++) {
@@ -79,7 +82,8 @@ export default class Home extends Component {
       //   }
       // }
       this.setState({modelData: chapters})
-      this.setState({verseList: verseModels})      
+      this.setState({isLoading:true})
+      // this.setState({verseList: verseModels})      
     }
   }
 
