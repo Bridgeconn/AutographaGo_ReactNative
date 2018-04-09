@@ -1,104 +1,3 @@
-// import React, { Component } from 'react';
-// import {
-//   StyleSheet,
-//   Text,
-//   View,
-//   Button
-// } from 'react-native';
-// import DbQueries from '../utils/dbQueries'
-// import DbHelper from '../utils/dbHelper';
-
-// export default class Home extends Component {
-
-//   constructor(props) {
-//     super(props);
-
-//     DbHelper.setRealm();
-
-//     this.state = {
-//         modelData: []
-//     }
-
-//     this.showRows = this.showRows.bind(this);
-//   }
-
-//   async componentWillMount() {
-//     let models = await DbQueries.getSomeDataFromModel()
-//     if (models) {
-//       this.setState({modelData: models})
-//     }
-//   }
-
-//   render() {
-//     return (
-//       <View style={styles.container}>
-//         <Text>
-//         Hello there
-//         </Text>
-//         <Text>
-//         {this.state.modelData.length}
-//         </Text>
-//         <Button
-//           onPress={this.addRow}
-//           title="Add"
-//           color="#841584"
-//         />
-//         <Button
-//           onPress={this.showRows}
-//           title="Show"
-//           color="#841584"
-//         />
-//         <Button
-//           onPress={this.showBooks}
-//           title="Book Show"
-//           color="#841584"
-//         />
-//         <Button
-//           onPress={this.addBook}
-//           title="Book Add"
-//           color="#841584"
-//         />
-//       </View>
-//     );
-//   }
-
-//   async showRows() {
-//     let models = await DbQueries.getSomeDataFromModel();
-//     if (models) {
-//       this.setState({modelData: models})
-//     }
-//   }
-
-//   addRow() {
-//     var value = {chapterNumber: Math.floor(Math.random() * (20)) + 1, numberOfVerses: 12}
-//     DbQueries.addNewChapter(value);
-//   }
-
-//   addBook() {
-//     var value1 = {chapterNumber: Math.floor(Math.random() * (20)) + 1, numberOfVerses: 10}
-//     var value2 = {chapterNumber: Math.floor(Math.random() * (20)) + 1, numberOfVerses: 11}
-//     var value3 = [];
-//     value3.push(value1)
-//     value3.push(value2)
-//     var value4 = {bookId: 'BO1', bookName: 'Book 1', bookNumber: 2, section: 'OT', chapterItems: value3}
-//     DbQueries.addNewBook(value4)
-//   }
-
-//   showBooks() {
-//     DbQueries.getLinks();
-//   }
-
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: '#F5FCFF',
-//   },
-// });
-
 
 import React, { Component } from 'react';
 import {
@@ -115,15 +14,13 @@ const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 
 export default class Home extends Component {
-  static navigationOptions = ({navigation}) => ({
-    headerTintColor: 'white',
-    headerStyle: {
-      backgroundColor:"midnightblue"
-       },
-      })
+  static navigationOptions = {
+    headerTitle: 'Autographa Go',
+  };
+
   constructor(props){
     super(props)
-    console.log("props value home page update "+this.props.screenProps.colorMode)
+    console.log("props value home page update "+this.props.screenProps)
     this.state = {
       colorMode:this.props.screenProps.colorMode,
       sizeMode:this.props.screenProps.sizeMode,
@@ -137,23 +34,29 @@ export default class Home extends Component {
   this.setState({activeTab1:true,activeTab2:false})
   this.ScrollViewPosition.scrollTo({x: 0, y: 0, animated: true})
   }
+  
   toggleButton2(){
     this.setState({activeTab1:false,activeTab2:true})
     this.ScrollViewPosition.scrollTo({x: 0, y: 569, animated: false})
   }
   
   handleScroll = (event)=>{
-  console.log("handleScroll"+ Math.round(event.nativeEvent.contentOffset.y));
-  console.log("maxHeight of window "+height)
-  if(Math.round(event.nativeEvent.contentOffset.y)>568){
-    console.log("height is more than 568")
-    this.setState({activeTab1:false,activeTab2:true})
-  }
-  else{
-    console.log("height is less than 568")
-    this.setState({activeTab1:true,activeTab2:false})
+    console.log("handleScroll"+ Math.round(event.nativeEvent.contentOffset.y));
+    console.log("maxHeight of window "+height)
+    if(Math.round(event.nativeEvent.contentOffset.y)>568){
+      console.log("height is more than 568")
+      this.setState({activeTab1:false,activeTab2:true})
+    }
+    else{
+      console.log("height is less than 568")
+      this.setState({activeTab1:true,activeTab2:false})
+    }
   }
 
+  componentWillReceiveProps(props){
+    console.log('componentWillReceiveProps home '+JSON.stringify(props))
+
+    
   }
   render() {
     const iconName = [
@@ -171,7 +74,9 @@ export default class Home extends Component {
         <View style={{flexDirection:'column',width:width/5,backgroundColor:'black', }}>
         {
           iconName.map((iconName)=>
-            <Icon name={iconName.icon} color="white" size={32} style={{alignSelf:'center',padding:16}} onPress={() =>this.props.navigation.navigate(iconName.pressIcon,{paramColorMode:this.state.colorMode,paramSizeMode:this.state.sizeMode})}/>
+            <Icon name={iconName.icon} color="white" size={32} 
+              style={{alignSelf:'center',padding:16}} 
+              onPress={() =>this.props.navigation.navigate(iconName.pressIcon)}/>
           )
         }
         </View>

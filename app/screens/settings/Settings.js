@@ -8,9 +8,8 @@ import {
   Dimensions,
   TouchableOpacity,
   AsyncStorage,
-  BackHandler,
 } from 'react-native';
-import { HeaderBackButton,NavigationActions} from 'react-navigation'
+import { HeaderBackButton, NavigationActions} from 'react-navigation'
 import { Container, Header, Content, Card, CardItem, Right, Left } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 const width = Dimensions.get('window').width;
@@ -20,36 +19,31 @@ import {nightColors, dayColors} from '../../utils/colors.js'
 import AsyncStorageUtil from '../../utils/AsyncStorageUtil.js';
 const AsyncStorageConstants = require('../../utils/AsyncStorageConstants')
 
-// import settingsPageStylestyles from 'style.js'
+const setParamsAction = ({colorMode}) => NavigationActions.setParams({
+  params: { colorMode },
+  key: 'Home',
+});
+
+const setParamsAction2 = ({sizeMode}) => NavigationActions.setParams({
+  params: { sizeMode },
+  key: 'Home',
+});
 
 export default class Setting extends Component {
-  static navigationOptions = ({ navigation }) => ({
+  static navigationOptions = {
     headerTitle: 'Settings',
-    headerLeft: (
-      <HeaderBackButton
-        onPress={()=>{
-        navigation.pop();
-        // navigation.state.handleThis;
-        console.log('navigationOptions param'+JSON.stringify(navigation.state));
-      }}/>
-    )
-});
+  };
+
   constructor(props) {
     super(props);
-    console.log("SCREEN = " + JSON.stringify(this.props))
-    console.log("SCREEN PORPS = " +this.props.screenProps)
-
-    this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
-    
     this.state = {
-      value: this.props.navigation.state.paramColorMode,
-      isDayMode: this.props.screenProps.colorMode == AsyncStorageConstants.Values.DayMode ? true : false,
+      sliderValue: this.props.screenProps.sizeMode,
+      colorMode: this.props.screenProps.colorMode,
     };
-
     this.colorFile = this.props.screenProps.colorMode == AsyncStorageConstants.Values.DayMode
       ? dayColors
       : nightColors;
-    
+
     var sizeFile;
     switch(this.props.screenProps.sizeMode) {
       case AsyncStorageConstants.Values.SizeModeXSmall: {
@@ -77,57 +71,64 @@ export default class Setting extends Component {
     this.styleFile = settingsPageStyle(this.colorFile, sizeFile);
     
   }
-
-
-  handleBackPress = () => {
-    console.log("on handle back press")
-    return true;
-  }
   
-  change(value) {
-    console.log("slider value "+value)
+  onChangeSlider(value) {
+    this.setState({sizeMode: value})
+    
+    AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.SizeMode, 
+      value);
+      
+    this.props.screenProps.updateSize(value);
+
+    var sizeFile;
     switch(value) {
-      case 0:{
-        this.setState({value:extraSmallFont});
-        return this.props.navigation.setParams({paramSizeMode: this.state.value})
+      case AsyncStorageConstants.Values.SizeModeXSmall: {
+        sizeFile = extraSmallFont;
+        break;
       }
-      case 1:{
-        this.setState({value:smallFont});
-        return this.props.navigation.setParams({paramSizeMode: this.state.value})
-        
+      case AsyncStorageConstants.Values.SizeModeSmall: {
+        sizeFile = smallFont;
+        break;
       }
-      case 2:{
-      this.setState({value:mediumFont});
-      return this.props.navigation.setParams({paramSizeMode: this.state.value})
-       
+      case AsyncStorageConstants.Values.SizeModeNormal: {
+        sizeFile = mediumFont;
+        break;
       }
-      case 3:{
-      this.setState({value:largeFont});
-      return this.props.navigation.setParams({paramSizeMode: this.state.value})
-        
+      case AsyncStorageConstants.Values.SizeModeLarge: {
+        sizeFile = largeFont;
+        break;
       }
-      case 4:{
-      this.setState({value:extraLargeFont});
-      return this.props.navigation.setParams({paramSizeMode: this.state.value})
-        
+      case AsyncStorageConstants.Values.SizeModeXLarge: {
+        sizeFile = extraLargeFont;
+        break;
       }
     }
+    
+    this.styleFile = settingsPageStyle(this.colorFile, sizeFile);
+
+    this.props.navigation.dispatch(setParamsAction2(value));
   }
 
   onColorModeChange(value){
-    this.setState({isDayMode: value})
+    if (this.state.colorMode == value) {
+      return;
+    }
+    this.setState({colorMode: value})
     
     AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.ColorMode, 
-      value 
-      ? AsyncStorageConstants.Values.DayMode 
-      : AsyncStorageConstants.Values.NightMode);
+      value);
       
-    this.props.screenProps.updateColor(value 
-      ? AsyncStorageConstants.Values.DayMode 
-      : AsyncStorageConstants.Values.NightMode);
-    this.props.navigation.setParams({paramColorMode: this.state.isDayMode ?  AsyncStorageConstants.Values.DayMode : AsyncStorageConstants.Values.NightMode})
-    console.log("updated or not check"+JSON.stringify(this.props.navigation))
+    this.props.screenProps.updateColor(value);
+    
+    this.colorFile = value == AsyncStorageConstants.Values.DayMode
+    ? dayColors
+    : nightColors;
+    this.styleFile = settingsPageStyle(this.colorFile, this.sizeFile);
+
+    this.props.navigation.dispatch(setParamsAction(value));
   }
+
+  
 
   render() {
     return (
@@ -146,13 +147,13 @@ export default class Setting extends Component {
                 <Text style={[{marginRight:8,marginBottom:20},]}>  
                   Night
                 </Text>
-                <Icon name="brightness-7" size={24} color={!this.state.isDayMode ? '#26A65B' : "gray"} onPress={this.onColorModeChange.bind(this, false)}/>
+                <Icon name="brightness-7" size={24} color={this.state.colorMode != AsyncStorageConstants.Values.DayMode ? '#26A65B' : "gray"} onPress={this.onColorModeChange.bind(this, 0)}/>
                 </View>
                 <View style={{flexDirection:'row'}}>
                 <Text style={[{marginRight:8}]}>
                   Day
                 </Text>
-                <Icon name="brightness-5" size={24} color={this.state.isDayMode ? '#F62459' : "gray"}  onPress={this.onColorModeChange.bind(this, true)}/>
+                <Icon name="brightness-5" size={24} color={this.state.colorMode == AsyncStorageConstants.Values.DayMode ? '#F62459' : "gray"}  onPress={this.onColorModeChange.bind(this, 1)}/>
                 </View>
               </Right>
              </CardItem>
@@ -171,8 +172,8 @@ export default class Setting extends Component {
                 maximumValue={4}
                 thumbTintColor={this.state.day ? '#F62459': '#26A65B'}
                 minimumTrackTintColor={this.state.day ? '#F62459': '#26A65B'}
-                onValueChange={this.change.bind(this)}
-                value={2}
+                onValueChange={this.onChangeSlider.bind(this)}
+                value={this.state.sliderValue}
               />
               </Right>
              </CardItem>

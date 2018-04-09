@@ -73,17 +73,22 @@ export default class App extends Component {
 			colorMode: null,
 			sizeMode: null,
         }
-        this.updateColorMode = this.updateColorMode.bind(this)
+		this.updateColorMode = this.updateColorMode.bind(this)
+		this.updateSizeMode = this.updateSizeMode.bind(this)
     }
 
     updateColorMode = (colorMode) => {
-        this.setState({colorMode})
+		this.setState({colorMode})
+	}
+	
+	updateSizeMode = (sizeMode) => {
+		this.setState({sizeMode})
     }
 
     render(){
         return(
-            <StackNav screenProps={{coloMode: this.state.colorMode, sizeMode: this.state.sizeMode, 
-                updateColor: this.updateColorMode }}/>
+			<StackNav screenProps={{colorMode: this.state.colorMode, sizeMode: this.state.sizeMode,
+				updateColor: this.updateColorMode, updateSize: this.updateSizeMode }}/>
         );
     }
     
@@ -92,6 +97,6 @@ export default class App extends Component {
         this.setState({colorMode});
 
         const sizeMode = await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.SizeMode, AsyncStorageConstants.Values.SizeModeNormal);
-        this.setState({sizeMode})
+		this.setState({sizeMode})
     }
 }
