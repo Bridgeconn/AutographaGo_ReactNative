@@ -29,6 +29,11 @@ const setParamsAction2 = ({sizeMode}) => NavigationActions.setParams({
   key: 'Home',
 });
 
+const setParamsAction3 = ({colorFile}) => NavigationActions.setParams({
+  params: { colorFile },
+  key: 'Home',
+});
+
 export default class Setting extends Component {
   static navigationOptions = {
     headerTitle: 'Settings',
@@ -36,15 +41,17 @@ export default class Setting extends Component {
 
   constructor(props) {
     super(props);
+    console.log('settings props'+JSON.stringify(this.props.screenProps))
     this.state = {
       sliderValue: this.props.screenProps.sizeMode,
       colorMode: this.props.screenProps.colorMode,
+      colorFile:this.props.screenProps.colorFile,
     };
     this.colorFile = this.props.screenProps.colorMode == AsyncStorageConstants.Values.DayMode
       ? dayColors
       : nightColors;
 
-    var sizeFile;
+    this.sizeFile;
     switch(this.props.screenProps.sizeMode) {
       case AsyncStorageConstants.Values.SizeModeXSmall: {
         sizeFile = extraSmallFont;
@@ -68,7 +75,7 @@ export default class Setting extends Component {
       }
     }
 
-    this.styleFile = settingsPageStyle(this.colorFile, sizeFile);
+    this.styleFile = settingsPageStyle(this.state.colorFile, sizeFile);
     
   }
   
@@ -104,32 +111,25 @@ export default class Setting extends Component {
       }
     }
     
-    this.styleFile = settingsPageStyle(this.colorFile, sizeFile);
-
+    this.styleFile = settingsPageStyle(this.state.colorFile, sizeFile);
     this.props.navigation.dispatch(setParamsAction2(value));
   }
 
-  onColorModeChange(value){
+   onColorModeChange(value){
     if (this.state.colorMode == value) {
       return;
     }
-    this.setState({colorMode: value})
-    
-    AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.ColorMode, 
-      value);
-      
+    this.setState({colorMode: value},()=>{console.log("value of colorMode"+this.state.colorMode)})
     this.props.screenProps.updateColor(value);
-    
-    this.colorFile = value == AsyncStorageConstants.Values.DayMode
+    const colorFile = this.state.colorMode == AsyncStorageConstants.Values.DayMode
     ? dayColors
     : nightColors;
-    this.styleFile = settingsPageStyle(this.colorFile, this.sizeFile);
-
-    this.props.navigation.dispatch(setParamsAction(value));
+    this.setState({colorFile}),
+    this.styleFile = settingsPageStyle(colorFile, this.sizeFile)
+    this.props.navigation.dispatch(setParamsAction3(colorFile))
+    this.props.navigation.dispatch(setParamsAction(value));    
+    AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.ColorMode, value);
   }
-
-  
-
   render() {
     return (
       <View style={this.styleFile.container}>

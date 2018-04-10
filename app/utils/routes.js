@@ -15,7 +15,9 @@ import Settings from '../screens/settings/Settings'
 import OpenHints from '../screens/OpenHints'
 const AsyncStorageConstants = require('./AsyncStorageConstants')
 import AsyncStorageUtil from './AsyncStorageUtil';
-
+import {nightColors, dayColors} from './colors.js'
+import {extraSmallFont,smallFont,mediumFont,largeFont,extraLargeFont} from './dimens.js'
+import { styleFile } from './styles.js'
 const StackNav = StackNavigator(
 {
   
@@ -68,27 +70,63 @@ const StackNav = StackNavigator(
 export default class App extends Component {
     constructor(props){
         super(props)
-        console.log('in routes'+this.props)
-        this.state = {
+        // console.log('in routes'+this.props)
+      this.state = {
 			colorMode: null,
 			sizeMode: null,
-        }
+			colorFile:null
+		}
+		// this.colorFile = this.state.colorMode == AsyncStorageConstants.Values.DayMode
+    //   	? dayColors
+    //   	: nightColors;
+
+    // var sizeFile;
+    // switch(this.props.screenProps.sizeMode) {
+    //   case AsyncStorageConstants.Values.SizeModeXSmall: {
+    //     sizeFile = extraSmallFont;
+    //     break;
+    //   }
+    //   case AsyncStorageConstants.Values.SizeModeSmall: {
+    //     sizeFile = smallFont;
+    //     break;
+    //   }
+    //   case AsyncStorageConstants.Values.SizeModeNormal: {
+    //     sizeFile = mediumFont;
+    //     break;
+    //   }
+    //   case AsyncStorageConstants.Values.SizeModeLarge: {
+    //     sizeFile = largeFont;
+    //     break;
+    //   }
+    //   case AsyncStorageConstants.Values.SizeModeXLarge: {
+    //     sizeFile = extraLargeFont;
+    //     break;
+    //   }
+    // }
+
+    // this.styleFile = settingsPageStyle(this.colorFile);
 		this.updateColorMode = this.updateColorMode.bind(this)
-		this.updateSizeMode = this.updateSizeMode.bind(this)
+    this.updateSizeMode = this.updateSizeMode.bind(this)
+    this.updateColorFile = this.updateColorFile.bind(this)
     }
 
     updateColorMode = (colorMode) => {
 		this.setState({colorMode})
 	}
 	
-	updateSizeMode = (sizeMode) => {
+	  updateSizeMode = (sizeMode) => {
 		this.setState({sizeMode})
     }
 
+    updateColorFile = (colorFile) => {
+      this.setState({colorFile})
+      console.log("update color"+colorFile)
+      }
+
     render(){
         return(
-			<StackNav screenProps={{colorMode: this.state.colorMode, sizeMode: this.state.sizeMode,
-				updateColor: this.updateColorMode, updateSize: this.updateSizeMode }}/>
+			<StackNav screenProps={{colorMode: this.state.colorMode, sizeMode: this.state.sizeMode, colorFile:this.state.colorFile,
+				updateColor: this.updateColorMode, updateSize: this.updateSizeMode ,updateColorFile:this.updateColorFile}}/>
         );
     }
     
@@ -97,6 +135,14 @@ export default class App extends Component {
         this.setState({colorMode});
 
         const sizeMode = await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.SizeMode, AsyncStorageConstants.Values.SizeModeNormal);
-		this.setState({sizeMode})
+		    this.setState({sizeMode})
+
+		    colorFile = this.state.colorMode == AsyncStorageConstants.Values.DayMode
+      	? dayColors
+        : nightColors;
+        this.setState({colorFile})
+        console.log('day or night color '+JSON.stringify(colorFile))
+
+        
     }
 }

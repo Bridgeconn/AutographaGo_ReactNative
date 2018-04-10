@@ -56,7 +56,6 @@ export default class Home extends Component {
   componentWillReceiveProps(props){
     console.log('componentWillReceiveProps home '+JSON.stringify(props))
 
-    
   }
   render() {
     const iconName = [
