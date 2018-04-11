@@ -41,10 +41,12 @@ export default class Home extends Component {
     // }
     return (
       <View style={styles.container}>
+      {this.state.isLoading ? 
         <ActivityIndicator 
           animating={this.state.isLoading ? true : false} 
           size="large" 
           color="#0000ff" />
+          :
         <FlatList
           data={this.state.modelData}
           renderItem={({item}) => 
@@ -65,13 +67,14 @@ export default class Home extends Component {
           }}
           // getItemCount={data => data.length} 
           />
+        }
       </View>
     );
   }
 
   async queryBookWithId() {
     this.setState({isLoading: true})
-    let models = await DbQueries.queryBookWithId("gen", "ULB", "ENG");
+    let models = await DbQueries.queryBookWithId("1jn", "ULB", "ENG");
     // let verseModels = []
     if (models && models.length > 0) {
       let chapters = models[0].chapterModels;      
@@ -82,7 +85,7 @@ export default class Home extends Component {
       //   }
       // }
       this.setState({modelData: chapters})
-      this.setState({isLoading:true})
+      this.setState({isLoading:false})
       // this.setState({verseList: verseModels})      
     }
   }
