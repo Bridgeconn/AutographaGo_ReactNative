@@ -23,18 +23,44 @@ export default class Home extends Component {
   constructor(props){
     super(props)
     console.log("props value home page update "+this.props.screenProps)
+
+    this.queryBooksList = this.queryBooksList.bind(this)
+
     this.state = {
       colorMode:this.props.screenProps.colorMode,
       sizeMode:this.props.screenProps.sizeMode,
       activeTab1:true,
       activeTab2:false,
+      booksList: [],
       number:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,996,97,98,99],
     }
   }
 
+  componentDidMount() {
+    this.queryBooksList();
+  }
+
+  async queryBooksList() {
+    this.setState({isLoading: true})
+    let models = await DbQueries.queryBooksWithCode("ULB", "ENG");
+    // let verseModels = []
+    if (models && models.length > 0) {
+      // let chapters = models[0].chapterModels;      
+      // for (var i=0; i<chapters.length; i++) {
+      //   let verses = chapters[i].verseComponentsModels;
+      //   for (var j=0; j<verses.length; j++) {
+      //     verseModels.push(verses[j]);
+      //   }
+      // }
+      this.setState({booksList: models})
+      this.setState({isLoading:false})
+      // this.setState({verseList: verseModels})      
+    }
+  }
+
   toggleButton1(){
-  this.setState({activeTab1:true,activeTab2:false})
-  this.ScrollViewPosition.scrollTo({x: 0, y: 0, animated: true})
+    this.setState({activeTab1:true,activeTab2:false})
+    this.ScrollViewPosition.scrollTo({x: 0, y: 0, animated: true})
   }
   
   toggleButton2(){
@@ -89,9 +115,18 @@ export default class Home extends Component {
              <ScrollView
               onScroll = {this.handleScroll}
               scrollEventThrottle={10}
-              ref = {refs => this.ScrollViewPosition =refs }
-              >
-                {this.state.number.map((item)=><View><TouchableOpacity onPress={()=>this.props.navigation.navigate('Book')}><Text>{item}</Text></TouchableOpacity></View>)}
+              ref = {refs => this.ScrollViewPosition =refs }>
+                {this.state.booksList.map((item)=>
+                  <TouchableOpacity 
+                    onPress={()=>this.props.navigation.navigate('Book', {bookId: item.bookId, bookName: item.bookName})}>
+                    <View style={{flexDirection:'row', justifyContent:'space-between', paddingHorizontal:16, paddingVertical:12}}>
+                      <Text style={{fontSize:22}}>
+                        {item.bookName}
+                      </Text>
+                      <Icon name='chevron-right' color="gray" size={24} />
+                    </View>
+                  </TouchableOpacity>
+                )}
               </ScrollView>
         </View> 
       </View>

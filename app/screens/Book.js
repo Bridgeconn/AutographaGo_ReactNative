@@ -20,9 +20,9 @@ const width = Dimensions.get('window').width;
 
 export default class Home extends Component {
 
-  static navigationOptions = {
-    headerTitle: 'Book',
-  };
+  static navigationOptions = ({navigation}) => ({
+    headerTitle: navigation.state.params.bookName,
+  });
 
   constructor(props) {
     super(props);
@@ -35,6 +35,7 @@ export default class Home extends Component {
       modelData: [], // array of chapters in a book
       verseList: [], // array of all verses from all chapters
       isLoading: false,
+      bookId: this.props.navigation.state.params.bookId,
     }
   }
 
@@ -81,7 +82,7 @@ export default class Home extends Component {
 
   async queryBookWithId() {
     this.setState({isLoading: true})
-    let models = await DbQueries.queryBookWithId("1jn", "ULB", "ENG");
+    let models = await DbQueries.queryBookWithId(this.state.bookId, "ULB", "ENG");
     // let verseModels = []
     if (models && models.length > 0) {
       let chapters = models[0].chapterModels;      
