@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import {StackNavigator} from 'react-navigation'
-import Home from '../screens/Home'
+import Home from '../screens/home/Home'
 import About from '../screens/About'
 import Book from '../screens/Book'
 import Bookmarks from '../screens/Bookmarks'
@@ -119,7 +119,11 @@ export default class App extends Component {
     }
 
     updateColorFile = (colorFile) => {
-      this.setState({colorFile})
+      // this.setState({colorFile})
+      colorFile = this.state.colorMode == AsyncStorageConstants.Values.DayMode
+      	? dayColors
+        : nightColors;
+        this.setState({colorFile})
       console.log("update color"+colorFile)
       }
 
@@ -131,18 +135,16 @@ export default class App extends Component {
     }
     
     async componentDidMount(){
-        const colorMode = await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.ColorMode, AsyncStorageConstants.Values.DayMode);
-        this.setState({colorMode});
+        await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.ColorMode, AsyncStorageConstants.Values.DayMode).then((colorMode) => {
+          this.setState({colorMode})
+        })
+        await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.SizeMode, AsyncStorageConstants.Values.SizeModeNormal).then((sizeMode) => {
+          this.setState({sizeMode})
+        })
 
-        const sizeMode = await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.SizeMode, AsyncStorageConstants.Values.SizeModeNormal);
-		    this.setState({sizeMode})
-
-		    colorFile = this.state.colorMode == AsyncStorageConstants.Values.DayMode
-      	? dayColors
-        : nightColors;
+        colorFile = this.state.colorMode == 1 ? dayColors : nightColors 
         this.setState({colorFile})
-        console.log('day or night color '+JSON.stringify(colorFile))
-
-        
+        console.log("router page "+this.state.colorMode)
+        console.log('day or night color '+JSON.stringify(this.state.colorFile))
     }
 }

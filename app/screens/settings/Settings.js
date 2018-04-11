@@ -41,41 +41,42 @@ export default class Setting extends Component {
 
   constructor(props) {
     super(props);
+
     console.log('settings props'+JSON.stringify(this.props.screenProps))
     this.state = {
       sliderValue: this.props.screenProps.sizeMode,
       colorMode: this.props.screenProps.colorMode,
-      colorFile:this.props.screenProps.colorFile,
+      colorFile:this.props.screenProps.colorFile
     };
-    this.colorFile = this.props.screenProps.colorMode == AsyncStorageConstants.Values.DayMode
-      ? dayColors
-      : nightColors;
+    // this.colorFile = this.props.screenProps.colorMode == AsyncStorageConstants.Values.DayMode
+    //   ? dayColors
+    //   : nightColors;
 
     this.sizeFile;
-    switch(this.props.screenProps.sizeMode) {
-      case AsyncStorageConstants.Values.SizeModeXSmall: {
-        sizeFile = extraSmallFont;
-        break;
-      }
-      case AsyncStorageConstants.Values.SizeModeSmall: {
-        sizeFile = smallFont;
-        break;
-      }
-      case AsyncStorageConstants.Values.SizeModeNormal: {
-        sizeFile = mediumFont;
-        break;
-      }
-      case AsyncStorageConstants.Values.SizeModeLarge: {
-        sizeFile = largeFont;
-        break;
-      }
-      case AsyncStorageConstants.Values.SizeModeXLarge: {
-        sizeFile = extraLargeFont;
-        break;
-      }
-    }
+    // switch(this.props.screenProps.sizeMode) {
+    //   case AsyncStorageConstants.Values.SizeModeXSmall: {
+    //     sizeFile = extraSmallFont;
+    //     break;
+    //   }
+    //   case AsyncStorageConstants.Values.SizeModeSmall: {
+    //     sizeFile = smallFont;
+    //     break;
+    //   }
+    //   case AsyncStorageConstants.Values.SizeModeNormal: {
+    //     sizeFile = mediumFont;
+    //     break;
+    //   }
+    //   case AsyncStorageConstants.Values.SizeModeLarge: {
+    //     sizeFile = largeFont;
+    //     break;
+    //   }
+    //   case AsyncStorageConstants.Values.SizeModeXLarge: {
+    //     sizeFile = extraLargeFont;
+    //     break;
+    //   }
+    // }
 
-    this.styleFile = settingsPageStyle(this.state.colorFile, sizeFile);
+    this.styleFile = settingsPageStyle(this.state.colorFile, this.sizeFile);
     
   }
   
@@ -115,20 +116,28 @@ export default class Setting extends Component {
     this.props.navigation.dispatch(setParamsAction2(value));
   }
 
-   onColorModeChange(value){
+  async onColorModeChange(value){
     if (this.state.colorMode == value) {
       return;
     }
-    this.setState({colorMode: value},()=>{console.log("value of colorMode"+this.state.colorMode)})
-    this.props.screenProps.updateColor(value);
+    this.setState({colorMode: value},()=>{
+      this.props.screenProps.updateColor(this.state.colorMode);
+    })
+    this.props.navigation.dispatch(setParamsAction(value));   
+    
     const colorFile = this.state.colorMode == AsyncStorageConstants.Values.DayMode
-    ? dayColors
-    : nightColors;
-    this.setState({colorFile}),
-    this.styleFile = settingsPageStyle(colorFile, this.sizeFile)
+      ? dayColors
+      : nightColors;
+    this.setState({colorFile},()=>{
+      this.styleFile = settingsPageStyle(this.state.colorFile, this.sizeFile)
+      this.props.screenProps.updateColorFile(this.state.colorFile);
+    })
     this.props.navigation.dispatch(setParamsAction3(colorFile))
-    this.props.navigation.dispatch(setParamsAction(value));    
-    AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.ColorMode, value);
+    await AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.ColorMode,this.state.colorMode);
+    console.log("value"+value)
+    console.log("color mode"+this.state.colorMode)
+    console.log("colorfile"+JSON.stringify(this.state.colorFile))
+    
   }
   render() {
     return (
