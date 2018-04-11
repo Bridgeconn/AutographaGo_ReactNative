@@ -7,7 +7,8 @@ import {
   ScrollView,
   VirtualizedList,
   FlatList,
-  ActivityIndicator
+  ActivityIndicator,
+  Dimensions,
 } from 'react-native';
 import DbQueries from '../utils/dbQueries'
 import USFMParser from '../utils/USFMParser'
@@ -15,7 +16,13 @@ import Realm from 'realm'
 import VerseViewBook from '../components/VerseViewBook'
 const Constants = require('../utils/constants')
 
+const width = Dimensions.get('window').width;
+
 export default class Home extends Component {
+
+  static navigationOptions = {
+    headerTitle: 'Book',
+  };
 
   constructor(props) {
     super(props);
@@ -27,7 +34,7 @@ export default class Home extends Component {
     this.state = {
       modelData: [], // array of chapters in a book
       verseList: [], // array of all verses from all chapters
-      isLoading: false
+      isLoading: false,
     }
   }
 

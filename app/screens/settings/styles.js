@@ -1,7 +1,7 @@
 import {StyleSheet} from 'react-native'
 import { Icon } from 'native-base';
 
-export const styleFile =(colorMode, sizeMode) =>{
+export const settingsPageStyle =(colorMode, sizeMode) =>{
     return StyleSheet.create({
    container:{
        flex:1,
@@ -18,3 +18,4 @@ export const styleFile =(colorMode, sizeMode) =>{
 
 })
 }
+

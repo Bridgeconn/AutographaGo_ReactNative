@@ -1,223 +1,100 @@
+
 import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
   View,
-  Button
+  Dimensions,
+  ScrollView,
+  TouchableOpacity
 } from 'react-native';
 import DbQueries from '../utils/dbQueries'
 import USFMParser from '../utils/USFMParser'
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import {Segment,Button,Tab,Tabs} from 'native-base'
+const height = Dimensions.get('window').height;
+const width = Dimensions.get('window').width;
 
 export default class Home extends Component {
+  static navigationOptions = {
+    headerTitle: 'Autographa Go',
+  };
 
-  constructor(props) {
-    super(props);
-
+  constructor(props){
+    super(props)
+    console.log("props value home page update "+this.props.screenProps)
     this.state = {
-        modelData: []
+      colorMode:this.props.screenProps.colorMode,
+      sizeMode:this.props.screenProps.sizeMode,
+      activeTab1:true,
+      activeTab2:false,
+      number:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,996,97,98,99],
     }
-
-    this.showRows = this.showRows.bind(this);
   }
 
+  toggleButton1(){
+  this.setState({activeTab1:true,activeTab2:false})
+  this.ScrollViewPosition.scrollTo({x: 0, y: 0, animated: true})
+  }
+  
+  toggleButton2(){
+    this.setState({activeTab1:false,activeTab2:true})
+    this.ScrollViewPosition.scrollTo({x: 0, y: 569, animated: false})
+  }
+  
+  handleScroll = (event)=>{
+    console.log("handleScroll"+ Math.round(event.nativeEvent.contentOffset.y));
+    console.log("maxHeight of window "+height)
+    if(Math.round(event.nativeEvent.contentOffset.y)>568){
+      console.log("height is more than 568")
+      this.setState({activeTab1:false,activeTab2:true})
+    }
+    else{
+      console.log("height is less than 568")
+      this.setState({activeTab1:true,activeTab2:false})
+    }
+  }
+
+  componentWillReceiveProps(props){
+    console.log('componentWillReceiveProps home '+JSON.stringify(props))
+
+  }
   render() {
+    const iconName = [
+      {icon:'local-library',pressIcon:'EditNote',},
+      {icon:'history',pressIcon:'History'},
+      {icon:'search',pressIcon:'Search'},
+      {icon:'note',pressIcon:'Notes'},
+      {icon:'bookmark',pressIcon:'Bookmarks',},
+      {icon:'border-color',pressIcon:'Highlights'},
+      {icon:'settings',pressIcon:'Settings'}
+    ]
+    const iconPress = ['EditNote',' history','Search','Note','Bookmarks','Highlights','Settings']
     return (
-      <View style={styles.container}>
-        <Text>
-          Hello there
-        </Text>
-        <Text>
-          {this.state.modelData.length}
-        </Text>
-        <Button
-          onPress={this.queryLanguages}
-          title="LANGUAGES"
-          color="#841584"
-        />
-        <Button
-          onPress={this.queryLanguageWithCode}
-          title="Language With Code"
-          color="#841584"
-        />
-        <Button
-          onPress={this.queryVersionWithCode}
-          title="Version With Code"
-          color="#841584"
-        />
-        <Button
-          onPress={this.queryBooksWithCode}
-          title="Books With Code"
-          color="#841584"
-        />
-        <Button
-          onPress={this.queryBookWithId}
-          title="Book With Id"
-          color="#841584"
-        />
-        <Button
-          onPress={this.querySearchBookWithName}
-          title="Search Book With Name"
-          color="#841584"
-        />
-        <Button
-          onPress={this.querySearchVerse}
-          title="Search Verse"
-          color="#841584"
-        />
-        <Button
-          onPress={this.queryHighlights}
-          title="Highlights"
-          color="#841584"
-        />
-        {/* <Button
-          onPress={this.showRows}
-          title="Show"
-          color="#841584"
-        /> */}
+      <View style={{flex:1,flexDirection:'row'}}>
+        <View style={{flexDirection:'column',width:width/5,backgroundColor:'black', }}>
+        {
+          iconName.map((iconName)=>
+            <Icon name={iconName.icon} color="white" size={32} 
+              style={{alignSelf:'center',padding:16}} 
+              onPress={() =>this.props.navigation.navigate(iconName.pressIcon)}/>
+          )
+        }
+        </View>
+        <View style={{flexDirection:'column',width:width*4/5}}>
+            <Segment style={{borderColor:'#3F51B5',borderBottomWidth:1}}>
+              <Button first active={this.state.activeTab1} style={{backgroundColor:this.state.activeTab1==false ? "#fff" : "#3F51B5", padding: 0,height: 45,width:width*2/5}} onPress={this.toggleButton1.bind(this)}><Text active={this.state.activeTab1} style={{color:this.state.activeTab1==false ? "#000" : "#fff"}}>Old Testment</Text></Button>
+              <Button last active={this.state.activeTab2} style={{backgroundColor:this.state.activeTab2==false ?  "#fff" : "#3F51B5",  padding: 0,height: 45,width:width*2/5}} onPress={this.toggleButton2.bind(this)}><Text active={this.state.activeTab2} style={{color:this.state.activeTab2==false ? "#000" : "#fff"}}>New Testment</Text></Button>
+            </Segment>
+             <ScrollView
+              onScroll = {this.handleScroll}
+              scrollEventThrottle={10}
+              ref = {refs => this.ScrollViewPosition =refs }
+              >
+                {this.state.number.map((item)=><View><TouchableOpacity onPress={()=>this.props.navigation.navigate('Book')}><Text>{item}</Text></TouchableOpacity></View>)}
+              </ScrollView>
+        </View> 
       </View>
     );
   }
-
-  async queryLanguages() {
-    let models = await DbQueries.queryLanguages();
-    console.log("Num = " + models.length)
-    for (i=0; i<models.length; i++) {
-      console.log("code " + i + " = " + models[i].languageCode + "  vers = " + models[i].versionModels.length)
-    }
-  }
-  async queryLanguageWithCode() {
-    let models = await DbQueries.queryLanguageWithCode("ENG");
-    console.log("Num = " + models.length)
-    for (i=0; i<models.length; i++) {
-      console.log("code " + i + " = " + models[i].languageName + "  vers = " + models[i].versionModels.length)
-    }
-  }
-  async queryVersionWithCode() {
-    let models = await DbQueries.queryVersionWithCode("UDB", "ENG");
-    console.log("Num = " + models.length)
-    for (i=0; i<models.length; i++) {
-      console.log("code " + i + " = " + models[i].versionName + "  vers = " + models[i].bookModels.length)
-    }
-  }
-  async queryBooksWithCode() {
-    let models = await DbQueries.queryBooksWithCode("UDB", "ENG");
-    console.log("Num = " + models.length)
-    for (i=0; i<models.length; i++) {
-      console.log("code " + i + " = " + models[i].bookName + "  vers = " + models[i].chapterModels.length)
-    }
-  }
-  async queryBookWithId() {
-    let models = await DbQueries.queryBookWithId("GEN", "UDB", "ENG");
-    console.log("Num = " + models.length)
-    for (i=0; i<models.length; i++) {
-      console.log("code " + i + " = " + models[i].bookName + "  vers = " + models[i].chapterModels.length)
-    }
-  }
-  async querySearchBookWithName() {
-    let models = await DbQueries.querySearchBookWithName("El", "UDB", "ENG");
-    console.log("Num = " + models.length)
-    for (i=0; i<models.length; i++) {
-      console.log("code " + i + " = " + models[i].bookName + "  vers = " + models[i].chapterModels.length)
-    }
-  }    
-  async querySearchVerse() {
-    let models = await DbQueries.querySearchVerse("thrones", "UDB", "ENG");
-    console.log("Num = " + models.length)
-    for (i=0; i<models.length; i++) {
-      console.log("code " + i + " = " + models[i].verseNumber + "  vers = " + models[i].type)
-    }
-  }
-  async queryHighlights() {
-    let models = await DbQueries.querySearchVerse("UDB", "ENG");
-    console.log("Num = " + models.length)
-    for (i=0; i<models.length; i++) {
-      console.log("code " + i + " = " + models[i].verseNumber + "  vers = " + models[i].type)
-    }
-  }
-
-  async showRows() {
-    let models = await DbQueries.getSomeDataFromModel();
-    if (models) {
-      this.setState({modelData: models})
-    }
-  }
-
-  // async startParseUDB() {
-  //   await new USFMParser().parseFile('01-GEN.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('02-EXO.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('03-LEV.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('04-NUM.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('05-DEU.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('06-JOS.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('07-JDG.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('08-RUT.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('09-1SA.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('10-2SA.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('11-1KI.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('12-2KI.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('13-1CH.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('14-2CH.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('15-EZR.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('16-NEH.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('17-EST.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('18-JOB.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('19-PSA.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('20-PRO.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('21-ECC.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('22-SNG.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('23-ISA.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('24-JER.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('25-LAM.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('26-EZK.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('27-DAN.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('28-HOS.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('29-JOL.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('30-AMO.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('31-OBA.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('32-JON.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('33-MIC.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('34-NAM.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('35-HAB.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('36-ZEP.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('37-HAG.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('38-ZEC.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('39-MAL.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('41-MAT.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('42-MRK.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('43-LUK.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('44-JHN.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('45-ACT.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('46-ROM.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('47-1CO.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('48-2CO.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('49-GAL.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('50-EPH.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('51-PHP.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('52-COL.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('53-1TH.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('54-2TH.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('55-1TI.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('56-2TI.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('57-TIT.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('58-PHM.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('59-HEB.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('60-JAS.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('61-1PE.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('62-2PE.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('63-1JN.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('64-2JN.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('65-3JN.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('66-JUD.usfm', "UDB", "Unlocked Dynamic Bible");
-  //   await new USFMParser().parseFile('67-REV.usfm', "UDB", "Unlocked Dynamic Bible");
-  // }
-
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-});
+};
