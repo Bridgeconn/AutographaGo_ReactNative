@@ -46,7 +46,9 @@ export default class Setting extends Component {
     this.state = {
       sliderValue: this.props.screenProps.sizeMode,
       colorMode: this.props.screenProps.colorMode,
-      colorFile:this.props.screenProps.colorFile
+      colorFile:this.props.screenProps.colorMode == AsyncStorageConstants.Values.DayMode
+        ? dayColors
+        : nightColors
     };
     // this.colorFile = this.props.screenProps.colorMode == AsyncStorageConstants.Values.DayMode
     //   ? dayColors
@@ -117,9 +119,9 @@ export default class Setting extends Component {
   }
 
   onColorModeChange(value){
-    // if (this.state.colorMode == value) {
-    //   return;
-    // }
+    if (this.state.colorMode == value) {
+      return;
+    }
     this.setState({colorMode: value},()=>{
       console.log("color mode in setstate "+this.state.colorMode)
       this.props.screenProps.updateColor(this.state.colorMode);
@@ -130,11 +132,11 @@ export default class Setting extends Component {
     const changeColorFile = value == AsyncStorageConstants.Values.DayMode
       ? dayColors
       : nightColors
-    this.setState({colorFile:changeColorFile},()=>{
+    this.setState({colorFile: changeColorFile},()=>{
       console.log("color file in setstate "+JSON.stringify(this.state.colorFile))
       this.styleFile = settingsPageStyle(this.state.colorFile, this.sizeFile)
       this.props.screenProps.updateColorFile(this.state.colorFile);
-      this.props.navigation.dispatch(setParamsAction3(colorFile))
+      this.props.navigation.dispatch(setParamsAction3(this.state.colorFile))
     })
     console.log("value"+value)
     console.log("color mode"+this.state.colorMode)
