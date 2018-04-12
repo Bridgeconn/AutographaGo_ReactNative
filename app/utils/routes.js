@@ -72,9 +72,9 @@ export default class App extends Component {
         super(props)
         // console.log('in routes'+this.props)
       this.state = {
-			colorMode: null,
-			sizeMode: null,
-			colorFile:null
+			colorMode: AsyncStorageConstants.Values.DayMode,
+			sizeMode: AsyncStorageConstants.Values.SizeModeNormal,
+			colorFile:dayColors
 		}
 		// this.colorFile = this.state.colorMode == AsyncStorageConstants.Values.DayMode
     //   	? dayColors
@@ -137,13 +137,13 @@ export default class App extends Component {
     async componentDidMount(){
         await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.ColorMode, AsyncStorageConstants.Values.DayMode).then((colorMode) => {
           this.setState({colorMode})
+          var colorFile = this.state.colorMode == 1 ? dayColors : nightColors 
+          this.setState({colorFile})
         })
         await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.SizeMode, AsyncStorageConstants.Values.SizeModeNormal).then((sizeMode) => {
           this.setState({sizeMode})
         })
 
-        colorFile = this.state.colorMode == 1 ? dayColors : nightColors 
-        this.setState({colorFile})
         console.log("router page "+this.state.colorMode)
         console.log('day or night color '+JSON.stringify(this.state.colorFile))
     }

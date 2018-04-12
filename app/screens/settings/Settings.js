@@ -12,12 +12,12 @@ import {
 import { HeaderBackButton, NavigationActions} from 'react-navigation'
 import { Container, Header, Content, Card, CardItem, Right, Left } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-const width = Dimensions.get('window').width;
 import {extraSmallFont,smallFont,mediumFont,largeFont,extraLargeFont} from '../../utils/dimens.js'
-import {settingsPageStyle} from './styles.js'
+import { settingsPageStyle } from './styles.js'
 import {nightColors, dayColors} from '../../utils/colors.js'
 import AsyncStorageUtil from '../../utils/AsyncStorageUtil.js';
 const AsyncStorageConstants = require('../../utils/AsyncStorageConstants')
+const width = Dimensions.get('window').width;
 
 const setParamsAction = ({colorMode}) => NavigationActions.setParams({
   params: { colorMode },
@@ -46,9 +46,10 @@ export default class Setting extends Component {
     this.state = {
       sliderValue: this.props.screenProps.sizeMode,
       colorMode: this.props.screenProps.colorMode,
-      colorFile:this.props.screenProps.colorMode == AsyncStorageConstants.Values.DayMode
-        ? dayColors
-        : nightColors
+      colorFile:this.props.screenProps.colorFile,
+      //  == AsyncStorageConstants.Values.DayMode
+        // ? dayColors
+        // : nightColors
     };
     // this.colorFile = this.props.screenProps.colorMode == AsyncStorageConstants.Values.DayMode
     //   ? dayColors
