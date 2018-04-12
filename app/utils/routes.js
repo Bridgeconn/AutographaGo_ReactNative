@@ -18,6 +18,8 @@ import AsyncStorageUtil from './AsyncStorageUtil';
 import {nightColors, dayColors} from './colors.js'
 import {extraSmallFont,smallFont,mediumFont,largeFont,extraLargeFont} from './dimens.js'
 import { styleFile } from './styles.js'
+import Realm from 'realm'
+
 const StackNav = StackNavigator(
 {
   
@@ -71,6 +73,9 @@ export default class App extends Component {
     constructor(props){
         super(props)
         // console.log('in routes'+this.props)
+
+        Realm.copyBundledRealmFiles();
+
       this.state = {
 			colorMode: AsyncStorageConstants.Values.DayMode,
 			sizeMode: AsyncStorageConstants.Values.SizeModeNormal,

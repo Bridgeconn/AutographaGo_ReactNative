@@ -27,8 +27,6 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
 
-    Realm.copyBundledRealmFiles();
-
     this.queryBookWithId = this.queryBookWithId.bind(this)
 
     this.state = {

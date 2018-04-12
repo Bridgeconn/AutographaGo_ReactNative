@@ -50,18 +50,10 @@ export default class Home extends Component {
   async queryBooksList() {
     this.setState({isLoading: true})
     let models = await DbQueries.queryBooksWithCode("ULB", "ENG");
-    // let verseModels = []
+    
     if (models && models.length > 0) {
-      // let chapters = models[0].chapterModels;      
-      // for (var i=0; i<chapters.length; i++) {
-      //   let verses = chapters[i].verseComponentsModels;
-      //   for (var j=0; j<verses.length; j++) {
-      //     verseModels.push(verses[j]);
-      //   }
-      // }
       this.setState({booksList: models})
       this.setState({isLoading:false})
-      // this.setState({verseList: verseModels})      
     }
   }
 
@@ -104,7 +96,7 @@ export default class Home extends Component {
       {icon:'border-color',pressIcon:'Highlights'},
       {icon:'settings',pressIcon:'Settings'}
     ]
-    const iconPress = ['EditNote',' history','Search','Note','Bookmarks','Highlights','Settings']
+    const iconPress = ['EditNote',' History','Search','Note','Bookmarks','Highlights','Settings']
     return (
       <View style={{flex:1,flexDirection:'row'}}>
         <View style={{flexDirection:'column',width:width/5,backgroundColor:'black', }}>
@@ -118,8 +110,8 @@ export default class Home extends Component {
         </View>
         <View style={{flexDirection:'column',width:width*4/5}}>
             <Segment style={{borderColor:'#3F51B5',borderBottomWidth:1}}>
-              <Button first active={this.state.activeTab1} style={{backgroundColor:this.state.activeTab1==false ? "#fff" : "#3F51B5", padding: 0,height: 45,width:width*2/5}} onPress={this.toggleButton1.bind(this)}><Text active={this.state.activeTab1} style={{color:this.state.activeTab1==false ? "#000" : "#fff"}}>Old Testment</Text></Button>
-              <Button last active={this.state.activeTab2} style={{backgroundColor:this.state.activeTab2==false ?  "#fff" : "#3F51B5",  padding: 0,height: 45,width:width*2/5}} onPress={this.toggleButton2.bind(this)}><Text active={this.state.activeTab2} style={{color:this.state.activeTab2==false ? "#000" : "#fff"}}>New Testment</Text></Button>
+              <Button first active={this.state.activeTab1} style={{backgroundColor:this.state.activeTab1==false ? "#fff" : "#3F51B5", padding: 0,height: 45,width:width*2/5}} onPress={this.toggleButton1.bind(this)}><Text active={this.state.activeTab1} style={{color:this.state.activeTab1==false ? "#000" : "#fff"}}>Old Testament</Text></Button>
+              <Button last active={this.state.activeTab2} style={{backgroundColor:this.state.activeTab2==false ?  "#fff" : "#3F51B5",  padding: 0,height: 45,width:width*2/5}} onPress={this.toggleButton2.bind(this)}><Text active={this.state.activeTab2} style={{color:this.state.activeTab2==false ? "#000" : "#fff"}}>New Testament</Text></Button>
             </Segment>
              <ScrollView
               onScroll = {this.handleScroll}
