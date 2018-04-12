@@ -116,24 +116,26 @@ export default class Setting extends Component {
     this.props.navigation.dispatch(setParamsAction2(value));
   }
 
-  async onColorModeChange(value){
-    if (this.state.colorMode == value) {
-      return;
-    }
+  onColorModeChange(value){
+    // if (this.state.colorMode == value) {
+    //   return;
+    // }
     this.setState({colorMode: value},()=>{
+      console.log("color mode in setstate "+this.state.colorMode)
       this.props.screenProps.updateColor(this.state.colorMode);
+      this.props.navigation.dispatch(setParamsAction(this.state.colorMode)); 
+      AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.ColorMode,this.state.colorMode);
     })
-    this.props.navigation.dispatch(setParamsAction(value));   
-    
-    const colorFile = this.state.colorMode == AsyncStorageConstants.Values.DayMode
+    console.log("color mode"+this.state.colorMode)
+    const changeColorFile = value == AsyncStorageConstants.Values.DayMode
       ? dayColors
-      : nightColors;
-    this.setState({colorFile},()=>{
+      : nightColors
+    this.setState({colorFile:changeColorFile},()=>{
+      console.log("color file in setstate "+JSON.stringify(this.state.colorFile))
       this.styleFile = settingsPageStyle(this.state.colorFile, this.sizeFile)
       this.props.screenProps.updateColorFile(this.state.colorFile);
+      this.props.navigation.dispatch(setParamsAction3(colorFile))
     })
-    this.props.navigation.dispatch(setParamsAction3(colorFile))
-    await AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.ColorMode,this.state.colorMode);
     console.log("value"+value)
     console.log("color mode"+this.state.colorMode)
     console.log("colorfile"+JSON.stringify(this.state.colorFile))
