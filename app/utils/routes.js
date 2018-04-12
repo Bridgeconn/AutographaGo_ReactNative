@@ -79,63 +79,37 @@ export default class App extends Component {
       this.state = {
 			colorMode: AsyncStorageConstants.Values.DayMode,
 			sizeMode: AsyncStorageConstants.Values.SizeModeNormal,
-			colorFile:dayColors
-		}
-		// this.colorFile = this.state.colorMode == AsyncStorageConstants.Values.DayMode
-    //   	? dayColors
-    //   	: nightColors;
+      colorFile:dayColors,
+      sizeFile:mediumFont
+    }
+    
+    this.updateSize = this.updateSize.bind(this)
+    this.updateColor = this.updateColor.bind(this)
 
-    // var sizeFile;
-    // switch(this.props.screenProps.sizeMode) {
-    //   case AsyncStorageConstants.Values.SizeModeXSmall: {
-    //     sizeFile = extraSmallFont;
-    //     break;
-    //   }
-    //   case AsyncStorageConstants.Values.SizeModeSmall: {
-    //     sizeFile = smallFont;
-    //     break;
-    //   }
-    //   case AsyncStorageConstants.Values.SizeModeNormal: {
-    //     sizeFile = mediumFont;
-    //     break;
-    //   }
-    //   case AsyncStorageConstants.Values.SizeModeLarge: {
-    //     sizeFile = largeFont;
-    //     break;
-    //   }
-    //   case AsyncStorageConstants.Values.SizeModeXLarge: {
-    //     sizeFile = extraLargeFont;
-    //     break;
-    //   }
-    // }
-
-    // this.styleFile = settingsPageStyle(this.colorFile);
-		this.updateColorMode = this.updateColorMode.bind(this)
-    this.updateSizeMode = this.updateSizeMode.bind(this)
-    this.updateColorFile = this.updateColorFile.bind(this)
     }
 
-    updateColorMode = (colorMode) => {
-		this.setState({colorMode})
+    updateColor = (colorMode, colorFile) => {
+		this.setState({colorMode, colorFile})
 	}
 	
-	  updateSizeMode = (sizeMode) => {
-		this.setState({sizeMode})
+	  updateSize = (sizeMode, sizeFile) => {
+		this.setState({sizeMode, sizeFile})
     }
 
-    updateColorFile = (colorFile) => {
-      // this.setState({colorFile})
-      colorFile = this.state.colorMode == AsyncStorageConstants.Values.DayMode
-      	? dayColors
-        : nightColors;
-        this.setState({colorFile})
-      console.log("update color"+colorFile)
-      }
-
+    
+      
     render(){
         return(
-			<StackNav screenProps={{colorMode: this.state.colorMode, sizeMode: this.state.sizeMode, colorFile:this.state.colorFile,
-				updateColor: this.updateColorMode, updateSize: this.updateSizeMode ,updateColorFile:this.updateColorFile}}/>
+          <StackNav 
+            screenProps={{
+              colorMode: this.state.colorMode, 
+              sizeMode: this.state.sizeMode, 
+              colorFile:this.state.colorFile,
+              sizeFile:this.state.sizeFile,
+              updateColor: this.updateColor,
+              updateSize: this.updateSize
+            }}
+          />
         );
     }
     
@@ -145,8 +119,31 @@ export default class App extends Component {
           var colorFile = this.state.colorMode == 1 ? dayColors : nightColors 
           this.setState({colorFile})
         })
-        await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.SizeMode, AsyncStorageConstants.Values.SizeModeNormal).then((sizeMode) => {
+        await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.SizeMode, 
+          AsyncStorageConstants.Values.SizeModeNormal).then((sizeMode) => {
           this.setState({sizeMode})
+          switch (sizeMode) {
+            case  AsyncStorageConstants.Values.SizeModeXSmall : {
+              this.setState({sizeFile:extraSmallFont})
+              break;
+            } 
+            case  AsyncStorageConstants.Values.SizeModeSmall : {
+              this.setState({sizeFile:smallFont})
+              break;
+            }
+            case AsyncStorageConstants.Values.SizeModeNormal : {
+              this.setState({sizeFile:mediumFont})
+              break;
+            }
+            case AsyncStorageConstants.Values.SizeModeLarge : {
+              this.setState({sizeFile:largeFont})
+              break;
+            }
+            case AsyncStorageConstants.Values.SizeModeXLarge : {
+              this.setState({sizeFile:extraLargeFont})
+              break;
+            }
+          }
         })
 
         console.log("router page "+this.state.colorMode)

@@ -19,20 +19,17 @@ import AsyncStorageUtil from '../../utils/AsyncStorageUtil.js';
 const AsyncStorageConstants = require('../../utils/AsyncStorageConstants')
 const width = Dimensions.get('window').width;
 
-const setParamsAction = ({colorMode}) => NavigationActions.setParams({
-  params: { colorMode },
+const setParamsAction = ({colorFile}) => NavigationActions.setParams({
+  params: { sizeFile },
   key: 'Home',
 });
 
-const setParamsAction2 = ({sizeMode}) => NavigationActions.setParams({
-  params: { sizeMode },
+const setParamsAction2 = ({sizeFile}) => NavigationActions.setParams({
+  params: { sizeFile },
   key: 'Home',
 });
 
-const setParamsAction3 = ({colorFile}) => NavigationActions.setParams({
-  params: { colorFile },
-  key: 'Home',
-});
+
 
 export default class Setting extends Component {
   static navigationOptions = {
@@ -47,102 +44,70 @@ export default class Setting extends Component {
       sliderValue: this.props.screenProps.sizeMode,
       colorMode: this.props.screenProps.colorMode,
       colorFile:this.props.screenProps.colorFile,
-      //  == AsyncStorageConstants.Values.DayMode
-        // ? dayColors
-        // : nightColors
+      sizeFile:this.props.screenProps.sizeFile
+    
     };
-    // this.colorFile = this.props.screenProps.colorMode == AsyncStorageConstants.Values.DayMode
-    //   ? dayColors
-    //   : nightColors;
-
-    this.sizeFile;
-    // switch(this.props.screenProps.sizeMode) {
-    //   case AsyncStorageConstants.Values.SizeModeXSmall: {
-    //     sizeFile = extraSmallFont;
-    //     break;
-    //   }
-    //   case AsyncStorageConstants.Values.SizeModeSmall: {
-    //     sizeFile = smallFont;
-    //     break;
-    //   }
-    //   case AsyncStorageConstants.Values.SizeModeNormal: {
-    //     sizeFile = mediumFont;
-    //     break;
-    //   }
-    //   case AsyncStorageConstants.Values.SizeModeLarge: {
-    //     sizeFile = largeFont;
-    //     break;
-    //   }
-    //   case AsyncStorageConstants.Values.SizeModeXLarge: {
-    //     sizeFile = extraLargeFont;
-    //     break;
-    //   }
-    // }
-
-    this.styleFile = settingsPageStyle(this.state.colorFile, this.sizeFile);
+    
+    this.styleFile = settingsPageStyle(this.state.colorFile, this.state.sizeFile);
     
   }
   
+  onSizeFileUpdate(sizeMode, sizeFile){
+    this.setState({sizeFile})
+    this.props.screenProps.updateSize(sizeMode, sizeFile)
+    this.props.navigation.dispatch(setParamsAction2(sizeFile));
+    this.styleFile = settingsPageStyle(this.state.colorFile, sizeFile);
+  }
   onChangeSlider(value) {
+    AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.SizeMode, value);
     this.setState({sizeMode: value})
-    
-    AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.SizeMode, 
-      value);
-      
-    this.props.screenProps.updateSize(value);
 
-    var sizeFile;
+    var sizeFile
     switch(value) {
       case AsyncStorageConstants.Values.SizeModeXSmall: {
-        sizeFile = extraSmallFont;
+        this.onSizeFileUpdate(value, extraSmallFont)
         break;
       }
+
       case AsyncStorageConstants.Values.SizeModeSmall: {
-        sizeFile = smallFont;
+        this.onSizeFileUpdate(value, smallFont)
         break;
       }
+
       case AsyncStorageConstants.Values.SizeModeNormal: {
-        sizeFile = mediumFont;
+        this.onSizeFileUpdate(value, mediumFont)
         break;
       }
+
       case AsyncStorageConstants.Values.SizeModeLarge: {
-        sizeFile = largeFont;
+        this.onSizeFileUpdate(value, largeFont)
         break;
       }
+      
       case AsyncStorageConstants.Values.SizeModeXLarge: {
         sizeFile = extraLargeFont;
+        this.onSizeFileUpdate(value, sizeFile)
         break;
       }
     }
-    
-    this.styleFile = settingsPageStyle(this.state.colorFile, sizeFile);
-    this.props.navigation.dispatch(setParamsAction2(value));
   }
 
   onColorModeChange(value){
     if (this.state.colorMode == value) {
       return;
     }
-    this.setState({colorMode: value},()=>{
-      console.log("color mode in setstate "+this.state.colorMode)
-      this.props.screenProps.updateColor(this.state.colorMode);
-      this.props.navigation.dispatch(setParamsAction(this.state.colorMode)); 
-      AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.ColorMode,this.state.colorMode);
-    })
-    console.log("color mode"+this.state.colorMode)
     const changeColorFile = value == AsyncStorageConstants.Values.DayMode
       ? dayColors
-      : nightColors
-    this.setState({colorFile: changeColorFile},()=>{
-      console.log("color file in setstate "+JSON.stringify(this.state.colorFile))
-      this.styleFile = settingsPageStyle(this.state.colorFile, this.sizeFile)
-      this.props.screenProps.updateColorFile(this.state.colorFile);
-      this.props.navigation.dispatch(setParamsAction3(this.state.colorFile))
+      : nightColors;
+
+    this.setState({colorMode: value, colorFile: changeColorFile},()=>{
+      this.props.screenProps.updateColor(this.state.colorMode,this.state.colorFile);
+      this.props.navigation.dispatch(setParamsAction(this.state.colorFile))
+
+      AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.ColorMode,this.state.colorMode);
+
+      this.styleFile = settingsPageStyle(changeColorFile, this.state.sizeFile)
     })
-    console.log("value"+value)
-    console.log("color mode"+this.state.colorMode)
-    console.log("colorfile"+JSON.stringify(this.state.colorFile))
-    
   }
   render() {
     return (

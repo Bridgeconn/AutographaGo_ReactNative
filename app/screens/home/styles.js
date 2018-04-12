@@ -8,7 +8,7 @@ export const homePageStyle =(colorMode, sizeMode) =>{
    },
    textStyle: {
         // color: colorMode.accentColor,   
-        // fontSize:sizeMode.fontSize
+        fontSize:sizeMode.fontSize
    },
    IconCustom:{
     // iconColor:colorMode.iconColor
