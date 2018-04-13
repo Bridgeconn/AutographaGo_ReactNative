@@ -1,15 +1,40 @@
-import {StyleSheet} from 'react-native'
+import {StyleSheet,Dimensions} from 'react-native'
 import { Icon } from 'native-base';
-
-export const homePageStyle =(colorMode, sizeMode) =>{
+const height = Dimensions.get('window').height;
+const width = Dimensions.get('window').width;
+export const homePageStyle =(colorFile, sizeFile) =>{
     return StyleSheet.create({
+
    container:{
-       backgroundColor:colorMode.backgroundColor 
+    flex:1,
+    flexDirection:'row'
    },
    textStyle: {
-        // color: colorMode.accentColor,   
-        fontSize:sizeMode.fontSize
+        fontSize:sizeFile.fontSize
    },
+    sideBarContainer:{
+        flexDirection:'column',
+        width:width/5,
+        backgroundColor:colorFile.sidebarBackground, 
+    },
+    sideBarIconCustom:{
+        alignSelf:'center',
+        padding:16,
+        color:colorFile.sidebarIconColor
+    },
+    bookNameContainer:{
+        flexDirection:'column',
+        width:width*4/5
+    },
+    segmentCustom:{
+        borderColor:'#3F51B5',
+        borderBottomWidth:1
+    },
+    segmentButton:{
+        padding: 0,
+        height: 45,
+        width:width*2/5
+    },
    IconCustom:{
     // iconColor:colorMode.iconColor
    },

@@ -3,20 +3,28 @@ export const nightColors = {
     backgroundColor: 'black',
     settingsIconColor: 'gray',
     iconColor: 'white',
-    textColor: 'darkgray',
+    textColor: 'white',
     accentColor: 'pink',
     primaryColor: 'blue',
     primaryDarkColor: 'darkblue',
-    
+
+    sidebarBackground: 'white',
+    sidebarIconColor: "gray"   
 
 };
+
 export const dayColors = {
     backgroundColor: 'white',
     settingsIconColor:'white',
-    iconColor:'black',
-    textColor:'white',
+    iconColor:'gray',
+    textColor:'gray',
     accentColor:'green',
     primaryColor:'darkBlue',
-    primaryDarkColor:'darkblue'
+    primaryDarkColor:'darkblue',
+
+    sidebarBackground: 'black',
+    sidebarIconColor: "white"   
+    
+    
 };
 

@@ -82,7 +82,6 @@ export default class Home extends Component {
     console.log('componentWillReceiveProps home '+JSON.stringify(props))
     this.setState({
       colorFile:props.screenProps.colorFile,
-      // colorMode: props.screenProps.colorMode,
       sizeFile:props.screenProps.sizeFile,
     })
     this.styleFile = homePageStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
@@ -100,33 +99,79 @@ export default class Home extends Component {
     ]
     const iconPress = ['EditNote',' History','Search','Note','Bookmarks','Highlights','Settings']
     return (
-      <View style={{flex:1,flexDirection:'row'}}>
-        <View style={{flexDirection:'column',width:width/5,backgroundColor:'black', }}>
+      <View style={this.styleFile.container}>
+        <View style={this.styleFile.sideBarContainer}>
         {
           iconName.map((iconName)=>
-            <Icon name={iconName.icon} color="white" size={32} 
-              style={{alignSelf:'center',padding:16}} 
+            <Icon name={iconName.icon} size={32} 
+              style={this.styleFile.sideBarIconCustom} 
               onPress={() =>this.props.navigation.navigate(iconName.pressIcon)}/>
           )
         }
         </View>
-        <View style={{flexDirection:'column',width:width*4/5}}>
-            <Segment style={{borderColor:'#3F51B5',borderBottomWidth:1}}>
-              <Button first active={this.state.activeTab1} style={{backgroundColor:this.state.activeTab1==false ? "#fff" : "#3F51B5", padding: 0,height: 45,width:width*2/5}} onPress={this.toggleButton1.bind(this)}><Text active={this.state.activeTab1} style={{color:this.state.activeTab1==false ? "#000" : "#fff"}}>Old Testament</Text></Button>
-              <Button last active={this.state.activeTab2} style={{backgroundColor:this.state.activeTab2==false ?  "#fff" : "#3F51B5",  padding: 0,height: 45,width:width*2/5}} onPress={this.toggleButton2.bind(this)}><Text active={this.state.activeTab2} style={{color:this.state.activeTab2==false ? "#000" : "#fff"}}>New Testament</Text></Button>
+        <View style={this.styleFile.bookNameContainer}>
+            <Segment style={this.styleFile.segmentCustom}>
+              <Button 
+                first active={this.state.activeTab1} 
+                style={[
+                  {backgroundColor:this.state.activeTab1==false ? "#fff" : "#3F51B5",},
+                  this.styleFile.segmentButton
+                ]} 
+                onPress={this.toggleButton1.bind(this)}
+              >
+                <Text 
+                  active={this.state.activeTab1} 
+                  style={{color:this.state.activeTab1==false ? "#000" : "#fff"
+                  }}>
+                  Old Testament
+                </Text>
+              </Button>
+              <Button 
+                last active={this.state.activeTab2} 
+                style={[
+                  {backgroundColor:this.state.activeTab2==false ?  "#fff" : "#3F51B5"},  
+                  this.styleFile.segmentButton
+                ]} 
+                onPress={
+                  this.toggleButton2.bind(this)}>
+                <Text 
+                  active={this.state.activeTab2} 
+                  style={{
+                    color:this.state.activeTab2==false ? "#000" : "#fff"
+                  }}>
+                  New Testament
+                </Text>
+              </Button>
             </Segment>
              <ScrollView
               onScroll = {this.handleScroll}
               scrollEventThrottle={10}
-              ref = {refs => this.ScrollViewPosition =refs }>
+              ref = {refs => this.ScrollViewPosition =refs }
+              >
                 {this.state.booksList.map((item)=>
                   <TouchableOpacity 
-                    onPress={()=>this.props.navigation.navigate('Book', {bookId: item.bookId, bookName: item.bookName})}>
-                    <View style={{flexDirection:'row', justifyContent:'space-between', paddingHorizontal:16, paddingVertical:12}}>
-                      <Text style={this.styleFile.textStyle}>
+                    onPress={
+                      ()=>this.props.navigation.navigate('Book', 
+                      {bookId: item.bookId, bookName: item.bookName
+                      })
+                    }>
+                    <View 
+                      style={{
+                        flexDirection:'row',
+                        justifyContent:'space-between', 
+                        paddingHorizontal:16, 
+                        paddingVertical:12
+                      }}>
+                      <Text
+                        style={
+                          this.styleFile.textStyle
+                        }>
                         {item.bookName}
                       </Text>
-                      <Icon name='chevron-right' color="gray" size={24} />
+                      <Icon 
+                        name='chevron-right' 
+                        color="gray" 
+                        size={24} />
                     </View>
                   </TouchableOpacity>
                 )}
