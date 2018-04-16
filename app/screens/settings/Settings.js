@@ -40,7 +40,6 @@ export default class Setting extends Component {
   constructor(props) {
     super(props);
 
-    console.log('settings props'+JSON.stringify(this.props.screenProps))
     this.state = {
       sizeMode: this.props.screenProps.sizeMode,
       sizeFile:this.props.screenProps.sizeFile,
@@ -64,33 +63,33 @@ export default class Setting extends Component {
     AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.SizeMode, value);
     this.setState({sizeMode: value})
     SizeFileUtils.onSizeFileChange(value)
-    // switch(value) {
-    //   case AsyncStorageConstants.Values.SizeModeXSmall: {
-    //     this.onSizeFileUpdate(value, extraSmallFont)
-    //     break;
-    //   }
+    switch(value) {
+      case AsyncStorageConstants.Values.SizeModeXSmall: {
+        this.onSizeFileUpdate(value, extraSmallFont)
+        break;
+      }
 
-    //   case AsyncStorageConstants.Values.SizeModeSmall: {
-    //     this.onSizeFileUpdate(value, smallFont)
-    //     break;
-    //   }
+      case AsyncStorageConstants.Values.SizeModeSmall: {
+        this.onSizeFileUpdate(value, smallFont)
+        break;
+      }
 
-    //   case AsyncStorageConstants.Values.SizeModeNormal: {
-    //     this.onSizeFileUpdate(value, mediumFont)
-    //     break;
-    //   }
+      case AsyncStorageConstants.Values.SizeModeNormal: {
+        this.onSizeFileUpdate(value, mediumFont)
+        break;
+      }
 
-    //   case AsyncStorageConstants.Values.SizeModeLarge: {
-    //     this.onSizeFileUpdate(value, largeFont)
-    //     break;
-    //   }
+      case AsyncStorageConstants.Values.SizeModeLarge: {
+        this.onSizeFileUpdate(value, largeFont)
+        break;
+      }
       
-    //   case AsyncStorageConstants.Values.SizeModeXLarge: {
-    //     sizeFile = extraLargeFont;
-    //     this.onSizeFileUpdate(value, sizeFile)
-    //     break;
-    //   }
-    // }
+      case AsyncStorageConstants.Values.SizeModeXLarge: {
+        sizeFile = extraLargeFont;
+        this.onSizeFileUpdate(value, sizeFile)
+        break;
+      }
+    }
   }
 
   onColorModeChange(value){

@@ -6,10 +6,8 @@ const AsyncStorageConstants = require('./AsyncStorageConstants')
        
 export default class  SizeFileUtils {
   onSizeFileChange(value){
-    console.log("pressed"+value)
     switch (value) {
       case  AsyncStorageConstants.Values.SizeModeXSmall : {
-        console.log("switch case value")
          extraSmallFont
         break;
       } 

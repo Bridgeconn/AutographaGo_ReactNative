@@ -72,7 +72,6 @@ const StackNav = StackNavigator(
 export default class App extends Component {
     constructor(props){
         super(props)
-        // console.log('in routes'+this.props)
 
         Realm.copyBundledRealmFiles();
 
@@ -146,7 +145,5 @@ export default class App extends Component {
           }
         })
 
-        console.log("router page "+this.state.colorMode)
-        console.log('day or night color '+JSON.stringify(this.state.colorFile))
     }
 }

@@ -35,6 +35,12 @@ export const homePageStyle =(colorFile, sizeFile) =>{
         height: 45,
         width:width*2/5
     },
+    BookList:{
+        flexDirection:'row',
+        justifyContent:'space-between', 
+        paddingHorizontal:16, 
+        paddingVertical:12
+      },
    IconCustom:{
     // iconColor:colorMode.iconColor
    },
