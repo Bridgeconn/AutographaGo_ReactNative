@@ -1,5 +1,3 @@
-export const colorMode = "color_mode";
-
 module.exports = {
     Keys: {
         ColorMode : 'color_mode',

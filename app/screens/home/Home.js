@@ -55,23 +55,16 @@ export default class Home extends Component {
 
   toggleButton(value){
     this.setState({activeTab:value})
-
     if(value == false){
       console.log("pressed")
       this.elementIndex.scrollToIndex({index:34,viewPosition:0,animated: true,viewOffset:60})
-      // setTimeout(() => { this.elementIndex.scrollToIndex({index: randomIndex}) }, 100);
     }
     else{
       this.elementIndex.scrollToIndex({index:0,viewPosition:0,animated: true,viewOffset:60})
     }
   }
   
-  handleScroll = (event) =>{
-    this.setState({ scrollPosition: event.nativeEvent.contentOffset.y });
-    console.log("on scroll in flatlist "+ event.nativeEvent.contentOffset.y )
-   }
-            
-  
+ 
   componentWillReceiveProps(props){
     this.setState({
       colorFile:props.screenProps.colorFile,
@@ -83,6 +76,19 @@ export default class Home extends Component {
   getItemLayout = (data, index) => (
     { length: 60, offset: 60 * index, index }
   )
+  handleScroll = (event)=>{
+    let offset = Math.round(event.nativeEvent.contentOffset.y);
+     let index = parseInt(offset / 58);
+     console.log(index+ "  index value")  
+     if(index < 34){
+       console.log("active tab"+this.state.activeTab)
+       this.setState({activeTab:true})
+     }
+     else{
+       this.setState({activeTab:false})
+     } 
+    //  this.toggleButton()
+  }
   render() {
     const iconName = [
       {icon:'local-library',pressIcon:'EditNote',},
@@ -142,6 +148,7 @@ export default class Home extends Component {
               ref={ref => this.elementIndex = ref}
               data={this.state.booksList}
               getItemLayout={this.getItemLayout}
+              onScroll={this.handleScroll}
               renderItem={({item,index})=>(
                 <TouchableOpacity 
                     onPress={
