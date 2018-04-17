@@ -8,7 +8,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 export default class BookMarks extends Component {
   static navigationOptions = {
-    headerTitle: 'BookMarks',
+    headerTitle: 'Bookmarks',
   };
   render() {
     return (

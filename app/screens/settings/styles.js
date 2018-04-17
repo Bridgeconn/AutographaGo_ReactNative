@@ -29,10 +29,12 @@ export const settingsPageStyle =(colorFile, sizeFile) =>{
     },
     nightModeCustom:{
         marginRight:8,
-        marginBottom:20
+        marginBottom:20,
+        color:colorFile.textColor
     },
     dayModeCustom:{
         marginRight:8,
+        color:colorFile.textColor
     },
     cardItemAlignRight:{
         alignItems:'flex-start'
@@ -40,11 +42,11 @@ export const settingsPageStyle =(colorFile, sizeFile) =>{
     segmentCustom:{
         width:width-50, 
         height: 30, 
-        borderRadius: 50
+        borderRadius: 50,
     },
     cardItemIconCustom:{
         margin:8,
-        color:colorFile.iconColor   
+        color:colorFile.settingsIconColor   
     }
 })
 }

@@ -16,7 +16,7 @@ import {extraSmallFont,smallFont,mediumFont,largeFont,extraLargeFont} from '../.
 import { settingsPageStyle } from './styles.js'
 import {nightColors, dayColors} from '../../utils/colors.js'
 import AsyncStorageUtil from '../../utils/AsyncStorageUtil';
-import SizeFileUtils from '../../utils/SizeFileUtils'
+// import SizeFileUtils from '../../utils/SizeFileUtils'
 const AsyncStorageConstants = require('../../utils/AsyncStorageConstants')
 
 
@@ -62,7 +62,7 @@ export default class Setting extends Component {
   onChangeSlider(value) {
     AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.SizeMode, value);
     this.setState({sizeMode: value})
-    SizeFileUtils.onSizeFileChange(value)
+    // SizeFileUtils.onSizeFileChange(value)
     switch(value) {
       case AsyncStorageConstants.Values.SizeModeXSmall: {
         this.onSizeFileUpdate(value, extraSmallFont)
@@ -177,8 +177,8 @@ export default class Setting extends Component {
                 step={1}
                 minimumValue={0}
                 maximumValue={4}
-                thumbTintColor={this.state.colorMode == AsyncStorageConstants.dayColors ? '#F62459': '#26A65B'}
-                minimumTrackTintColor={this.state.colorMode == AsyncStorageConstants.dayColors ? '#F62459': '#26A65B'}
+                thumbTintColor={this.state.colorMode == AsyncStorageConstants.Values.DayMode ? '#F62459': '#26A65B'}
+                minimumTrackTintColor={this.state.colorMode == AsyncStorageConstants.Values.DayMode ? '#F62459': '#26A65B'}
                 onValueChange={this.onChangeSlider.bind(this)}
                 value={this.state.sizeMode}
               />
@@ -198,7 +198,7 @@ export default class Setting extends Component {
              </CardItem>
            </Card>
            <Card>
-             <TouchableOpacity onPress={()=>this.props.navigation.navigate('OpenHints')}>
+             <TouchableOpacity onPress={()=>this.props.navigation.navigate('Hints')}>
             <CardItem style={this.styleFile.cardItemStyle}>
             <Icon name='help' size={24} style={this.styleFile.cardItemIconCustom} />
               <Text style={this.styleFile.textStyle}>Open Hints</Text>

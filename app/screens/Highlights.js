@@ -10,7 +10,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class HighLights extends Component {
   static navigationOptions = {
-    headerTitle: 'HighLights',
+    headerTitle: 'Highlights',
   };
   render() {
     return (

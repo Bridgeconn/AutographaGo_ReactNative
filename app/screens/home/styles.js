@@ -2,6 +2,8 @@ import {StyleSheet,Dimensions} from 'react-native'
 import { Icon } from 'native-base';
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
+import colorConstants from '../../utils/colorConstants.js'
+
 export const homePageStyle =(colorFile, sizeFile) =>{
     return StyleSheet.create({
 
@@ -10,21 +12,24 @@ export const homePageStyle =(colorFile, sizeFile) =>{
     flexDirection:'row'
    },
    textStyle: {
-        fontSize:sizeFile.fontSize
+        fontSize:sizeFile.fontSize,
+        color:colorFile.textColor,
+        justifyContent:'center'
    },
     sideBarContainer:{
         flexDirection:'column',
         width:width/5,
-        backgroundColor:colorFile.sidebarBackground, 
+        backgroundColor:colorConstants.Black
     },
     sideBarIconCustom:{
         alignSelf:'center',
         padding:16,
-        color:colorFile.sidebarIconColor
+        color:colorConstants.White
     },
     bookNameContainer:{
         flexDirection:'column',
-        width:width*4/5
+        width:width*4/5,
+        backgroundColor:colorFile.backgroundColor
     },
     segmentCustom:{
         borderColor:'#3F51B5',
@@ -33,13 +38,15 @@ export const homePageStyle =(colorFile, sizeFile) =>{
     segmentButton:{
         padding: 0,
         height: 45,
-        width:width*2/5
+        width:width*2/5,
+        
     },
-    BookList:{
+    bookList:{
         flexDirection:'row',
-        justifyContent:'space-between', 
+        justifyContent:'space-between',
+        alignItems:"center",
         paddingHorizontal:16, 
-        paddingVertical:12
+        height:48
       },
    IconCustom:{
     // iconColor:colorMode.iconColor

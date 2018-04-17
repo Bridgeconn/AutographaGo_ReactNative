@@ -12,7 +12,7 @@ import History from '../screens/History'
 import Notes from '../screens/Notes'
 import Search from '../screens/Search'
 import Settings from '../screens/settings/Settings'
-import OpenHints from '../screens/OpenHints'
+import Hints from '../screens/Hints/Hints'
 const AsyncStorageConstants = require('./AsyncStorageConstants')
 import AsyncStorageUtil from './AsyncStorageUtil';
 import {nightColors, dayColors} from './colors.js'
@@ -54,12 +54,13 @@ const StackNav = StackNavigator(
   	Settings: {
       screen: Settings,
     },
-	OpenHints: {
-    	screen: OpenHints,
-  	},
+	  Hints: {
+      screen: Hints,
+    },
 },
 {
 	navigationOptions: {
+    initialRouteName: 'Hints',
     headerTintColor: '#fff',
     headerStyle: {
       backgroundColor: '#3F51B5'
