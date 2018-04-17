@@ -28,8 +28,6 @@ export default class RV extends Component {
   constructor(props) {
     super(props);
 
-    Realm.copyBundledRealmFiles();
-
     this.queryBookWithId = this.queryBookWithId.bind(this)
 
     let { width, height } = Dimensions.get("window");

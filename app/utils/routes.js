@@ -13,14 +13,16 @@ import Notes from '../screens/Notes'
 import Search from '../screens/Search'
 import Settings from '../screens/settings/Settings'
 import OpenHints from '../screens/OpenHints'
+import NumberSelection from '../screens/numberSelection/NumberSelection'
 const AsyncStorageConstants = require('./AsyncStorageConstants')
 import AsyncStorageUtil from './AsyncStorageUtil';
 import {nightColors, dayColors} from './colors.js'
 import {extraSmallFont,smallFont,mediumFont,largeFont,extraLargeFont} from './dimens.js'
 import { styleFile } from './styles.js'
+import BookIdModel from '../models/BookIdModel'
+
 const StackNav = StackNavigator(
-{
-  
+{  
 	Home: {
     	screen: Home,
   	},
@@ -47,14 +49,16 @@ const StackNav = StackNavigator(
   	},
   	Search: {
         screen: Search,
-      
   	},
   	Settings: {
       screen: Settings,
     },
-	OpenHints: {
+  	OpenHints: {
     	screen: OpenHints,
-  	},
+    },
+    NumberSelection: {
+      screen: NumberSelection,
+    },
 },
 {
 	navigationOptions: {
@@ -74,7 +78,9 @@ export default class App extends Component {
       this.state = {
 			colorMode: null,
 			sizeMode: null,
-			colorFile:null
+      colorFile:null,
+      books: null,
+      // booksData: BookIdModel[],
 		}
 		// this.colorFile = this.state.colorMode == AsyncStorageConstants.Values.DayMode
     //   	? dayColors
@@ -108,6 +114,7 @@ export default class App extends Component {
 		this.updateColorMode = this.updateColorMode.bind(this)
     this.updateSizeMode = this.updateSizeMode.bind(this)
     this.updateColorFile = this.updateColorFile.bind(this)
+    this.updateBooks = this.updateBooks.bind(this)
     }
 
     updateColorMode = (colorMode) => {
@@ -123,11 +130,17 @@ export default class App extends Component {
       console.log("update color"+colorFile)
       }
 
+      updateBooks = (books) => {
+        this.setState({books})
+      }
+
     render(){
-        return(
-			<StackNav screenProps={{colorMode: this.state.colorMode, sizeMode: this.state.sizeMode, colorFile:this.state.colorFile,
-				updateColor: this.updateColorMode, updateSize: this.updateSizeMode ,updateColorFile:this.updateColorFile}}/>
-        );
+      return(
+        <StackNav screenProps={{colorMode: this.state.colorMode, sizeMode: this.state.sizeMode, 
+          colorFile:this.state.colorFile, books: this.state.books,
+          updateColor: this.updateColorMode, updateSize: this.updateSizeMode ,
+          updateColorFile:this.updateColorFile, updateBooks: this.updateBooks }}/>
+      );
     }
     
     async componentDidMount(){
@@ -143,6 +156,6 @@ export default class App extends Component {
         this.setState({colorFile})
         console.log('day or night color '+JSON.stringify(colorFile))
 
-        
+
     }
 }

@@ -43,18 +43,10 @@ export default class Home extends Component {
   async queryBooksList() {
     this.setState({isLoading: true})
     let models = await DbQueries.queryBooksWithCode("ULB", "ENG");
-    // let verseModels = []
     if (models && models.length > 0) {
-      // let chapters = models[0].chapterModels;      
-      // for (var i=0; i<chapters.length; i++) {
-      //   let verses = chapters[i].verseComponentsModels;
-      //   for (var j=0; j<verses.length; j++) {
-      //     verseModels.push(verses[j]);
-      //   }
-      // }
       this.setState({booksList: models})
       this.setState({isLoading:false})
-      // this.setState({verseList: verseModels})      
+      // this.props.screenProps.updateBooks(models)
     }
   }
 
@@ -118,7 +110,10 @@ export default class Home extends Component {
               ref = {refs => this.ScrollViewPosition =refs }>
                 {this.state.booksList.map((item)=>
                   <TouchableOpacity 
-                    onPress={()=>this.props.navigation.navigate('Book', {bookId: item.bookId, bookName: item.bookName})}>
+                    onPress={
+                      // ()=>this.props.navigation.navigate('NumberSelection', {bookIndex: 0})
+                      ()=>this.props.navigation.navigate('Book', {bookId: item.bookId, bookName: item.bookName})
+                      }>
                     <View style={{flexDirection:'row', justifyContent:'space-between', paddingHorizontal:16, paddingVertical:12}}>
                       <Text style={{fontSize:22}}>
                         {item.bookName}

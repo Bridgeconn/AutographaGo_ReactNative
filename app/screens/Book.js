@@ -11,12 +11,8 @@ import {
   Dimensions,
 } from 'react-native';
 import DbQueries from '../utils/dbQueries'
-import USFMParser from '../utils/USFMParser'
 import Realm from 'realm'
 import VerseViewBook from '../components/VerseViewBook'
-const Constants = require('../utils/constants')
-
-const width = Dimensions.get('window').width;
 
 export default class Home extends Component {
 
@@ -26,8 +22,6 @@ export default class Home extends Component {
 
   constructor(props) {
     super(props);
-
-    Realm.copyBundledRealmFiles();
 
     this.queryBookWithId = this.queryBookWithId.bind(this)
 
