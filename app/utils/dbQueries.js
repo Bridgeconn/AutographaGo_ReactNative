@@ -84,6 +84,11 @@ class DbQueries {
     updateBookWithHighlights(languageModels, verseIdModels) {
         DbHelper.updateHighlights(languageModels, verseIdModels);
     }
+
+    queryBookIdModels(verCode: string, langCode: string) {
+        return DbHelper.queryBookIdModels(verCode, langCode);
+    }
+
 }
 
 export default new DbQueries();

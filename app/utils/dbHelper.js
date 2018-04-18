@@ -171,6 +171,28 @@ class DbHelper {
     //         }
     //     }
 	// }
+
+	async queryBookIdModels(verCode: string, langCode: string) {
+		let realm = await this.getRealm();
+    	if (realm) {
+			let result = realm.objectForPrimaryKey("LanguageModel", langCode);
+			let resultsA = result.versionModels;
+			resultsA = resultsA.filtered('versionCode ==[c] "' + verCode + '"');
+			if (resultsA.length > 0) {
+				let resultsB = resultsA[0].bookModels;
+				let bookIdModels = [];
+				for (var i=0; i<resultsB.length; i++) {
+					var bModel = {bookId:resultsB[i].bookId, bookName:resultsB[i].bookName,
+						section: resultsB[i].section, bookNumber: resultsB[i].bookNumber,
+						languageCode: langCode, versionCode: verCode};
+						bookIdModels.push(bModel);
+				}		
+				return bookIdModels;
+			}
+			return null;
+		}
+		return null;
+	}
 }
 
 export default new DbHelper();

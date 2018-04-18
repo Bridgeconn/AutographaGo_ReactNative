@@ -13,6 +13,8 @@ import {
 import DbQueries from '../utils/dbQueries'
 import Realm from 'realm'
 import VerseViewBook from '../components/VerseViewBook'
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
 
 export default class Home extends Component {
 
@@ -30,11 +32,16 @@ export default class Home extends Component {
       verseList: [], // array of all verses from all chapters
       isLoading: false,
       bookId: this.props.navigation.state.params.bookId,
+      chapterNumber: this.props.navigation.state.params.chapterNumber,
     }
   }
 
   componentDidMount() {
       this.queryBookWithId();
+  }
+
+  getItemLayout = (data, index) => {
+      return { length: height, offset: height * index, index };
   }
 
   render() {
@@ -51,6 +58,10 @@ export default class Home extends Component {
           :
         <FlatList
           data={this.state.modelData}
+          // initialScrollIndex={this.state.chapterNumber - 1}
+          // initialNumToRender={2}
+          ref={(ref) => { this.flatListRef = ref; }}
+          getItemLayout={this.getItemLayout}
           renderItem={({item}) => 
             <Text style={{marginLeft:16, marginRight:16}}>
               <Text letterSpacing={24} onPress={() => {this.child.onPress();}} 
@@ -88,6 +99,7 @@ export default class Home extends Component {
       // }
       this.setState({modelData: chapters})
       this.setState({isLoading:false})
+
       // this.setState({verseList: verseModels})      
     }
   }
