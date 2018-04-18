@@ -103,11 +103,12 @@ export default class Setting extends Component {
     this.setState({colorMode: value, colorFile: changeColorFile},()=>{
       this.props.screenProps.updateColor(this.state.colorMode,this.state.colorFile);
       this.props.navigation.dispatch(setParamsAction(this.state.colorFile))
-
+      
       AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.ColorMode,this.state.colorMode);
-
+      
       this.styleFile = settingsPageStyle(changeColorFile, this.state.sizeFile)
     })
+    
   }
   render() {
     return (

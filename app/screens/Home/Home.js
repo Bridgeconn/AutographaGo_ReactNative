@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import {
   StyleSheet,
@@ -30,14 +29,12 @@ export default class Home extends Component {
     this.queryBooksList = this.queryBooksList.bind(this)
 
     this.state = {
-      styleFile: homePageStyle(this.props.screenProps.colorFile, this.props.screenProps.sizeFile),
       colorFile:this.props.screenProps.colorFile,
       sizeFile:this.props.screenProps.sizeFile,
       activeTab:true,
       booksList: [],
-      number:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,996,97,98,99],
     }
-    // this.styleFile = homePageStyle(this.state.colorFile, this.state.sizeFile);
+    this.styleFile = homePageStyle(this.state.colorFile, this.state.sizeFile);
     
     this.viewabilityConfig = {
       itemVisiblePercentThreshold: 50,
@@ -74,12 +71,12 @@ export default class Home extends Component {
   
  
   componentWillReceiveProps(props){
+  console.log("will recievr props"+JSON.stringify(props))
     this.setState({
       colorFile:props.screenProps.colorFile,
       sizeFile:props.screenProps.sizeFile,
-      styleFile: homePageStyle(props.screenProps.colorFile, props.screenProps.sizeFile)
     })
-    // this.styleFile = homePageStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
+    this.styleFile = homePageStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
   }
 
   getItemLayout = (data, index) => (
@@ -87,14 +84,6 @@ export default class Home extends Component {
   )
   handleScroll = (event)=>{
      console.log(event.nativeEvent.contentOffset.y+ "  index value")  
-    //  if(index < 34){
-    //    console.log("active tab"+this.state.activeTab)
-    //    this.setState({activeTab:true})
-    //  }
-    //  else{
-    //    this.setState({activeTab:false})
-    //  } 
-    //  this.toggleButton()
   }
 
   _onViewableItemsChanged = (info) => {
@@ -103,8 +92,9 @@ export default class Home extends Component {
     
   }
 
-  handleViewableItemsChanged(info) {
-    console.log(info)
+  handleViewableItemsChanged = ({viewableItems }) => {
+    console.log("handleViewableItemsChanged.. "+viewableItems)
+    // console.log("handleViewableItemsChanged changes.. "+changed)
 }
 
   renderItem = ({item, index})=> {
@@ -116,16 +106,17 @@ export default class Home extends Component {
             })
           }>
           <View 
-            style={this.state.styleFile.bookList}>
+            style={this.styleFile.bookList}>
             <Text
               style={
-                this.state.styleFile.textStyle
+                this.styleFile.textStyle
               }>
               {item.bookName}
             </Text>
             <Icon 
               name='chevron-right' 
               color="gray" 
+              style={this.styleFile.iconCustom}
               size={24} />
           </View>
         </TouchableOpacity>
@@ -146,23 +137,23 @@ export default class Home extends Component {
     ]
     const iconPress = ['EditNote',' History','Search','Note','Bookmarks','Highlights','Settings']
     return (
-      <View style={this.state.styleFile.container}>
-        <View style={this.state.styleFile.sideBarContainer}>
+      <View style={this.styleFile.container}>
+        <View style={this.styleFile.sideBarContainer}>
         {
           iconName.map((iconName)=>
             <Icon name={iconName.icon} size={32} 
-              style={this.state.styleFile.sideBarIconCustom} 
+              style={this.styleFile.sideBarIconCustom} 
               onPress={() =>this.props.navigation.navigate(iconName.pressIcon)}/>
           )
         }
         </View>
-        <View style={this.state.styleFile.bookNameContainer}>
-            <Segment style={this.state.styleFile.segmentCustom}>
+        <View style={this.styleFile.bookNameContainer}>
+            <Segment style={this.styleFile.segmentCustom}>
               <Button 
                 first active={this.state.activeTab} 
                 style={[
                   {backgroundColor:this.state.activeTab ?  "#3F51B5":"#fff"},
-                  this.state.styleFile.segmentButton
+                  this.styleFile.segmentButton
                 ]} 
                 onPress={this.toggleButton.bind(this,true)}
               >
@@ -176,7 +167,7 @@ export default class Home extends Component {
                 last active={!this.state.activeTab} 
                 style={[
                   {backgroundColor:this.state.activeTab ?  "#fff" : "#3F51B5"},  
-                  this.state.styleFile.segmentButton
+                  this.styleFile.segmentButton
                 ]} 
                 onPress={
                   this.toggleButton.bind(this,false)}>
@@ -195,6 +186,8 @@ export default class Home extends Component {
               getItemLayout={this.getItemLayout}
               // onScroll={this.handleScroll}
               renderItem={this.renderItem}
+              extraData={this.styleFile}
+              
               // onViewableItemsChanged={this.handleViewableItemsChanged}
               // viewabilityConfig={this.viewabilityConfig}
             />
@@ -203,3 +196,4 @@ export default class Home extends Component {
     );
   }
 };
+

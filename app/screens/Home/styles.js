@@ -6,12 +6,11 @@ import colorConstants from '../../utils/colorConstants.js'
 
 export const homePageStyle =(colorFile, sizeFile) =>{
     return StyleSheet.create({
-
    container:{
     flex:1,
     flexDirection:'row'
    },
-   textStyle: {
+    textStyle: {
         fontSize:sizeFile.fontSize,
         color:colorFile.textColor,
         justifyContent:'center'
@@ -48,9 +47,9 @@ export const homePageStyle =(colorFile, sizeFile) =>{
         paddingHorizontal:16, 
         height:48
       },
-   IconCustom:{
-    // iconColor:colorMode.iconColor
-   },
+    iconCustom:{
+        color:colorFile.iconColor
+    },
    cardItemStyle:{paddingTop:16,paddingBottom:16}
 
 })

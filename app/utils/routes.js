@@ -2,14 +2,15 @@
 
 import React, { Component } from 'react'
 import {StackNavigator} from 'react-navigation'
-import Home from '../screens/home/Home'
+import Home from '../screens/Home/Home'
 import About from '../screens/About'
 import Book from '../screens/Book'
 import Bookmarks from '../screens/Bookmarks'
 import EditNote from '../screens/EditNote'
 import Highlights from '../screens/Highlights'
 import History from '../screens/History'
-import Notes from '../screens/Notes'
+import Notes from '../screens/Note/Notes'
+import AddNotes from '../screens/Note/AddNotes'
 import Search from '../screens/Search'
 import Settings from '../screens/settings/Settings'
 import Hints from '../screens/Hints/Hints'
@@ -43,10 +44,13 @@ const StackNav = StackNavigator(
   	},
   	History: {
     	screen: History,
-  	},
-  	Notes: {
-    	screen: Notes,
-  	},
+    },
+    Notes: {
+      screen: Notes,
+    },
+    AddNotes:{
+      screen:AddNotes,
+    },
   	Search: {
         screen: Search,
       
@@ -145,6 +149,5 @@ export default class App extends Component {
             }
           }
         })
-
     }
 }
