@@ -45,6 +45,9 @@ const StackNav = StackNavigator(
   	History: {
     	screen: History,
     },
+    Hints: {
+      screen: Hints,
+    },
     Notes: {
       screen: Notes,
     },
@@ -54,13 +57,11 @@ const StackNav = StackNavigator(
   	Search: {
         screen: Search,
       
-  	},
+    },
   	Settings: {
       screen: Settings,
     },
-	  Hints: {
-      screen: Hints,
-    },
+	  
 },
 {
 	navigationOptions: {

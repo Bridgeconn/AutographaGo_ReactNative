@@ -17,11 +17,13 @@ const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 const AsyncStorageConstants = require('../../utils/AsyncStorageConstants')
 import {nightColors, dayColors} from '../../utils/colors.js'
+import FixedSidebar from '../../components/FixedSidebar'
 
 
 export default class Home extends Component {
   static navigationOptions = {
     headerTitle: 'Autographa Go',
+
   };
 
   constructor(props){
@@ -33,6 +35,8 @@ export default class Home extends Component {
       sizeFile:this.props.screenProps.sizeFile,
       activeTab:true,
       booksList: [],
+      iconPress: []
+      
     }
     this.styleFile = homePageStyle(this.state.colorFile, this.state.sizeFile);
     
@@ -126,27 +130,9 @@ export default class Home extends Component {
 
 
   render() {
-    const iconName = [
-      {icon:'local-library',pressIcon:'EditNote',},
-      {icon:'history',pressIcon:'History'},
-      {icon:'search',pressIcon:'Search'},
-      {icon:'note',pressIcon:'Notes'},
-      {icon:'bookmark',pressIcon:'Bookmarks',},
-      {icon:'border-color',pressIcon:'Highlights'},
-      {icon:'settings',pressIcon:'Settings'}
-    ]
-    const iconPress = ['EditNote',' History','Search','Note','Bookmarks','Highlights','Settings']
     return (
       <View style={this.styleFile.container}>
-        <View style={this.styleFile.sideBarContainer}>
-        {
-          iconName.map((iconName)=>
-            <Icon name={iconName.icon} size={32} 
-              style={this.styleFile.sideBarIconCustom} 
-              onPress={() =>this.props.navigation.navigate(iconName.pressIcon)}/>
-          )
-        }
-        </View>
+       <FixedSidebar onPress={(icon)=>{this.props.navigation.navigate(icon)}}/>
         <View style={this.styleFile.bookNameContainer}>
             <Segment style={this.styleFile.segmentCustom}>
               <Button 
