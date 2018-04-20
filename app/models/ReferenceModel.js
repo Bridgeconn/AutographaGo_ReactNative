@@ -6,8 +6,12 @@ export default class ReferenceModel extends Realm.Object {}
 ReferenceModel.schema = {
     name: 'ReferenceModel',
     properties: {
+        bookId:'string',
         bookName:'string',
         chapterNumber:'int',
-        VerseNumber:'int'
+        verseNumber:'string',
+        versionCode:'string',
+        languageCode:'string'
+        
     }
 };

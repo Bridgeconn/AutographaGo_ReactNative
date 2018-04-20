@@ -7,7 +7,6 @@ import ChapterModel from '../models/ChapterModel'
 import VerseComponentsModel from '../models/VerseComponentsModel'
 
 class DbQueries {
-
     getSomeDataFromModel() {
         return DbHelper.query('ChapterModel');
     }

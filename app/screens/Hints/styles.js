@@ -9,29 +9,16 @@ export const HintStyle = (colorFile, sizeFile) =>{
             flexDirection:'row',
             backgroundColor:colorFile.backgroundColor
         },
-        iconView: {
-            width: width/5,
-            backgroundColor:colorFile.primaryColor
-        },
-        iconRow:{
-            flexDirection:'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-        AnimatedViewCustom:{
-            backgroundColor: 'transparent',
-            alignItems: "center",
-            justifyContent: "center",
-            margin:12
-        },
+       
 
         textView: {
             width: width*4/5,
             backgroundColor: colorFile.backgroundColor,
+            flexDirection:'column',
         },
         textRow: {
             justifyContent:'center',
-            height:60
+            height:64
         },
         textStyle:{
             color:colorFile.textColor,

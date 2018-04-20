@@ -17,7 +17,8 @@ const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 const AsyncStorageConstants = require('../../utils/AsyncStorageConstants')
 import {nightColors, dayColors} from '../../utils/colors.js'
-import FixedSidebar from '../../components/FixedSidebar'
+import FixedSidebar from '../../components/FixedSidebar/FixedSidebar'
+
 
 
 export default class Home extends Component {
@@ -127,12 +128,20 @@ export default class Home extends Component {
     );
 
   }
+  handlePressIn() {
 
+  }
+  handlePressOut(){
+    
+  }
 
   render() {
     return (
       <View style={this.styleFile.container}>
-       <FixedSidebar onPress={(icon)=>{this.props.navigation.navigate(icon)}}/>
+        <FixedSidebar 
+          onPress={(icon)=>{this.props.navigation.navigate(icon)}}
+          doAnimate = {false}
+        />
         <View style={this.styleFile.bookNameContainer}>
             <Segment style={this.styleFile.segmentCustom}>
               <Button 
@@ -141,7 +150,10 @@ export default class Home extends Component {
                   {backgroundColor:this.state.activeTab ?  "#3F51B5":"#fff"},
                   this.styleFile.segmentButton
                 ]} 
-                onPress={this.toggleButton.bind(this,true)}
+                onPress={() => 
+                  // this.props.navigation.navigate('Settings')
+                  this.toggleButton.bind(this,true)
+                }
               >
                 <Text 
                   style={{color:this.state.activeTab? "#fff" : "#000"
