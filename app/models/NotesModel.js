@@ -7,7 +7,7 @@ NoteModel.schema = {
     name: 'NoteModel',
     properties: {
         timestamp:'string',
-        body: 'string',
+        body: 'string?',
         styling: 'StylingModel?[]',
         references: 'ReferenceModel?[]',
     }
