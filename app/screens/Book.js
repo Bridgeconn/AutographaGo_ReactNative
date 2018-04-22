@@ -13,6 +13,7 @@ import {
 import DbQueries from '../utils/dbQueries'
 import Realm from 'realm'
 import VerseViewBook from '../components/VerseViewBook'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
@@ -31,6 +32,7 @@ export default class Home extends Component {
       modelData: [], // array of chapters in a book
       verseList: [], // array of all verses from all chapters
       isLoading: false,
+      showBottomBar: true,
       bookId: this.props.navigation.state.params.bookId,
       chapterNumber: this.props.navigation.state.params.chapterNumber,
     }
@@ -81,6 +83,38 @@ export default class Home extends Component {
           // getItemCount={data => data.length} 
           />
         }
+        {this.state.showBottomBar 
+        ? 
+        <View style={{backgroundColor:'blue', height:64, width:'100%', 
+          flexDirection:'row', justifyContent:'space-evenly', alignItems:'center', marginTop:4 }}>
+
+          <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
+            <Text style={{color:'white'}}>
+              HIGHLIGHT
+            </Text>
+            <Icon name={'border-color'} color="white" size={24} style={{marginHorizontal:8}} />
+          </View>
+          
+          <View style={{width:1, height:48, color:'white', backgroundColor:'white'}} />
+          
+          <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>          
+            <Text style={{color:'white'}}>
+              NOTES
+            </Text>
+            <Icon name={'note'} color="white" size={24} style={{marginHorizontal:8}} />
+          </View>
+          
+          <View style={{width:1, height:48, color:'white', backgroundColor:'white'}} />          
+
+          <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>          
+            <Text style={{color:'white'}}>
+              SHARE
+            </Text>
+            <Icon name={'share'} color="white" size={24} style={{marginHorizontal:8}} />
+          </View>
+
+        </View>
+        : null }
       </View>
     );
   }

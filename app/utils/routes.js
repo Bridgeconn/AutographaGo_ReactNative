@@ -13,6 +13,7 @@ import Notes from '../screens/Notes'
 import Search from '../screens/Search'
 import Settings from '../screens/settings/Settings'
 import OpenHints from '../screens/OpenHints'
+import Splash from '../screens/Splash'
 import NumberSelection from '../screens/numberSelection/NumberSelection'
 const AsyncStorageConstants = require('./AsyncStorageConstants')
 import AsyncStorageUtil from './AsyncStorageUtil';
@@ -23,6 +24,9 @@ import BookIdModel from '../models/BookIdModel'
 
 const StackNav = StackNavigator(
 {  
+  Splash: {
+    screen: Splash,
+  },
 	Home: {
     	screen: Home,
   	},
@@ -59,6 +63,7 @@ const StackNav = StackNavigator(
     NumberSelection: {
       screen: NumberSelection,
     },
+    
 },
 {
 	navigationOptions: {
