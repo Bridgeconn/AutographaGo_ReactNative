@@ -9,6 +9,14 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
 export default class Notes extends Component {
+  constructor(props){
+    super(props);
+    console.log(" props notes "+JSON.stringify(this.props))
+    this.state = {
+      noteBody:null
+    }
+  }
+
   static navigationOptions = ({navigation}) => ({
     headerTitle: 'Notes',
     headerRight:(
@@ -17,10 +25,11 @@ export default class Notes extends Component {
      </TouchableOpacity>
 )
   });
+  
   render() {
     return (
       <View style={{flex:1}}>
-        <Text>Notes</Text>
+      <Text>{this.state.noteBody}</Text>
       </View>
     );
   }

@@ -5,6 +5,7 @@ import VersionModel from '../models/VersionModel'
 import BookModel from '../models/BookModel'
 import ChapterModel from '../models/ChapterModel'
 import VerseComponentsModel from '../models/VerseComponentsModel'
+import dbHelper from './dbHelper';
 
 class DbQueries {
     getSomeDataFromModel() {
@@ -82,6 +83,9 @@ class DbQueries {
 
     updateBookWithHighlights(languageModels, verseIdModels) {
         DbHelper.updateHighlights(languageModels, verseIdModels);
+    }
+    addNotes(note){
+       return dbHelper.addNotes(note);
     }
 }
 

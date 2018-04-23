@@ -4,6 +4,7 @@ import Realm from 'realm'
 import LanguageModel from '../models/LanguageModel'
 import VersionModel from '../models/VersionModel'
 import BookModel from '../models/BookModel'
+import NotesModel from '../models/NotesModel'
 import ChapterModel from '../models/ChapterModel'
 import VerseComponentsModel from '../models/VerseComponentsModel'
 import {
@@ -21,7 +22,7 @@ class DbHelper {
 					Platform.OS === 'ios'
 					? RNFS.MainBundlePath + '/autographa.realm'
 					: RNFS.DocumentDirectoryPath + '/autographa.realm',
-				schema: [LanguageModel, VersionModel, BookModel, ChapterModel, VerseComponentsModel] });
+				schema: [LanguageModel, VersionModel, BookModel, ChapterModel, VerseComponentsModel,NotesModel] });
     	} catch (err) {
     		return null;
     	}
@@ -148,6 +149,18 @@ class DbHelper {
 	  	}
 	}
 
+	async addNotes(note: string){
+		let realm = await this.getRealm();
+		if (realm) {
+			realm.write(() => {
+				realm.create('NotesModel', {
+					body:note,
+				})
+				console.log("write complete.. new notes..")
+		  });
+		 
+		}
+	}
 	// updateHighlights(languageModels, verseIdModels) {
 	// 	for (LanguageModel languageModel : languageModels) {
     //         for (VersionModel versionModel : languageModel.getVersionModels()) {

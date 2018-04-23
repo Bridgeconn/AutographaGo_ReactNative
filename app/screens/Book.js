@@ -18,7 +18,7 @@ const Constants = require('../utils/constants')
 
 const width = Dimensions.get('window').width;
 
-export default class Home extends Component {
+export default class Book extends Component {
 
   static navigationOptions = ({navigation}) => ({
     headerTitle: navigation.state.params.bookName,
