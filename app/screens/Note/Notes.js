@@ -29,13 +29,14 @@ export default class Notes extends Component {
      </TouchableOpacity>
 )
   });
-  onSelect = (data) => {
-    if(data == ''){
-      return
-    }
-    this.setState({noteBody:data});
-    this.state.notesData.push(data)
-    
+  onSelect = (data,index) => {
+    console.log(" index value "+index )
+    console.log("value "+data)
+
+      // let notesData = [...this.state.notesData];
+      // notesData[index] =[...this.state.notesData[index], data]
+      // this.setState({ notesData });
+      this.setState({ notesData: [...this.state.notesData, data] })
   };
   
   updateNotesData = () => {
@@ -52,7 +53,7 @@ export default class Notes extends Component {
       { 
         this.state.notesData.map((item,index) =>
           <Content key={item}>
-            <TouchableOpacity onPress={()=>this.props.navigation.navigate('OpenNote',{item,index})}>
+            <TouchableOpacity onPress={()=>this.props.navigation.navigate('AddNotes',{item,index,onSelect:this.onSelect})}>
             <Card>
               <CardItem >
                 <Text>{item}</Text>

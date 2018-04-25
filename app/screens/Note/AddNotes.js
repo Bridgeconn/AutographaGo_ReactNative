@@ -29,7 +29,8 @@ export default class AddNotes extends Component {
     super(props);
     console.log(" props notes add "+JSON.stringify(this.props))
     this.state = {
-        noteBody:this.props.navigation.state.params.editableData,
+        noteBody:this.props.navigation.state.params.item,
+        noteIndex:this.props.navigation.state.params.index,
         show:false,
         // text:this.props.navigation.state.params.item
     }
@@ -58,8 +59,8 @@ export default class AddNotes extends Component {
         
     });
  
-    Alert.alert("Note Added Successfully.")
-    this.props.navigation.state.params.onSelect(this.state.noteBody);
+    // Alert.alert("Note Added Successfully.")
+    this.props.navigation.state.params.onSelect(this.state.noteBody,this.state.noteIndex);
     this.props.navigation.dispatch(NavigationActions.back())
    }
   componentDidMount () {
