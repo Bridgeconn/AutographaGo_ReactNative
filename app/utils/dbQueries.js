@@ -84,9 +84,9 @@ class DbQueries {
     updateBookWithHighlights(languageModels, verseIdModels) {
         DbHelper.updateHighlights(languageModels, verseIdModels);
     }
-    addNotes(note){
-       return dbHelper.addNotes(note);
-    }
+    // addNotes(note){
+    //    return dbHelper.addNotes(note);
+    // }
 }
 
 export default new DbQueries();

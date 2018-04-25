@@ -10,6 +10,7 @@ import EditNote from '../screens/EditNote'
 import Highlights from '../screens/Highlights'
 import History from '../screens/History'
 import Notes from '../screens/Note/Notes'
+import OpenNote from '../screens/Note/OpenNote'
 import AddNotes from '../screens/Note/AddNotes'
 import Search from '../screens/Search'
 import Settings from '../screens/settings/Settings'
@@ -59,6 +60,9 @@ const StackNav = StackNavigator(
     },
     AddNotes:{
       screen:AddNotes,
+    },
+    OpenNote:{
+      screen:OpenNote
     },
     Hints: {
       screen: Hints,
