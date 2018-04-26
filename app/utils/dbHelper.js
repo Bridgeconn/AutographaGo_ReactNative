@@ -4,9 +4,12 @@ import Realm from 'realm'
 import LanguageModel from '../models/LanguageModel'
 import VersionModel from '../models/VersionModel'
 import BookModel from '../models/BookModel'
-import NotesModel from '../models/NotesModel'
+import NoteModel from '../models/NoteModel'
 import ChapterModel from '../models/ChapterModel'
 import VerseComponentsModel from '../models/VerseComponentsModel'
+import StylingModel from '../models/StylingModel'
+import ReferenceModel from '../models/ReferenceModel'
+
 import {
 	Platform,
 } from 'react-native';
@@ -22,8 +25,9 @@ class DbHelper {
 					Platform.OS === 'ios'
 					? RNFS.MainBundlePath + '/autographa.realm'
 					: RNFS.DocumentDirectoryPath + '/autographa.realm',
-				schema: [LanguageModel, VersionModel, BookModel, ChapterModel, VerseComponentsModel] });
+				schema: [LanguageModel, VersionModel, BookModel, ChapterModel, VerseComponentsModel,NoteModel, StylingModel, ReferenceModel] });
     	} catch (err) {
+			console.log("erro in open ralm" + err)
     		return null;
     	}
     }
@@ -149,18 +153,18 @@ class DbHelper {
 	  	}
 	}
 
-	// async addNotes(note: string){
-	// 	let realm = await this.getRealm();
-	// 		if (realm) {
-	// 			realm.write(() => {
-	// 				realm.create('NotesModel', {
-	// 					body:note,
-	// 				})
-	// 				console.log("write.. new notes..")
-	// 	  	});
+	async addNote(value){
+		console.log("value in db helper "+value)
+		let realm = await this.getRealm();
+			if (realm) {
+				console.log("value in db help "+value)
+				realm.write(() => {
+					realm.create('NoteModel',{body:value, timestamp:'123456789'})
+					console.log("write.. new notes..")
+		  	});
 		 
-	// 	}
-	// }
+		}
+	}
 
 	// updateHighlights(languageModels, verseIdModels) {
 	// 	for (LanguageModel languageModel : languageModels) {

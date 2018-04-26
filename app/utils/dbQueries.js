@@ -6,6 +6,7 @@ import BookModel from '../models/BookModel'
 import ChapterModel from '../models/ChapterModel'
 import VerseComponentsModel from '../models/VerseComponentsModel'
 import dbHelper from './dbHelper';
+import NoteModel from '../models/NoteModel';
 
 class DbQueries {
     getSomeDataFromModel() {
@@ -84,9 +85,13 @@ class DbQueries {
     updateBookWithHighlights(languageModels, verseIdModels) {
         DbHelper.updateHighlights(languageModels, verseIdModels);
     }
-    // addNotes(note){
-    //    return dbHelper.addNotes(note);
-    // }
+    addNote(value){
+        console.log("value addnote "+value)
+       DbHelper.addNote(value);
+    }
+    queryNotes() {
+       return DbHelper.query('NoteModel')
+    }
 }
 
 export default new DbQueries();

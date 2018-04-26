@@ -6,12 +6,10 @@ import Home from '../screens/Home/Home'
 import About from '../screens/About'
 import Book from '../screens/Book'
 import Bookmarks from '../screens/Bookmarks'
-import EditNote from '../screens/EditNote'
 import Highlights from '../screens/Highlights'
 import History from '../screens/History'
 import Notes from '../screens/Note/Notes'
-import OpenNote from '../screens/Note/OpenNote'
-import AddNotes from '../screens/Note/AddNotes'
+import EditNote from '../screens/Note/EditNote'
 import Search from '../screens/Search'
 import Settings from '../screens/settings/Settings'
 import Hints from '../screens/Hints/Hints'
@@ -49,20 +47,12 @@ const StackNav = StackNavigator(
   	History: {
     	screen: History,
     },
-    
-   
   	Search: {
         screen: Search,
       
     },
   	Settings: {
       screen: Settings,
-    },
-    AddNotes:{
-      screen:AddNotes,
-    },
-    OpenNote:{
-      screen:OpenNote
     },
     Hints: {
       screen: Hints,
