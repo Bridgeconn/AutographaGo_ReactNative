@@ -165,7 +165,24 @@ class DbHelper {
 		 
 		}
 	}
-
+	async updateNote(value,index){
+		let realm = await this.getRealm();
+		let update = realm.objects('NoteModel');
+		console.log('update continue .....')
+		realm.write(() => {
+			update[index].body = value;
+		console.log("update index "+index+"  "+value)
+	});
+	}
+	async deleteNote(index){
+		let realm = await this.getRealm();
+		let results = realm.objects('NoteModel');
+		console.log("result "+JSON.stringify(results[index]))
+		realm.write(() => {
+			realm.delete(results[index]);
+			console.log("deleted data in db")
+		})
+	}
 	// updateHighlights(languageModels, verseIdModels) {
 	// 	for (LanguageModel languageModel : languageModels) {
     //         for (VersionModel versionModel : languageModel.getVersionModels()) {

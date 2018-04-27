@@ -92,6 +92,13 @@ class DbQueries {
     queryNotes() {
        return DbHelper.query('NoteModel')
     }
+    updateNote(value,index){
+        DbHelper.updateNote(value,index);
+    }
+    deleteNote(index){
+        console.log('delete note'+index)
+        DbHelper.deleteNote(index);
+    }
 }
 
 export default new DbQueries();

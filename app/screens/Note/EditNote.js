@@ -31,15 +31,15 @@ export default class EditNote extends Component {
         show:false,
     }
   }
-    
-  
- 
-   saveNote = () =>{
+  saveNote = () =>{
+  if(this.props.navigation.state.params.index == null){
     DbQueries.addNote(this.state.noteBody)
-    this.props.navigation.state.params.onEdit(this.state.noteBody,this.props.navigation.state.params.index);
-    this.props.navigation.dispatch(NavigationActions.back())
-   }
-  componentDidMount () {
+  }
+  DbQueries.updateNote(this.state.noteBody,this.props.navigation.state.params.index)
+  this.props.navigation.state.params.onEdit(this.state.noteBody,this.props.navigation.state.params.index);
+  this.props.navigation.dispatch(NavigationActions.back())
+  }
+  componentDidMount() {
     this.props.navigation.setParams({ handleAdd: this.saveNote})
   }
   
@@ -52,6 +52,9 @@ export default class EditNote extends Component {
         onChangeText = {(text) => this.setState({noteBody:text})}
         value={this.state.noteBody}
       />
+      <TouchableOpacity onPress={()=>this.onDelete()}>
+        <Text>delete</Text>
+      </TouchableOpacity>
      </View> 
     )
   }
