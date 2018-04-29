@@ -22,29 +22,33 @@ export default class NumberSelection extends Component {
     super(props)
     console.log("rops number : "+JSON.stringify(props))
 
-    this.queryBook = this.queryBook.bind(this)
+    // this.queryBook = this.queryBook.bind(this)
 
     this.state = {
-      number:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
       bookId: this.props.navigation.state.params.bookId,
       bookName: this.props.navigation.state.params.bookName,
+      booksList: this.props.screenProps.booksList,
+      bookIndex: this.props.navigation.state.params.bookIndex,
       isLoading: false,
-      bookData: null,
+      bookData: this.props.screenProps.booksList[this.props.navigation.state.params.bookIndex].chapterModels,
     }
+
+    console.log("BOOK DATA in number: " + JSON.stringify(this.state.bookData))
   }
   
-  componentDidMount() {
-    this.queryBook();
-  }
+  // componentDidMount() {
+  //   this.queryBook();
+  // }
 
-  async queryBook() {
-    this.setState({isLoading: true})
-    let models = await DbQueries.queryBooksWithCode("ULB", "ENG", this.state.bookId);
-    this.setState({isLoading:false})
-    if (models && models.length > 0) {
-      this.setState({bookData: models[0].chapterModels})
-    }
-  }
+  // async queryBook() {
+  //   this.setState({isLoading: true})
+  //   let models = await DbQueries.queryBooksWithCode("ULB", "ENG", this.state.bookId);
+  //   this.setState({isLoading:false})
+  //   if (models && models.length > 0) {
+  //     this.setState({bookData: models[0].chapterModels})
+  //     this.props.screenProps.updateCurrentBook(JSON.parse(JSON.stringify(models[0])))
+  //   }
+  // }
 
   render() {
     return (
@@ -57,7 +61,8 @@ export default class NumberSelection extends Component {
           height:width/4, justifyContent:"center"}}
           onPress={
             ()=>this.props.navigation.navigate('Book', {bookId: this.state.bookId, 
-              bookName: this.state.bookName, chapterNumber: item.chapterNumber})
+              bookName: this.state.bookName, chapterNumber: item.chapterNumber, 
+              bookIndex: this.state.bookIndex})
             }
           >
             {/* <View style={{flex:0.25,borderColor:'black',borderRightWidth:1, borderBottomWidth:1,

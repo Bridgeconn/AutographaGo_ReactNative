@@ -7,7 +7,6 @@ export default class AutographaGo extends Component {
 
     constructor(props) {
         super(props)
-        Realm.copyBundledRealmFiles();
     }
     
     render(){

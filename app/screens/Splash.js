@@ -1,19 +1,42 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
   View,
   Image,
 } from 'react-native';
+// import DbQueries from '../utils/dbQueries'
+import { NavigationActions } from 'react-navigation'
 
 export default class Splash extends Component {
   static navigationOptions = {
     header: null,
   };
 
-  componentWillMount (){
-    setTimeout(() => {
-        this.props.navigation.navigate('Home')
-    }, 800)
+  constructor(props) {
+    super(props)
+    console.log("SPLASH :: props " + JSON.stringify(props))
+    if (!this.props.screenProps.isDbLoading) {
+          console.log("NOWWW const")
+          this._navigateTo('Home')
+    }
+  }
+
+  componentWillReceiveProps(props) {
+    console.log("SPLASH receive PROPS : " + JSON.stringify(props))
+      if (!props.screenProps.isDbLoading) {
+        console.log("start home")
+          this._navigateTo('Home')
+          // this.props.navigation.navigate('Home')
+      }
+  }
+
+  _navigateTo = (routeName: string) => {
+    const resetAction = NavigationActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName })]
+    })
+    setTimeout(() => {  
+      this.props.navigation.dispatch(resetAction)
+    }, 800);
   }
 
   render() {

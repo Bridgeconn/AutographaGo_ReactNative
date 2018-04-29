@@ -21,6 +21,8 @@ import {nightColors, dayColors} from './colors.js'
 import {extraSmallFont,smallFont,mediumFont,largeFont,extraLargeFont} from './dimens.js'
 import { styleFile } from './styles.js'
 import BookIdModel from '../models/BookIdModel'
+import DbQueries from '../utils/dbQueries'
+import Realm from 'realm'
 
 const StackNav = StackNavigator(
 {  
@@ -77,78 +79,67 @@ const StackNav = StackNavigator(
 )
 
 export default class App extends Component {
-    constructor(props){
-        super(props)
-        // console.log('in routes'+this.props)
-      this.state = {
-			colorMode: null,
-			sizeMode: null,
+  
+  constructor(props){
+    super(props)
+      // console.log('in routes'+this.props)
+
+      Realm.copyBundledRealmFiles();
+      
+    this.state = {
+      colorMode: null,
+      sizeMode: null,
       colorFile:null,
       books: null,
+      currentBook: null,
+      booksList: [],
+      isDbLoading: true,
       // booksData: BookIdModel[],
-		}
-		// this.colorFile = this.state.colorMode == AsyncStorageConstants.Values.DayMode
-    //   	? dayColors
-    //   	: nightColors;
-
-    // var sizeFile;
-    // switch(this.props.screenProps.sizeMode) {
-    //   case AsyncStorageConstants.Values.SizeModeXSmall: {
-    //     sizeFile = extraSmallFont;
-    //     break;
-    //   }
-    //   case AsyncStorageConstants.Values.SizeModeSmall: {
-    //     sizeFile = smallFont;
-    //     break;
-    //   }
-    //   case AsyncStorageConstants.Values.SizeModeNormal: {
-    //     sizeFile = mediumFont;
-    //     break;
-    //   }
-    //   case AsyncStorageConstants.Values.SizeModeLarge: {
-    //     sizeFile = largeFont;
-    //     break;
-    //   }
-    //   case AsyncStorageConstants.Values.SizeModeXLarge: {
-    //     sizeFile = extraLargeFont;
-    //     break;
-    //   }
-    // }
+    }
 
     // this.styleFile = settingsPageStyle(this.colorFile);
 		this.updateColorMode = this.updateColorMode.bind(this)
     this.updateSizeMode = this.updateSizeMode.bind(this)
     this.updateColorFile = this.updateColorFile.bind(this)
     this.updateBooks = this.updateBooks.bind(this)
-    }
+    this.updateCurrentBook = this.updateCurrentBook.bind(this)    
+  }
 
-    updateColorMode = (colorMode) => {
+  updateColorMode = (colorMode) => {
 		this.setState({colorMode})
 	}
 	
-	  updateSizeMode = (sizeMode) => {
+	updateSizeMode = (sizeMode) => {
 		this.setState({sizeMode})
-    }
+  }
 
     updateColorFile = (colorFile) => {
       this.setState({colorFile})
       console.log("update color"+colorFile)
-      }
+    }
 
-      updateBooks = (books) => {
-        this.setState({books})
-      }
+    updateBooks = (books) => {
+      this.setState({books})
+    }
+
+    updateCurrentBook = (currentBook) => {
+      this.setState({currentBook})
+    }
 
     render(){
       return(
         <StackNav screenProps={{colorMode: this.state.colorMode, sizeMode: this.state.sizeMode, 
-          colorFile:this.state.colorFile, books: this.state.books,
-          updateColor: this.updateColorMode, updateSize: this.updateSizeMode ,
-          updateColorFile:this.updateColorFile, updateBooks: this.updateBooks }}/>
+          colorFile:this.state.colorFile, books: this.state.books, currentBook: this.state.currentBook,
+          booksList: this.state.booksList, isDbLoading: this.state.isDbLoading,
+          updateColor: this.updateColorMode, updateSize: this.updateSizeMode,
+          updateColorFile:this.updateColorFile, updateBooks: this.updateBooks, 
+          updateCurrentBook: this.updateCurrentBook }}/>
       );
     }
     
     async componentDidMount(){
+
+      
         const colorMode = await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.ColorMode, AsyncStorageConstants.Values.DayMode);
         this.setState({colorMode});
 
@@ -159,8 +150,18 @@ export default class App extends Component {
       	? dayColors
         : nightColors;
         this.setState({colorFile})
-        console.log('day or night color '+JSON.stringify(colorFile))
+        console.log('MDOEEEEEEEEEEEEEEEE day or night color '+JSON.stringify(colorFile))
 
+        let models = await DbQueries.queryBooksWithCodeObject("ULB", "ENG");
+        console.log("routes len =" + models)
+        this.setState({isDbLoading: false})
+        console.log("routes len = done set state book list" )
+        
+        if (models && models.length > 0) {
+          console.log("modesl len=" + models.length)
+          this.setState({booksList: models})
+        }
 
+        console.log("routes db lloading false")        
     }
 }

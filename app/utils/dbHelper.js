@@ -23,6 +23,7 @@ class DbHelper {
 					: RNFS.DocumentDirectoryPath + '/autographa.realm',
 				schema: [LanguageModel, VersionModel, BookModel, ChapterModel, VerseComponentsModel] });
     	} catch (err) {
+			console.log("errroe in realm " + err)
     		return null;
     	}
     }
@@ -58,17 +59,20 @@ class DbHelper {
 		let realm = await this.getRealm();
     	if (realm) {
 			let result = realm.objectForPrimaryKey("LanguageModel", langCode);
-			let resultsA = result.versionModels;
-			resultsA = resultsA.filtered('versionCode ==[c] "' + verCode + '"');
-			if (resultsA.length > 0) {
-				let resultsB = resultsA[0].bookModels;				
-				if (bookId) {
-					return resultsB.filtered('bookId ==[c] "' + bookId + '"');
+			if (result) {
+				let resultsA = result.versionModels;
+				resultsA = resultsA.filtered('versionCode ==[c] "' + verCode + '"');
+				if (resultsA.length > 0) {
+					let resultsB = resultsA[0].bookModels;				
+					if (bookId) {
+						return resultsB.filtered('bookId ==[c] "' + bookId + '"');
+					}
+					if (text) {
+						return resultsB.filtered('bookName CONTAINS[c] "' + text + '"').sorted("bookNumber");
+					}
+					return resultsB.sorted("bookNumber");
 				}
-				if (text) {
-					return resultsB.filtered('bookName CONTAINS[c] "' + text + '"').sorted("bookNumber");
-				}
-				return resultsB.sorted("bookNumber");
+				return null;
 			}
 			return null;
 		}
@@ -188,6 +192,49 @@ class DbHelper {
 						bookIdModels.push(bModel);
 				}		
 				return bookIdModels;
+			}
+			return null;
+		}
+		return null;
+	}
+
+	async queryBooksWithCodeObject(verCode: string, langCode: string) {
+		let realm = await this.getRealm();
+    	if (realm) {
+			let result = realm.objectForPrimaryKey("LanguageModel", langCode);
+			let resultsA = result.versionModels;
+			resultsA = resultsA.filtered('versionCode ==[c] "' + verCode + '"');
+			console.log("resuts L  " + resultsA.length)
+			if (resultsA.length > 0) {
+				let resultsB = resultsA[0].bookModels;
+				let resultsC = resultsB.sorted("bookNumber");
+				let bookModels = [];
+				for (var i=0; i<resultsC.length; i++) {
+					let chapModels = [];
+					for (var j=0; j<resultsC[i].chapterModels.length; j++) {
+						let verModels = [];
+						for (var k=0; k<resultsC[i].chapterModels[j].verseComponentsModels.length; k++) {
+							var vModel = {type: resultsC[i].chapterModels[j].verseComponentsModels[k].type, 
+								verseNumber: resultsC[i].chapterModels[j].verseComponentsModels[k].verseNumber, 
+								text: resultsC[i].chapterModels[j].verseComponentsModels[k].text, 
+								highlighted: resultsC[i].chapterModels[j].verseComponentsModels[k].highlighted, 
+								languageCode: resultsC[i].chapterModels[j].verseComponentsModels[k].languageCode, 
+								versionCode: resultsC[i].chapterModels[j].verseComponentsModels[k].versionCode, 
+								bookId: resultsC[i].chapterModels[j].verseComponentsModels[k].bookId, 
+								chapterNumber: resultsC[i].chapterModels[j].verseComponentsModels[k].chapterNumber};
+							verModels.push(vModel);
+						}
+						var cModel = {chapterNumber: resultsC[i].chapterModels[j].chapterNumber, 
+							numberOfVerses: resultsC[i].chapterModels[j].numberOfVerses, 
+							verseComponentsModels: verModels};
+						chapModels.push(cModel);
+					}
+					var bModel = {bookId:resultsC[i].bookId, bookName:resultsC[i].bookName,
+						section: resultsC[i].section, bookNumber: resultsC[i].bookNumber,
+						bookmarksList: resultsC[i].bookmarksList, chapterModels: chapModels};
+					bookModels.push(bModel);
+				}
+				return bookModels;
 			}
 			return null;
 		}

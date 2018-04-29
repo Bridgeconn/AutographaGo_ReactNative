@@ -22,31 +22,14 @@ export default class Home extends Component {
 
   constructor(props){
     super(props)
-    console.log("props value home page update "+this.props.screenProps)
-
-    this.queryBooksList = this.queryBooksList.bind(this)
+    console.log("props value home page update "+JSON.stringify(this.props.screenProps))
 
     this.state = {
       colorMode:this.props.screenProps.colorMode,
       sizeMode:this.props.screenProps.sizeMode,
       activeTab1:true,
       activeTab2:false,
-      booksList: [],
-      number:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,996,97,98,99],
-    }
-  }
-
-  componentDidMount() {
-    this.queryBooksList();
-  }
-
-  async queryBooksList() {
-    this.setState({isLoading: true})
-    let models = await DbQueries.queryBookIdModels("ULB", "ENG");
-    this.setState({isLoading:false})
-    if (models && models.length > 0) {
-      this.setState({booksList: models})
-      // this.props.screenProps.updateBooks(models)
+      booksList: this.props.screenProps.booksList,
     }
   }
 
@@ -74,7 +57,7 @@ export default class Home extends Component {
   }
 
   componentWillReceiveProps(props){
-    console.log('componentWillReceiveProps home '+JSON.stringify(props))
+    console.log('HOME  componentWillReceiveProps home '+JSON.stringify(props))
 
   }
   render() {
@@ -108,10 +91,10 @@ export default class Home extends Component {
               onScroll = {this.handleScroll}
               scrollEventThrottle={10}
               ref = {refs => this.ScrollViewPosition =refs }>
-                {this.state.booksList.map((item)=>
+                {this.state.booksList.map((item, index)=>
                   <TouchableOpacity 
                     onPress={
-                      ()=>this.props.navigation.navigate('NumberSelection', {bookId: item.bookId, bookName: item.bookName})
+                      ()=>this.props.navigation.navigate('NumberSelection', {bookId: item.bookId, bookName: item.bookName, bookIndex: index})
                       // ()=>this.props.navigation.navigate('Book', {bookId: item.bookId, bookName: item.bookName})
                       }>
                     <View style={{flexDirection:'row', justifyContent:'space-between', paddingHorizontal:16, paddingVertical:12}}>

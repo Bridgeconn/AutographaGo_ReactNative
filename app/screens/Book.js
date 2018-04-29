@@ -27,14 +27,17 @@ export default class Home extends Component {
     super(props);
 
     this.queryBookWithId = this.queryBookWithId.bind(this)
-
+    console.log("BOOK props--" + JSON.stringify(props))
     this.state = {
-      modelData: [], // array of chapters in a book
+      modelData: this.props.screenProps.booksList[this.props.navigation.state.params.bookIndex].chapterModels, // array of chapters in a book
       verseList: [], // array of all verses from all chapters
       isLoading: false,
       showBottomBar: true,
       bookId: this.props.navigation.state.params.bookId,
+      bookName: this.props.navigation.state.params.bookName,
       chapterNumber: this.props.navigation.state.params.chapterNumber,
+      // bookData: this.props.navigation.state.params.bookData,
+      bookIndex: this.props.navigation.state.params.bookIndex,
     }
   }
 
@@ -120,6 +123,7 @@ export default class Home extends Component {
   }
 
   async queryBookWithId() {
+    /*
     this.setState({isLoading: true})
     let models = await DbQueries.queryBookWithId(this.state.bookId, "ULB", "ENG");
     // let verseModels = []
@@ -136,6 +140,7 @@ export default class Home extends Component {
 
       // this.setState({verseList: verseModels})      
     }
+    */
   }
 
 }

@@ -25,6 +25,10 @@ class DbQueries {
         return DbHelper.queryVersionWithCode(verCode, langCode);
     }
 
+    queryBooksWithCodeObject(verCode: string, langCode: string) {
+        return DbHelper.queryBooksWithCodeObject(verCode, langCode);        
+    }
+
     queryBooksWithCode(verCode: string, langCode: string) {
         return DbHelper.queryBooksWithCode(verCode, langCode);
     }
