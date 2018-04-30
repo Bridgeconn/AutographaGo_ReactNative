@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   Alert,
   ToastAndroid,
-  TouchableWithoutFeedback
+  Modal,
+  TouchableHighlight
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { HeaderBackButton, NavigationActions } from 'react-navigation';
@@ -32,6 +33,7 @@ export default class EditNote extends Component {
         noteBody: this.props.navigation.state.params.item,
         show:false,
         selection: [0,0],
+        styleArray:[]
     }
   }
   saveNote = () =>{
@@ -45,7 +47,6 @@ export default class EditNote extends Component {
   this.props.navigation.dispatch(NavigationActions.back())
   }
   onBack = () =>{
-      // ToastAndroid.show('save changes', ToastAndroid.SHORT)
       if(this.state.noteBody !== this.props.navigation.state.params.item){
         Alert.alert(
           'Discard Changes ? ',
@@ -68,10 +69,29 @@ export default class EditNote extends Component {
     console.log("on delection change"+this.state.selection)
     
   };
-
+   
   componentDidMount() {
     this.props.navigation.setParams({ handleAdd: this.saveNote})
     this.props.navigation.setParams({ handleBack: this.onBack})
+  }
+  styleChar(value){
+    switch(value){
+      case 0 :{
+        this.setState({ 
+           notesData: [...this.state.styleArray,0] 
+        })
+      }
+      case 1 :{
+        this.setState({ 
+          notesData: [...this.state.styleArray,1] 
+       })
+      }
+      case 2 :{
+        this.setState({ 
+          notesData: [...this.state.styleArray,2] 
+       })
+      }
+    }
   }
   render() {
     return (
@@ -83,8 +103,17 @@ export default class EditNote extends Component {
         onSelectionChange={this.onSelectionChange} 
         onChangeText = {(text) => this.setState({noteBody:text})}
         value={this.state.noteBody}
-        
       />
+      <TouchableOpacity onPress={()=>this.styleChar(0)}>
+      <Text>Bold</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={()=>this.styleChar(1)}>
+      <Text>Italic</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={()=>this.styleChar(2)}>
+      <Text>UnderLine</Text>
+      </TouchableOpacity>
+
      </View> 
     )
   }
