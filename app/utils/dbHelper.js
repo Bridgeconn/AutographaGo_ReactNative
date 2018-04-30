@@ -165,6 +165,20 @@ class DbHelper {
 		 
 		}
 	}
+
+	// async addStyle(index,){
+	// 	console.log("value in db helper "+value)
+	// 	let realm = await this.getRealm();
+	// 		if (realm) {
+	// 			console.log("value in db help "+value)
+	// 			realm.write(() => {
+	// 				realm.create('StylingModel',{characterIndex:index, format:})
+	// 				console.log("write.. new notes..")
+	// 	  	});
+		 
+	// 	}
+	// }
+
 	async updateNote(value,index){
 		let realm = await this.getRealm();
 		let update = realm.objects('NoteModel');
@@ -174,15 +188,17 @@ class DbHelper {
 		console.log("update index "+index+"  "+value)
 	});
 	}
+
 	async deleteNote(index){
 		let realm = await this.getRealm();
 		let results = realm.objects('NoteModel');
 		console.log("result "+JSON.stringify(results[index]))
 		realm.write(() => {
 			realm.delete(results[index]);
-			console.log("deleted data in db")
+			console.log("deleted data from table")
 		})
 	}
+
 	// updateHighlights(languageModels, verseIdModels) {
 	// 	for (LanguageModel languageModel : languageModels) {
     //         for (VersionModel versionModel : languageModel.getVersionModels()) {
