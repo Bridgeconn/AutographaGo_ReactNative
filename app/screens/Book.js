@@ -29,7 +29,7 @@ export default class Home extends Component {
     this.queryBookWithId = this.queryBookWithId.bind(this)
     console.log("BOOK props--" + JSON.stringify(props))
     this.state = {
-      modelData: this.props.screenProps.booksList[this.props.navigation.state.params.bookIndex].chapterModels, // array of chapters in a book
+      modelData: this.props.screenProps.currentBook.chapterModels,//booksList[this.props.navigation.state.params.bookIndex].chapterModels, // array of chapters in a book
       verseList: [], // array of all verses from all chapters
       isLoading: false,
       showBottomBar: true,

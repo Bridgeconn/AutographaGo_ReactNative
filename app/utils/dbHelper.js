@@ -198,7 +198,8 @@ class DbHelper {
 		return null;
 	}
 
-	async queryBooksWithCodeObject(verCode: string, langCode: string) {
+	async queryBooksWithCodeObject(verCode: string, langCode: string, bookId: string) {
+		console.log("start : "+langCode+" :"+verCode+" :"+bookId)
 		let realm = await this.getRealm();
     	if (realm) {
 			let result = realm.objectForPrimaryKey("LanguageModel", langCode);
@@ -207,34 +208,35 @@ class DbHelper {
 			console.log("resuts L  " + resultsA.length)
 			if (resultsA.length > 0) {
 				let resultsB = resultsA[0].bookModels;
-				let resultsC = resultsB.sorted("bookNumber");
-				let bookModels = [];
-				for (var i=0; i<resultsC.length; i++) {
+				let resultsC = resultsB.filtered('bookId ==[c] "' + bookId + '"');
+				// let bookModels = [];
+				// for (var i=0; i<resultsC.length; i++) {
+				if (resultsC.length > 0) {
 					let chapModels = [];
-					for (var j=0; j<resultsC[i].chapterModels.length; j++) {
+					for (var j=0; j<resultsC[0].chapterModels.length; j++) {
 						let verModels = [];
-						for (var k=0; k<resultsC[i].chapterModels[j].verseComponentsModels.length; k++) {
-							var vModel = {type: resultsC[i].chapterModels[j].verseComponentsModels[k].type, 
-								verseNumber: resultsC[i].chapterModels[j].verseComponentsModels[k].verseNumber, 
-								text: resultsC[i].chapterModels[j].verseComponentsModels[k].text, 
-								highlighted: resultsC[i].chapterModels[j].verseComponentsModels[k].highlighted, 
-								languageCode: resultsC[i].chapterModels[j].verseComponentsModels[k].languageCode, 
-								versionCode: resultsC[i].chapterModels[j].verseComponentsModels[k].versionCode, 
-								bookId: resultsC[i].chapterModels[j].verseComponentsModels[k].bookId, 
-								chapterNumber: resultsC[i].chapterModels[j].verseComponentsModels[k].chapterNumber};
+						for (var k=0; k<resultsC[0].chapterModels[j].verseComponentsModels.length; k++) {
+							var vModel = {type: resultsC[0].chapterModels[j].verseComponentsModels[k].type, 
+								verseNumber: resultsC[0].chapterModels[j].verseComponentsModels[k].verseNumber, 
+								text: resultsC[0].chapterModels[j].verseComponentsModels[k].text, 
+								highlighted: resultsC[0].chapterModels[j].verseComponentsModels[k].highlighted, 
+								languageCode: resultsC[0].chapterModels[j].verseComponentsModels[k].languageCode, 
+								versionCode: resultsC[0].chapterModels[j].verseComponentsModels[k].versionCode, 
+								bookId: resultsC[0].chapterModels[j].verseComponentsModels[k].bookId, 
+								chapterNumber: resultsC[0].chapterModels[j].verseComponentsModels[k].chapterNumber};
 							verModels.push(vModel);
 						}
-						var cModel = {chapterNumber: resultsC[i].chapterModels[j].chapterNumber, 
-							numberOfVerses: resultsC[i].chapterModels[j].numberOfVerses, 
+						var cModel = {chapterNumber: resultsC[0].chapterModels[j].chapterNumber, 
+							numberOfVerses: resultsC[0].chapterModels[j].numberOfVerses, 
 							verseComponentsModels: verModels};
 						chapModels.push(cModel);
 					}
-					var bModel = {bookId:resultsC[i].bookId, bookName:resultsC[i].bookName,
-						section: resultsC[i].section, bookNumber: resultsC[i].bookNumber,
-						bookmarksList: resultsC[i].bookmarksList, chapterModels: chapModels};
-					bookModels.push(bModel);
+					var bModel = {bookId:resultsC[0].bookId, bookName:resultsC[0].bookName,
+						section: resultsC[0].section, bookNumber: resultsC[0].bookNumber,
+						bookmarksList: resultsC[0].bookmarksList, chapterModels: chapModels};
+					return bModel;
 				}
-				return bookModels;
+				return null;
 			}
 			return null;
 		}

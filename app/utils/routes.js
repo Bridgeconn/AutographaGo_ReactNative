@@ -90,7 +90,7 @@ export default class App extends Component {
       colorMode: null,
       sizeMode: null,
       colorFile:null,
-      books: null,
+      // books: null,
       currentBook: null,
       booksList: [],
       isDbLoading: true,
@@ -102,7 +102,7 @@ export default class App extends Component {
     this.updateSizeMode = this.updateSizeMode.bind(this)
     this.updateColorFile = this.updateColorFile.bind(this)
     this.updateBooks = this.updateBooks.bind(this)
-    this.updateCurrentBook = this.updateCurrentBook.bind(this)    
+    this.updateCurrentBook = this.updateCurrentBook.bind(this)
   }
 
   updateColorMode = (colorMode) => {
@@ -152,7 +152,7 @@ export default class App extends Component {
         this.setState({colorFile})
         console.log('MDOEEEEEEEEEEEEEEEE day or night color '+JSON.stringify(colorFile))
 
-        let models = await DbQueries.queryBooksWithCodeObject("ULB", "ENG");
+        let models = await DbQueries.queryBookIdModels("ULB", "ENG");
         console.log("routes len =" + models)
         this.setState({isDbLoading: false})
         console.log("routes len = done set state book list" )

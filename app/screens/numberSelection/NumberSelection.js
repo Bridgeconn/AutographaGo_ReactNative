@@ -22,33 +22,35 @@ export default class NumberSelection extends Component {
     super(props)
     console.log("rops number : "+JSON.stringify(props))
 
-    // this.queryBook = this.queryBook.bind(this)
+    this.queryBook = this.queryBook.bind(this)
 
     this.state = {
       bookId: this.props.navigation.state.params.bookId,
       bookName: this.props.navigation.state.params.bookName,
-      booksList: this.props.screenProps.booksList,
+      // booksList: this.props.screenProps.booksList,
       bookIndex: this.props.navigation.state.params.bookIndex,
       isLoading: false,
-      bookData: this.props.screenProps.booksList[this.props.navigation.state.params.bookIndex].chapterModels,
+      bookData: null,//this.props.screenProps.booksList[this.props.navigation.state.params.bookIndex].chapterModels,
     }
 
-    console.log("BOOK DATA in number: " + JSON.stringify(this.state.bookData))
+    console.log("BOOK DATA in number: " + this.state.bookId)
   }
   
-  // componentDidMount() {
-  //   this.queryBook();
-  // }
+  componentDidMount() {
+    this.queryBook();
+  }
 
-  // async queryBook() {
-  //   this.setState({isLoading: true})
-  //   let models = await DbQueries.queryBooksWithCode("ULB", "ENG", this.state.bookId);
-  //   this.setState({isLoading:false})
-  //   if (models && models.length > 0) {
-  //     this.setState({bookData: models[0].chapterModels})
-  //     this.props.screenProps.updateCurrentBook(JSON.parse(JSON.stringify(models[0])))
-  //   }
-  // }
+  async queryBook() {
+    this.setState({isLoading: true})
+    console.log("start loading, id " + this.state.bookId)
+    let model = await DbQueries.queryBooksWithCodeObject("ULB", "ENG", this.state.bookId);
+    this.setState({isLoading:false})
+    console.log("BOOK IN NUMBER : " +JSON.stringify(model))
+    if (model) {
+      this.setState({bookData: model.chapterModels})
+      this.props.screenProps.updateCurrentBook(model)
+    }
+  }
 
   render() {
     return (
