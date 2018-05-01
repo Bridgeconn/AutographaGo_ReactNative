@@ -216,14 +216,17 @@ class DbHelper {
 					for (var j=0; j<resultsC[0].chapterModels.length; j++) {
 						let verModels = [];
 						for (var k=0; k<resultsC[0].chapterModels[j].verseComponentsModels.length; k++) {
-							var vModel = {type: resultsC[0].chapterModels[j].verseComponentsModels[k].type, 
+							var vModel = {
+								type: resultsC[0].chapterModels[j].verseComponentsModels[k].type, 
 								verseNumber: resultsC[0].chapterModels[j].verseComponentsModels[k].verseNumber, 
 								text: resultsC[0].chapterModels[j].verseComponentsModels[k].text, 
 								highlighted: resultsC[0].chapterModels[j].verseComponentsModels[k].highlighted, 
 								languageCode: resultsC[0].chapterModels[j].verseComponentsModels[k].languageCode, 
 								versionCode: resultsC[0].chapterModels[j].verseComponentsModels[k].versionCode, 
 								bookId: resultsC[0].chapterModels[j].verseComponentsModels[k].bookId, 
-								chapterNumber: resultsC[0].chapterModels[j].verseComponentsModels[k].chapterNumber};
+								chapterNumber: resultsC[0].chapterModels[j].verseComponentsModels[k].chapterNumber,
+								selected: false
+							};
 							verModels.push(vModel);
 						}
 						var cModel = {chapterNumber: resultsC[0].chapterModels[j].chapterNumber, 

@@ -14,13 +14,14 @@ export default class VerseViewBook extends Component {
 
     this.state = {
         verseData: this.props.verseComponent,
-        isSelected: false,
     }
   }
 
   onPress() {
-    console.log("on press" + this.state.isSelected)
-    this.setState({isSelected: !this.state.isSelected})
+    console.log("on press")
+    var verseData = {...this.state.verseData}
+    verseData.selected = !verseData.selected;
+    this.setState({verseData})
   }
 
   getResultText(text) {
@@ -73,22 +74,22 @@ export default class VerseViewBook extends Component {
         if (this.state.verseData.verseNumber == "1" || 
             this.state.verseData.verseNumber.startsWith("1-")) {
               return (
-                <Text>
+                <Text onPress={() => {this.onPress()}}>
                   <Text style={{fontSize:26}}> 
                     {"\n"}{this.state.verseData.chapterNumber}{' '}
                   </Text>
-                  <Text style={{fontSize:16, backgroundColor: this.state.isSelected ? 'yellow' : 'transparent'}} >
+                  <Text style={{fontSize:16, textDecorationLine: this.state.verseData.selected ? 'underline' : 'none'}} >
                     {this.getResultText(this.state.verseData.text)}
                   </Text>
                  </Text>
               );
         }
         return (
-          <Text>
+          <Text onPress={() => {this.onPress()}}>
             <Text style={{fontSize:10}} >
               {this.state.verseData.verseNumber}{" "}
             </Text>
-            <Text style={{fontSize:16, textDecorationLine: this.state.isSelected ? 'underline' : 'none'}} >
+            <Text style={{fontSize:16, textDecorationLine: this.state.verseData.selected ? 'underline' : 'none'}} >
               {this.getResultText(this.state.verseData.text)}
             </Text>         
           </Text>

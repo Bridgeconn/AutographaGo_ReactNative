@@ -20,7 +20,7 @@ export default class NumberSelection extends Component {
 
   constructor(props){
     super(props)
-    console.log("rops number : "+JSON.stringify(props))
+    console.log("props number : "+JSON.stringify(props))
 
     this.queryBook = this.queryBook.bind(this)
 
