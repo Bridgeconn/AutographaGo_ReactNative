@@ -59,6 +59,7 @@ export default class Notes extends Component {
     this.props.navigation.setParams({ updateNotesData: this.updateNotesData})
     let res = await DbQueries.queryNotes();
     this.setState({ notesData: res})
+    
     console.log("coming in component mount"+JSON.stringify(this.state.notesData))
   }
  renderItem = ({item,index})=>{

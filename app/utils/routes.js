@@ -25,7 +25,6 @@ const StackNav = StackNavigator(
   Notes: {
     screen: Notes,
   },
-  
 	Home: {
     	screen: Home,
   	},
@@ -80,11 +79,13 @@ export default class App extends Component {
 			colorMode: AsyncStorageConstants.Values.DayMode,
 			sizeMode: AsyncStorageConstants.Values.SizeModeNormal,
       colorFile:dayColors,
-      sizeFile:mediumFont
+      sizeFile:mediumFont,
+      verseInLine:false
     }
     
     this.updateSize = this.updateSize.bind(this)
     this.updateColor = this.updateColor.bind(this)
+    this.updateVerseInLine = this.updateVerseInLine.bind(this)
 
     }
 
@@ -94,6 +95,10 @@ export default class App extends Component {
 	
 	  updateSize = (sizeMode, sizeFile) => {
 		this.setState({sizeMode, sizeFile})
+    }
+
+    updateVerseInLine = (verseInLine) =>{
+      this.setState({verseInLine})
     }
 
     
@@ -106,8 +111,10 @@ export default class App extends Component {
               sizeMode: this.state.sizeMode, 
               colorFile:this.state.colorFile,
               sizeFile:this.state.sizeFile,
+              verseInLine:this.state.verseInLine,
               updateColor: this.updateColor,
-              updateSize: this.updateSize
+              updateSize: this.updateSize,
+              updateVerseInLine:this.updateVerseInLine
             }}
           />
         );
@@ -144,6 +151,10 @@ export default class App extends Component {
               break;
             }
           }
+        })
+
+        await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.VerseViewMode, AsyncStorageConstants.Values.VerseInLine).then((verseInLine) => {
+          this.setState({verseInLine})
         })
     }
 }

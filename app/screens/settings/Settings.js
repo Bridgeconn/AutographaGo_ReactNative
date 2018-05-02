@@ -8,6 +8,8 @@ import {
   Dimensions,
   TouchableOpacity,
   AsyncStorage,
+  Switch,
+  ScrollView
 } from 'react-native';
 import { HeaderBackButton, NavigationActions} from 'react-navigation'
 import { Container, Header, Content, Card, CardItem, Right, Left } from 'native-base';
@@ -46,6 +48,8 @@ export default class Setting extends Component {
       
       colorMode: this.props.screenProps.colorMode,
       colorFile:this.props.screenProps.colorFile,
+
+      verseInLine:this.props.screenProps.verseInLine
     
     };
     
@@ -110,11 +114,19 @@ export default class Setting extends Component {
     })
     
   }
+
+  onVerseInLineModeChange(){
+    this.setState({verseInLine:!this.state.verseInLine}, ()=>{
+        this.props.screenProps.updateVerseInLine(this.state.verseInLine);
+      
+      AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.VerseViewMode,this.state.verseInLine);
+    })
+  }
   render() {
     return (
       <View style={this.styleFile.container}>
       <View style={this.styleFile.containerMargin}>
-         <Content>
+         <ScrollView showsVerticalScrollIndicator={false}>
           <Card >
             <CardItem style={this.styleFile.cardItemStyle}>
               <Left>
@@ -187,6 +199,16 @@ export default class Setting extends Component {
              </CardItem>
            </Card>
            <Card>
+            <CardItem style={this.styleFile.switchButtonCard}>
+            <Text style={this.styleFile.textStyle}>One Verse Per Line</Text>
+            <Switch 
+            size={24} 
+            onValueChange={this.onVerseInLineModeChange.bind(this)}
+            value={this.state.verseInLine}
+            />
+             </CardItem>
+           </Card>
+           <Card>
             <CardItem style={this.styleFile.cardItemStyle}>
             <Icon name='settings-backup-restore' size={24} style={this.styleFile.cardItemIconCustom} />
               <Text style={this.styleFile.textStyle}>Backup and Restore</Text>
@@ -212,7 +234,7 @@ export default class Setting extends Component {
               <Text style={this.styleFile.textStyle}>About</Text>
              </CardItem>
            </Card>
-        </Content>
+        </ScrollView>
       </View>
       </View>
     );
