@@ -153,31 +153,18 @@ class DbHelper {
 	  	}
 	}
 
-	async addNote(value){
+	async addNote(value,time){
 		console.log("value in db helper "+value)
 		let realm = await this.getRealm();
 			if (realm) {
 				console.log("value in db help "+value)
 				realm.write(() => {
-					realm.create('NoteModel',{body:value, timestamp:'123456789'})
+					realm.create('NoteModel',{body:value, createdTime:time,modifiedTime:time})
 					console.log("write.. new notes..")
 		  	});
 		 
 		}
 	}
-
-	// async addStyle(index,){
-	// 	console.log("value in db helper "+value)
-	// 	let realm = await this.getRealm();
-	// 		if (realm) {
-	// 			console.log("value in db help "+value)
-	// 			realm.write(() => {
-	// 				realm.create('StylingModel',{characterIndex:index, format:})
-	// 				console.log("write.. new notes..")
-	// 	  	});
-		 
-	// 	}
-	// }
 
 	async updateNote(value,index){
 		let realm = await this.getRealm();
@@ -199,6 +186,18 @@ class DbHelper {
 		})
 	}
 
+	// async addStyle(index,){
+	// 	console.log("value in db helper "+value)
+	// 	let realm = await this.getRealm();
+	// 		if (realm) {
+	// 			console.log("value in db help "+value)
+	// 			realm.write(() => {
+	// 				realm.create('StylingModel',{characterIndex:index, format:})
+	// 				console.log("write.. new notes..")
+	// 	  	});
+		 
+	// 	}
+	// }
 	// updateHighlights(languageModels, verseIdModels) {
 	// 	for (LanguageModel languageModel : languageModels) {
     //         for (VersionModel versionModel : languageModel.getVersionModels()) {

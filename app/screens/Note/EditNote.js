@@ -30,7 +30,7 @@ export default class EditNote extends Component {
     super(props);
     console.log(" props notes add "+JSON.stringify(this.props))
     this.state = {
-        noteBody: this.props.navigation.state.params.item,
+        noteBody: '',
         show:false,
         selection: [0,0],
         styleArray:[],
@@ -38,18 +38,11 @@ export default class EditNote extends Component {
     }
   }
   saveNote = () =>{
-    var  date = new Date()
-    let time = date.now()
-  if(this.props.navigation.state.params.index == null && !this.state.noteBody){
-    ToastAndroid.show('write something to note', ToastAndroid.SHORT)
-    
-    DbQueries.addNote(this.state.noteBody,time,time)
-    this.props.navigation.state.params.onEdit(this.state.noteBody,this.props.navigation.state.params.index);
-    return
-  }
-  DbQueries.updateNote(this.state.noteBody,time,time)
-  this.props.navigation.state.params.onEdit(this.state.noteBody,this.props.navigation.state.params.index);
-  this.props.navigation.dispatch(NavigationActions.back())
+    var time =  new Date().toLocaleString()
+    console.log("time "+time)
+    DbQueries.addNote(this.state.noteBody,time)
+    this.props.navigation.state.params.onEdit(this.state.noteBody,time);
+    this.props.navigation.dispatch(NavigationActions.back())
   }
   onBack = () =>{
       if(this.state.noteBody !== this.props.navigation.state.params.item){

@@ -17,7 +17,6 @@ import DbQueries from '../../utils/dbQueries.js'
 export default class Notes extends Component {
   constructor(props){
     super(props);
-    // console.log(" props notes "+JSON.stringify(this.props.navigation.state.params.index))
     this.state = {
       notesData:[],
       index:null
@@ -33,17 +32,16 @@ export default class Notes extends Component {
      </TouchableOpacity>
 )
   });
-    onEdit(body, index){
-    if(index == null){
-      this.setState({ notesData: [...this.state.notesData, {body:body}] }, ()=> {
+    onEdit(body, time){
+      this.setState({ notesData: [...this.state.notesData, {body:body,createdTime:time,modifiedTime:time}] }, ()=> {
         console.log("setstate notesdata"+JSON.stringify(this.state.notesData))
-      })
       return
-    }
-    let notesData = [ ...this.state.notesData ];
-    notesData[index] = {...notesData[index], body:body};
-    this.setState({notesData})
-  };
+    })
+    
+    // let notesData = [ ...this.state.notesData ];
+    // notesData[index] = {...notesData[index], body:body};
+    // this.setState({notesData})
+  }
   
   updateNotesData = () => {
     this.props.navigation.navigate('EditNote',{onEdit: this.onEdit })
@@ -57,19 +55,24 @@ export default class Notes extends Component {
   }
   async componentDidMount(){
     this.props.navigation.setParams({ updateNotesData: this.updateNotesData})
+
     let res = await DbQueries.queryNotes();
+    if(res==null){
+      return
+    }
     this.setState({ notesData: res})
-    
+
     console.log("coming in component mount"+JSON.stringify(this.state.notesData))
+    console.log("coming in component mount result "+JSON.stringify(res))
   }
  renderItem = ({item,index})=>{
-  //  var item = JSON.stringify(item);
-  //  console.log("index in render function   0" +index)
+    var date = new Date(item.createdTime);
    return(
     <TouchableOpacity style={{height:80}} onPress={()=>this.props.navigation.navigate('EditNote',{item:item.body,index,onEdit:this.onEdit})}>
       <Card style={{margin:8}}>
         <CardItem>
-          <Text >{item.body}</Text>
+          <Text>{item.body}</Text>
+          <Text style = {{marginHorizontal:8}}>{date.getHours() + ':' + date.getMinutes()+ ':' + date.getSeconds()}</Text>
           <Right>
           <TouchableOpacity onPress={()=>this.onDelete(index)}>
             <Text>delete</Text>

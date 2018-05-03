@@ -6,8 +6,8 @@ export default class NoteModel extends Realm.Object {}
 NoteModel.schema = {
     name: 'NoteModel',
     properties: {
-        createdTimestamp:'date',
-        modifiedTimestamp:'date',
+        createdTime:'date',
+        modifiedTime:'date',
         body: 'string?',
         styling: 'StylingModel[]',
         references: 'ReferenceModel[]',

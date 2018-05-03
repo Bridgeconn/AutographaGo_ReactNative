@@ -7,6 +7,7 @@ import ChapterModel from '../models/ChapterModel'
 import VerseComponentsModel from '../models/VerseComponentsModel'
 import dbHelper from './dbHelper';
 import NoteModel from '../models/NoteModel';
+import { Body } from 'native-base';
 
 class DbQueries {
     getSomeDataFromModel() {
@@ -85,12 +86,16 @@ class DbQueries {
     updateBookWithHighlights(languageModels, verseIdModels) {
         DbHelper.updateHighlights(languageModels, verseIdModels);
     }
-    addNote(value){
+    addNote(value,time){
         console.log("value addnote "+value)
-       DbHelper.addNote(value);
+       DbHelper.addNote(value,time);
     }
-    queryNotes() {
+    async queryNotes() {
+       var result =  await DbHelper.query('NoteModel')
+    //    results = results.filtered(body);
+    //   await  console.log("db result "+JSON.stringify(result[0].createdTime.toLocaleString()))
        return DbHelper.query('NoteModel')
+      
     }
     updateNote(value,index){
         DbHelper.updateNote(value,index);
