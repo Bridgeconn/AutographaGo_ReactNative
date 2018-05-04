@@ -166,14 +166,16 @@ class DbHelper {
 		}
 	}
 
-	async updateNote(value,index){
+	async updateNote(value, createdTime, modifiedTime){
 		let realm = await this.getRealm();
-		let update = realm.objects('NoteModel');
 		console.log('update continue .....')
+		let update = realm.objects('NoteModel').filtered(	"createdTime = $0",new Date(createdTime));
+		await console.log("update comes with output "+JSON.stringify(update[0].createdTime))
+
 		realm.write(() => {
-			update[index].body = value;
-		console.log("update index "+index+"  "+value)
-	});
+			update[0].modifiedTime = modifiedTime,
+			update[0].body = value
+		})
 	}
 
 	async deleteNote(index){

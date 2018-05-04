@@ -28,9 +28,9 @@ export default class EditNote extends Component {
 });
   constructor(props){
     super(props);
-    console.log(" props notes add "+JSON.stringify(this.props))
+    console.log(" props notes add "+this.props.navigation.state.params.item)
     this.state = {
-        noteBody: '',
+        noteBody:this.props.navigation.state.params.item,
         show:false,
         selection: [0,0],
         styleArray:[],
@@ -40,7 +40,16 @@ export default class EditNote extends Component {
   saveNote = () =>{
     var time =  new Date().toLocaleString()
     console.log("time "+time)
-    DbQueries.addNote(this.state.noteBody,time)
+    console.log("time from props"+this.props.navigation.state.params.time)
+     
+      
+    if(!this.props.navigation.state.params.item){
+      DbQueries.addNote(this.state.noteBody,time)
+      this.props.navigation.state.params.onEdit(this.state.noteBody,time);
+      this.props.navigation.dispatch(NavigationActions.back())
+      return
+    }
+    DbQueries.updateNote(this.state.noteBody,this.props.navigation.state.params.time,time)
     this.props.navigation.state.params.onEdit(this.state.noteBody,time);
     this.props.navigation.dispatch(NavigationActions.back())
   }

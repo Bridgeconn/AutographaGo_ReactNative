@@ -13,7 +13,7 @@ import { Card, CardItem, Content, Right } from 'native-base';
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 import DbQueries from '../../utils/dbQueries.js'
-
+var moment = require('moment');
 export default class Notes extends Component {
   constructor(props){
     super(props);
@@ -35,12 +35,11 @@ export default class Notes extends Component {
     onEdit(body, time){
       this.setState({ notesData: [...this.state.notesData, {body:body,createdTime:time,modifiedTime:time}] }, ()=> {
         console.log("setstate notesdata"+JSON.stringify(this.state.notesData))
-      return
     })
+        // let notesData = [ ...this.state.notesData ];
+        // notesData[i] = {...notesData[i], body:body};
+        // this.setState({notesData})
     
-    // let notesData = [ ...this.state.notesData ];
-    // notesData[index] = {...notesData[index], body:body};
-    // this.setState({notesData})
   }
   
   updateNotesData = () => {
@@ -67,16 +66,18 @@ export default class Notes extends Component {
   }
  renderItem = ({item,index})=>{
     var date = new Date(item.createdTime);
+    var modifiedDate = new Date(item.modifiedTime);
    return(
-    <TouchableOpacity style={{height:80}} onPress={()=>this.props.navigation.navigate('EditNote',{item:item.body,index,onEdit:this.onEdit})}>
+    <TouchableOpacity style={{height:80}} onPress={()=>this.props.navigation.navigate('EditNote',{item:item.body,time:item.createdTime,onEdit:this.onEdit})}>
       <Card style={{margin:8}}>
         <CardItem>
           <Text>{item.body}</Text>
-          <Text style = {{marginHorizontal:8}}>{date.getHours() + ':' + date.getMinutes()+ ':' + date.getSeconds()}</Text>
+          <Text style = {{marginHorizontal:8}}>{date.getHours() +"-"+ date.getMinutes() +' '+date.getSeconds()}</Text>
           <Right>
           <TouchableOpacity onPress={()=>this.onDelete(index)}>
             <Text>delete</Text>
           </TouchableOpacity>
+          <Text style = {{marginHorizontal:8}}>{modifiedDate.getHours() +"-"+ modifiedDate.getMinutes() +' '+modifiedDate.getSeconds()}</Text>
           </Right>
         </CardItem>
       </Card>

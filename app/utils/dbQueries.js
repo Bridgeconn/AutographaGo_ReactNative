@@ -87,8 +87,8 @@ class DbQueries {
         DbHelper.updateHighlights(languageModels, verseIdModels);
     }
     addNote(value,time){
-        console.log("value addnote "+value)
-       DbHelper.addNote(value,time);
+    console.log("value addnote "+value)
+    DbHelper.addNote(value,time);
     }
     async queryNotes() {
        var result =  await DbHelper.query('NoteModel')
@@ -97,8 +97,8 @@ class DbQueries {
        return DbHelper.query('NoteModel')
       
     }
-    updateNote(value,index){
-        DbHelper.updateNote(value,index);
+    updateNote(value, createdTime,modifiedTime){
+        DbHelper.updateNote(value, createdTime, modifiedTime);
     }
     deleteNote(index){
         console.log('delete note'+index)
