@@ -11,7 +11,7 @@ export default class VerseViewBook extends Component {
 
   constructor(props) {
     super(props);
-
+    // console.log("props: " + JSON.stringify(props))
     this.state = {
         verseData: this.props.verseComponent,
     }
@@ -21,7 +21,13 @@ export default class VerseViewBook extends Component {
     console.log("on press")
     var verseData = {...this.state.verseData}
     verseData.selected = !verseData.selected;
-    this.setState({verseData})
+    this.setState({verseData}, () => {
+        this.props.getSelection(
+          this.state.verseData.selected, 
+          this.props.index, 
+          this.state.verseData.chapterNumber
+        );
+    })
   }
 
   getResultText(text) {

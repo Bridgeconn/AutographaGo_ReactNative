@@ -27,19 +27,51 @@ export default class Home extends Component {
     super(props);
 
     console.log("BOOK props--" + JSON.stringify(props))
+
+    this.getSelectedReferences = this.getSelectedReferences.bind(this)
+
     this.state = {
       modelData: this.props.screenProps.currentBook.chapterModels,
       isLoading: false,
-      showBottomBar: true,
+      showBottomBar: false,
       bookId: this.props.navigation.state.params.bookId,
       bookName: this.props.navigation.state.params.bookName,
       chapterNumber: this.props.navigation.state.params.chapterNumber,
       bookIndex: this.props.navigation.state.params.bookIndex,
+      bottomHighlightText: 'HIGHLIGHT',
     }
+
+    this.selectedReferenceSet = new Set();
   }
 
   getItemLayout = (data, index) => {
       return { length: height, offset: height * index, index };
+  }
+
+  getSelectedReferences(isSelected, vIndex, chapterNum) {
+    console.log("getSelectedReferences calle " + isSelected + " : " + vIndex + " :: c=" + chapterNum);
+    let obj = {chapterNumber: chapterNum, verseIndex: vIndex};
+    if (isSelected) {
+      this.selectedReferenceSet.add(obj)
+    } else {
+      this.selectedReferenceSet.delete(obj)
+    }
+    console.log("SET=" + JSON.stringify(this.selectedReferenceSet))
+      
+    this.setState({showBottomBar: this.selectedReferenceSet.size > 0 ? true : false})
+
+    let selectedCount = 0, highlightCount = 0;
+    for (var i=0;  i<this.state.modelData.length; i++) {
+        for (var j=0; j<this.state.modelData[i].verseComponentsModels.length; j++) {
+            if (this.state.modelData[i].verseComponentsModels[j].selected) {
+                selectedCount++;
+                if (this.state.modelData[i].verseComponentsModels[j].highlighted) {
+                    highlightCount++;
+                }
+            }
+        }
+    }
+    this.setState({bottomHighlightText: selectedCount == highlightCount ? 'REMOVE HIGHLIGHT' : 'HIGHLIGHT'})
   }
 
   render() {
@@ -64,10 +96,14 @@ export default class Home extends Component {
             <Text style={{marginLeft:16, marginRight:16}}>
               <Text letterSpacing={24} ///onPress={() => {this.child.onPress();}} 
                   style={{lineHeight:26, textAlign:'justify'}}>
-                  {item.verseComponentsModels.map((verse) => 
+                  {item.verseComponentsModels.map((verse, index) => 
                       <VerseViewBook
                           ref={instance => {this.child = instance;}}
-                          verseComponent = {verse} />
+                          verseComponent = {verse}
+                          index = {index}
+                          getSelection = {(isSelected, verseIndex, chapterNumber) => {
+                            this.getSelectedReferences(isSelected, verseIndex, chapterNumber)
+                          }} />
                   )}
               </Text>
             </Text> 
@@ -86,12 +122,12 @@ export default class Home extends Component {
 
           <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
             <Text style={{color:'white'}}>
-              HIGHLIGHT
+              {this.state.bottomHighlightText}
             </Text>
             <Icon name={'border-color'} color="white" size={24} style={{marginHorizontal:8}} />
           </View>
           
-          <View style={{width:1, height:48, color:'white', backgroundColor:'white'}} />
+          <View style={{width:1, height:48, backgroundColor:'white'}} />
           
           <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>          
             <Text style={{color:'white'}}>
@@ -100,7 +136,7 @@ export default class Home extends Component {
             <Icon name={'note'} color="white" size={24} style={{marginHorizontal:8}} />
           </View>
           
-          <View style={{width:1, height:48, color:'white', backgroundColor:'white'}} />          
+          <View style={{width:1, height:48, backgroundColor:'white'}} />          
 
           <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>          
             <Text style={{color:'white'}}>
