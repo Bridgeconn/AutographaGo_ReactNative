@@ -32,18 +32,9 @@ export default class Notes extends Component {
      </TouchableOpacity>
 )
   });
-    onEdit(body, time){
-      this.setState({ notesData: [...this.state.notesData, {body:body,createdTime:time,modifiedTime:time}] }, ()=> {
-        console.log("setstate notesdata"+JSON.stringify(this.state.notesData))
-    })
-        // let notesData = [ ...this.state.notesData ];
-        // notesData[i] = {...notesData[i], body:body};
-        // this.setState({notesData})
-    
-  }
   
   updateNotesData = () => {
-    this.props.navigation.navigate('EditNote',{onEdit: this.onEdit })
+    this.props.navigation.navigate('EditNote',{onEdit: this.onEdit, index:-1 , item:'' })
   };
   onDelete(index){
     console.log("index in delete function "+this.state.index)
@@ -54,13 +45,11 @@ export default class Notes extends Component {
   }
   async componentDidMount(){
     this.props.navigation.setParams({ updateNotesData: this.updateNotesData})
-
     let res = await DbQueries.queryNotes();
     if(res==null){
       return
     }
     this.setState({ notesData: res})
-
     console.log("coming in component mount"+JSON.stringify(this.state.notesData))
     console.log("coming in component mount result "+JSON.stringify(res))
   }
@@ -68,7 +57,7 @@ export default class Notes extends Component {
     var date = new Date(item.createdTime);
     var modifiedDate = new Date(item.modifiedTime);
    return(
-    <TouchableOpacity style={{height:80}} onPress={()=>this.props.navigation.navigate('EditNote',{item:item.body,time:item.createdTime,onEdit:this.onEdit})}>
+    <TouchableOpacity style={{height:80}} onPress={()=>this.props.navigation.navigate('EditNote',{item:item.body,time:item.createdTime,index:index,onEdit:this.onEdit})}>
       <Card style={{margin:8}}>
         <CardItem>
           <Text>{item.body}</Text>

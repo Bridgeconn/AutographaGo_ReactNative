@@ -28,7 +28,7 @@ export default class EditNote extends Component {
 });
   constructor(props){
     super(props);
-    console.log(" props notes add "+this.props.navigation.state.params.item)
+    console.log(" props notes add "+this.props.navigation.state.params.index)
     this.state = {
         noteBody:this.props.navigation.state.params.item,
         show:false,
@@ -42,15 +42,21 @@ export default class EditNote extends Component {
     console.log("time "+time)
     console.log("time from props"+this.props.navigation.state.params.time)
      
-      
-    if(!this.props.navigation.state.params.item){
+    if(this.props.navigation.state.params.index == -1){
+      if(  this.state.noteBody == this.props.navigation.state.params.item){
+        this.props.navigation.dispatch(NavigationActions.back())
+        return
+      }
+      console.log("add note"+this.props.navigation.state.params.item)
       DbQueries.addNote(this.state.noteBody,time)
-      this.props.navigation.state.params.onEdit(this.state.noteBody,time);
-      this.props.navigation.dispatch(NavigationActions.back())
-      return
+     
     }
-    DbQueries.updateNote(this.state.noteBody,this.props.navigation.state.params.time,time)
-    this.props.navigation.state.params.onEdit(this.state.noteBody,time);
+    else{
+      console.log("update note"+this.props.navigation.state.params.item)
+      DbQueries.updateNote(this.state.noteBody,this.props.navigation.state.params.time,time)
+    }
+    
+    this.props.navigation.state.params.onEdit(this.state.noteBody,time,this.props.navigation.state.params.index);
     this.props.navigation.dispatch(NavigationActions.back())
   }
   onBack = () =>{
