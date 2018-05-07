@@ -94,6 +94,8 @@ export default class App extends Component {
       currentBook: null,
       booksList: [],
       isDbLoading: true,
+      languageCode: '',
+      versionCode: '',
       // booksData: BookIdModel[],
     }
 

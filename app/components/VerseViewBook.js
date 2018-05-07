@@ -18,7 +18,6 @@ export default class VerseViewBook extends Component {
   }
 
   onPress() {
-    console.log("on press")
     var verseData = {...this.state.verseData}
     verseData.selected = !verseData.selected;
     this.setState({verseData}, () => {
@@ -28,6 +27,24 @@ export default class VerseViewBook extends Component {
           this.state.verseData.chapterNumber
         );
     })
+  }
+
+  removeHighlight() {
+    if (this.state.verseData.selected) {
+      var verseData = {...this.state.verseData}
+      verseData.selected = false;
+      verseData.highlighted = false;      
+      this.setState({verseData})
+    }
+  }
+
+  doHighlight() {
+    if (this.state.verseData.selected) {
+      var verseData = {...this.state.verseData}
+      verseData.selected = false;
+      verseData.highlighted = true;      
+      this.setState({verseData})
+    }
   }
 
   getResultText(text) {
@@ -84,7 +101,9 @@ export default class VerseViewBook extends Component {
                   <Text style={{fontSize:26}}> 
                     {"\n"}{this.state.verseData.chapterNumber}{' '}
                   </Text>
-                  <Text style={{fontSize:16, textDecorationLine: this.state.verseData.selected ? 'underline' : 'none'}} >
+                  <Text style={{fontSize:16, 
+                    textDecorationLine: this.state.verseData.selected ? 'underline' : 'none',
+                    backgroundColor: this.state.verseData.highlighted ? 'yellow' : 'transparent' }} >
                     {this.getResultText(this.state.verseData.text)}
                   </Text>
                  </Text>
@@ -95,7 +114,9 @@ export default class VerseViewBook extends Component {
             <Text style={{fontSize:10}} >
               {this.state.verseData.verseNumber}{" "}
             </Text>
-            <Text style={{fontSize:16, textDecorationLine: this.state.verseData.selected ? 'underline' : 'none'}} >
+            <Text style={{fontSize:16, 
+              textDecorationLine: this.state.verseData.selected ? 'underline' : 'none',
+              backgroundColor: this.state.verseData.highlighted ? 'yellow' : 'transparent' }} >
               {this.getResultText(this.state.verseData.text)}
             </Text>         
           </Text>
