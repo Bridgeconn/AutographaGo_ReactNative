@@ -9,7 +9,7 @@ import {
   FlatList
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import { Card, CardItem, Content, Right } from 'native-base';
+import { Card, CardItem, Content, Right, Left } from 'native-base';
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 import DbQueries from '../../utils/dbQueries.js'
@@ -21,7 +21,6 @@ export default class Notes extends Component {
       notesData:[],
       index:null
     }
-    this.onEdit = this.onEdit.bind(this)
   }
 
   static navigationOptions = ({navigation}) => ({
@@ -34,7 +33,7 @@ export default class Notes extends Component {
   });
   
   updateNotesData = () => {
-    this.props.navigation.navigate('EditNote',{onEdit: this.onEdit, index:-1 , item:'' })
+    this.props.navigation.navigate('EditNote',{index:-1 , item:'' })
   };
   onDelete(index){
     console.log("index in delete function "+this.state.index)
@@ -55,20 +54,21 @@ export default class Notes extends Component {
   }
  renderItem = ({item,index})=>{
     var date = new Date(item.createdTime);
-    var modifiedDate = new Date(item.modifiedTime);
-   return(
-    <TouchableOpacity style={{height:80}} onPress={()=>this.props.navigation.navigate('EditNote',{item:item.body,time:item.createdTime,index:index,onEdit:this.onEdit})}>
-      <Card style={{margin:8}}>
+    dateFormate =  date.getHours() < 24  ? moment(item.modifiedTime).fromNow() : moment(item.modifiedTime).format('DD-MMM');  
+      console.log("format date "+dateFormate)
+    return(
+    <TouchableOpacity style={{flex:1}} onPress={()=>this.props.navigation.navigate('EditNote',{item:item.body,time:item.createdTime,index:index})}>
+      <Card style={{margin:8,flex:1 }}>
         <CardItem>
-          <Text>{item.body}</Text>
-          <Text style = {{marginHorizontal:8}}>{date.getHours() +"-"+ date.getMinutes() +' '+date.getSeconds()}</Text>
-          <Right>
-          <TouchableOpacity onPress={()=>this.onDelete(index)}>
-            <Text>delete</Text>
-          </TouchableOpacity>
-          <Text style = {{marginHorizontal:8}}>{modifiedDate.getHours() +"-"+ modifiedDate.getMinutes() +' '+modifiedDate.getSeconds()}</Text>
-          </Right>
+        <View> 
+          <Text numberOfLines={2}>{item.body}</Text>
+          <View style={{justifyContent:'space-between', alignItems:'center',marginTop:16, flexDirection:'row'}}>
+            <Text >{dateFormate}</Text>
+            <Icon name="delete-forever" size={24} onPress={()=>this.onDelete(index)}/>
+          </View>
+        </View>
         </CardItem>
+        
       </Card>
     </TouchableOpacity>
    )

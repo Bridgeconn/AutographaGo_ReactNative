@@ -56,7 +56,7 @@ export default class EditNote extends Component {
       DbQueries.updateNote(this.state.noteBody,this.props.navigation.state.params.time,time)
     }
     
-    this.props.navigation.state.params.onEdit(this.state.noteBody,time,this.props.navigation.state.params.index);
+    // this.props.navigation.state.params.onEdit(this.state.noteBody,time,this.props.navigation.state.params.index);
     this.props.navigation.dispatch(NavigationActions.back())
   }
   onBack = () =>{
