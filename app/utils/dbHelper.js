@@ -94,7 +94,8 @@ class DbHelper {
 		let realm = await this.getRealm();
     	if (realm) {
 			let result1 = realm.objects("VerseComponentsModel");
-			result1 = result1.filtered('languageCode ==[c] "' + langCode + '" && versionCode ==[c] "' + verCode + '"');
+			result1 = result1.filtered('languageCode ==[c] "' + langCode + 
+				'" && versionCode ==[c] "' + verCode + '"');
 			result1 = result1.filtered('highlighted == true');
 			return result1;//.distinct('verseNumber', 'chapterNumber', 'bookId');
 		}
@@ -175,6 +176,26 @@ class DbHelper {
     //         }
     //     }
 	// }
+
+	async updateHighlights(langCode, verCode, bookId, chapterNumber, verseNumber, isHighlight) {
+		console.log("start db high")
+		let realm = await this.getRealm();
+		if (realm) {
+			let results = realm.objects('VerseComponentsModel');
+			console.log("db len = " + results.length)
+			results = results.filtered('languageCode ==[c] "' + langCode + 
+				'" && versionCode ==[c] "' + verCode + '" && bookId ==[c] "' + 
+				bookId + '" && chapterNumber == ' + chapterNumber + 
+				' && type ==[c] "v" && verseNumber ==[c] "' + verseNumber + '"' );
+				console.log("db filter len = " + results.length)
+			realm.write(() => {
+				for (var i=0;i<results.length;i++) {
+					results[i].highlighted = isHighlight;
+				}
+				console.log("update highlight complete..")
+			});
+		  }
+	}
 
 	async queryBookIdModels(verCode: string, langCode: string) {
 		let realm = await this.getRealm();

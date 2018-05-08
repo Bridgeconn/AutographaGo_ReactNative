@@ -32,6 +32,8 @@ export default class Home extends Component {
     this.getSelectedReferences = this.getSelectedReferences.bind(this)
 
     this.state = {
+      languageCode: this.props.screenProps.languageCode,
+      versionCode: this.props.screenProps.versionCode,
       modelData: this.props.screenProps.currentBook.chapterModels,
       isLoading: false,
       showBottomBar: false,
@@ -94,6 +96,10 @@ export default class Home extends Component {
         modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].selected = false
         
         this[`child_${item}`].doHighlight()
+
+        DbQueries.updateBookWithHighlights(this.state.languageCode, this.state.versionCode, 
+            this.state.bookId, tempVal[0], 
+            modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].verseNumber, true)
       }
     } else {
       // remove highlight
@@ -102,7 +108,11 @@ export default class Home extends Component {
         modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].highlighted = false
         modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].selected = false
 
-        this[`child_${item}`].removeHighlight()
+        this[`child_${item}`].removeHighlight(this.state.languageCode, this.state.versionCode, 
+          this.state.bookId, tempVal[0], 
+          modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].verseNumber, false)
+
+        DbQueries.updateBookWithHighlights()
       }
     }
     this.setState({modelData})

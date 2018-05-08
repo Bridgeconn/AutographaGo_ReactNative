@@ -43,7 +43,8 @@ export default class NumberSelection extends Component {
   async queryBook() {
     this.setState({isLoading: true})
     console.log("start loading, id " + this.state.bookId)
-    let model = await DbQueries.queryBooksWithCodeObject("ULB", "ENG", this.state.bookId);
+    let model = await DbQueries.queryBooksWithCodeObject(this.props.screenProps.versionCode, 
+      this.props.screenProps.languageCode, this.state.bookId);
     this.setState({isLoading:false})
     console.log("BOOK IN NUMBER : " +JSON.stringify(model))
     if (model) {

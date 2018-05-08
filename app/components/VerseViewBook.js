@@ -39,11 +39,13 @@ export default class VerseViewBook extends Component {
   }
 
   doHighlight() {
+    console.log("in verse view book do high")
     if (this.state.verseData.selected) {
       var verseData = {...this.state.verseData}
       verseData.selected = false;
       verseData.highlighted = true;      
       this.setState({verseData})
+      console.log("in verse view book done...")      
     }
   }
 

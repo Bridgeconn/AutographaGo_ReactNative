@@ -85,8 +85,8 @@ class DbQueries {
         DbHelper.insertNewBook(bookModel, versionModel, languageModel);
     }
 
-    updateBookWithHighlights(languageModels, verseIdModels) {
-        DbHelper.updateHighlights(languageModels, verseIdModels);
+    updateBookWithHighlights(langCode, verCode, bookId, chapterNumber, verseNumber, isHighlight) {
+        DbHelper.updateHighlights(langCode, verCode, bookId, chapterNumber, verseNumber, isHighlight);
     }
 
     queryBookIdModels(verCode: string, langCode: string) {

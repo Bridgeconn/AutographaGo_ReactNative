@@ -94,8 +94,8 @@ export default class App extends Component {
       currentBook: null,
       booksList: [],
       isDbLoading: true,
-      languageCode: '',
-      versionCode: '',
+      languageCode: 'ENG',
+      versionCode: 'ULB',
       // booksData: BookIdModel[],
     }
 
@@ -133,6 +133,7 @@ export default class App extends Component {
         <StackNav screenProps={{colorMode: this.state.colorMode, sizeMode: this.state.sizeMode, 
           colorFile:this.state.colorFile, books: this.state.books, currentBook: this.state.currentBook,
           booksList: this.state.booksList, isDbLoading: this.state.isDbLoading,
+          languageCode: this.state.languageCode, versionCode: this.state.versionCode,
           updateColor: this.updateColorMode, updateSize: this.updateSizeMode,
           updateColorFile:this.updateColorFile, updateBooks: this.updateBooks, 
           updateCurrentBook: this.updateCurrentBook }}/>
@@ -154,7 +155,7 @@ export default class App extends Component {
         this.setState({colorFile})
         console.log('MDOEEEEEEEEEEEEEEEE day or night color '+JSON.stringify(colorFile))
 
-        let models = await DbQueries.queryBookIdModels("ULB", "ENG");
+        let models = await DbQueries.queryBookIdModels(this.state.versionCode, this.state.languageCode);
         console.log("routes len =" + models)
         this.setState({isDbLoading: false})
         console.log("routes len = done set state book list" )
