@@ -59,8 +59,8 @@ export default class Notes extends Component {
     return(
     <TouchableOpacity style={{flex:1}} onPress={()=>this.props.navigation.navigate('EditNote',{item:item.body,time:item.createdTime,index:index})}>
       <Card style={{margin:8,flex:1 }}>
-        <CardItem>
-        <View> 
+        <CardItem >
+        <View style={{flex:1}}> 
           <Text numberOfLines={2}>{item.body}</Text>
           <View style={{justifyContent:'space-between', alignItems:'center',marginTop:16, flexDirection:'row'}}>
             <Text >{dateFormate}</Text>
