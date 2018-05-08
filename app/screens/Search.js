@@ -17,40 +17,42 @@ export default class Search extends Component {
     this.state = {
       text:''
     }
-    this.onSearchText = this.onSearchText.bind(this)
-    this.onChangeText = this.onChangeText.bind(this)
+    // this.onSearchText = this.onSearchText.bind(this)
   }
 
   static navigationOptions = ({navigation}) =>({
-    headerTitle: <TextInput
+    headerTitle: (<TextInput
         placeholder="Search"
         style={{width:50, textAlignVertical: "top"}}
-        onChangeText={(text) => this.onChangeText(text)}
-        />,
-    headerRight:(
-      <TouchableOpacity style={{margin:8}} onPress={()=>navigation.state.params.onSearchText()}>
-        <Icon name="search" size={36}/>
-      </TouchableOpacity>
-      )
-  });
+        onChangeText={(text) => navigation.state.params.onText(text)}
+    />),
+    // headerRight:(
+    //     <Icon name="search" size={36} onPress={()=>navigation.state.params.onSearchText()}/>
+    //   )
+  })
   async onSearchText(){
     console.log("waiting for search funtion ")
-    // let res = DbQueries.querySearchBookWithName(this.state.text);
-    // console.log("result  "+res)
+    let searchResult = await DbQueries.querySearchBookWithName(this.state.text,"ULB", "ENG");
+    console.log("search result "+searchResult)
+     if (searchResult && searchResult.length > 0) {
+       console.log("search result "+JSON.stringify(searchResult[0].bookName))
+      // let result = searchResult[0].  
+      // this.setState({modelData: chapters}) 
+     }   
   }
-  onChangeText(text){
+  onText = (text) =>{
     this.setState({text})
-    console.log("text")
+    console.log("text"+this.state.text)
   }
+  
   componentDidMount(){
-    this.props.navigation.setParams({onSearchText: this.onSearchText})
-    this.props.navigation.setParams({onChangeText: this.onChangeText})
-
+    // console.log("props from navigation options "+this.props.navigation.state.params.text)
+    this.props.navigation.setParams({onText: this.onText,onSearchText: this.onSearchText,text:this.state.text})
   }
   render() {
     return (
       <View>
-       
+      <Icon name="search" size={36} onPress={()=>this.onSearchText()}/>
       </View>
     );
   }
