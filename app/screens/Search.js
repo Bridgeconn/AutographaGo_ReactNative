@@ -59,11 +59,14 @@ export default class Search extends Component {
       <FlatList
           data={this.state.searchedResult}
           renderItem={({item}) => 
-          <Text>{item.verseNumber}
-          <Text>{item.bookId}
+          <View>
+            <View>
+            <Text style={{color:"red"}}> {item.bookId} {item.verseNumber} : {item.chapterNumber} </Text>
+            </View>
           <Text>{item.text}</Text>
-          </Text>
-          </Text>
+          
+         
+          </View>
           }/>
       </View>
     )
