@@ -90,8 +90,6 @@ export default class App extends Component {
       colorMode: null,
       sizeMode: null,
       colorFile:null,
-      // books: null,
-      currentBook: null,
       booksList: [],
       isDbLoading: true,
       languageCode: 'ENG',
@@ -104,7 +102,6 @@ export default class App extends Component {
     this.updateSizeMode = this.updateSizeMode.bind(this)
     this.updateColorFile = this.updateColorFile.bind(this)
     this.updateBooks = this.updateBooks.bind(this)
-    this.updateCurrentBook = this.updateCurrentBook.bind(this)
   }
 
   updateColorMode = (colorMode) => {
@@ -120,23 +117,18 @@ export default class App extends Component {
       console.log("update color"+colorFile)
     }
 
-    updateBooks = (books) => {
-      this.setState({books})
-    }
-
-    updateCurrentBook = (currentBook) => {
-      this.setState({currentBook})
+    updateBooks = (booksList) => {
+      this.setState({booksList})
     }
 
     render(){
       return(
         <StackNav screenProps={{colorMode: this.state.colorMode, sizeMode: this.state.sizeMode, 
-          colorFile:this.state.colorFile, books: this.state.books, currentBook: this.state.currentBook,
+          colorFile:this.state.colorFile, 
           booksList: this.state.booksList, isDbLoading: this.state.isDbLoading,
           languageCode: this.state.languageCode, versionCode: this.state.versionCode,
           updateColor: this.updateColorMode, updateSize: this.updateSizeMode,
-          updateColorFile:this.updateColorFile, updateBooks: this.updateBooks, 
-          updateCurrentBook: this.updateCurrentBook }}/>
+          updateColorFile:this.updateColorFile, updateBooks: this.updateBooks }}/>
       );
     }
     

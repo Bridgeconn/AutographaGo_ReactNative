@@ -22,37 +22,15 @@ export default class NumberSelection extends Component {
     super(props)
     console.log("props number : "+JSON.stringify(props))
 
-    this.queryBook = this.queryBook.bind(this)
-
     this.state = {
       bookId: this.props.navigation.state.params.bookId,
       bookName: this.props.navigation.state.params.bookName,
-      // booksList: this.props.screenProps.booksList,
       bookIndex: this.props.navigation.state.params.bookIndex,
-      isLoading: false,
-      bookData: null,//this.props.screenProps.booksList[this.props.navigation.state.params.bookIndex].chapterModels,
+      numOfChapters: this.props.navigation.state.params.numOfChapters,
+      bookData: Array.from(new Array(this.props.navigation.state.params.numOfChapters), (x,i) => i+1),
     }
-
-    console.log("BOOK DATA in number: " + this.state.bookId)
   }
   
-  componentDidMount() {
-    this.queryBook();
-  }
-
-  async queryBook() {
-    this.setState({isLoading: true})
-    console.log("start loading, id " + this.state.bookId)
-    let model = await DbQueries.queryBooksWithCodeObject(this.props.screenProps.versionCode, 
-      this.props.screenProps.languageCode, this.state.bookId);
-    this.setState({isLoading:false})
-    console.log("BOOK IN NUMBER : " +JSON.stringify(model))
-    if (model) {
-      this.setState({bookData: model.chapterModels})
-      this.props.screenProps.updateCurrentBook(model)
-    }
-  }
-
   render() {
     return (
       <View style={{flex:1}}>
@@ -64,13 +42,12 @@ export default class NumberSelection extends Component {
           height:width/4, justifyContent:"center"}}
           onPress={
             ()=>this.props.navigation.navigate('Book', {bookId: this.state.bookId, 
-              bookName: this.state.bookName, chapterNumber: item.chapterNumber, 
-              bookIndex: this.state.bookIndex})
+              bookName: this.state.bookName, chapterNumber: item })
             }
           >
             {/* <View style={{flex:0.25,borderColor:'black',borderRightWidth:1, borderBottomWidth:1,
             height:width/4, justifyContent:"center"}}> */}
-                <Text style={{textAlign:"center",alignItems:"center", color:'black'}}>{item.chapterNumber}</Text>
+                <Text style={{textAlign:"center",alignItems:"center", color:'black'}}>{item}</Text>
             {/* </View> */}
             </TouchableOpacity>
         }

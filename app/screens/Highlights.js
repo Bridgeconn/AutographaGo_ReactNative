@@ -54,7 +54,7 @@ export default class HighLights extends Component {
   }
 
   removeHighlight(index) {
-    DbQueries.updateBookWithHighlights(this.props.screenProps.languageCode, 
+    DbQueries.updateHighlightsInVerse(this.props.screenProps.languageCode, 
       this.props.screenProps.versionCode, this.state.modelData[index].bookId, 
       this.state.modelData[index].chapterNumber, this.state.modelData[index].verseNumber, false)
 

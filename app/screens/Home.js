@@ -94,7 +94,7 @@ export default class Home extends Component {
                 {this.state.booksList.map((item, index)=>
                   <TouchableOpacity 
                     onPress={
-                      ()=>this.props.navigation.navigate('NumberSelection', {bookId: item.bookId, bookName: item.bookName, bookIndex: index})
+                      ()=>this.props.navigation.navigate('NumberSelection', {bookId: item.bookId, bookName: item.bookName, bookIndex: index, numOfChapters: item.numOfChapters})
                       // ()=>this.props.navigation.navigate('Book', {bookId: item.bookId, bookName: item.bookName})
                       }>
                     <View style={{flexDirection:'row', justifyContent:'space-between', paddingHorizontal:16, paddingVertical:12}}>

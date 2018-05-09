@@ -8,46 +8,40 @@ import VerseComponentsModel from '../models/VerseComponentsModel'
 
 class DbQueries {
 
-    getSomeDataFromModel() {
-        return DbHelper.query('ChapterModel');
-    }
-
     queryLanguages() {
         return DbHelper.query('LanguageModel', null, 'languageCode', false);
     }
 
     queryLanguageWithCode(code: string) {
         return DbHelper.query('LanguageModel', 'languageCode ==[c] "' + code + '"');
-        // names.filtered('name == $0', code);
     }
 
     queryVersionWithCode(verCode: string, langCode: string) {
         return DbHelper.queryVersionWithCode(verCode, langCode);
     }
 
-    queryBooksWithCodeObject(verCode: string, langCode: string, bookId: string) {
-        return DbHelper.queryBooksWithCodeObject(verCode, langCode, bookId);        
-    }
-
-    queryBooksWithCode(verCode: string, langCode: string) {
+    queryBooks(verCode: string, langCode: string) {
         return DbHelper.queryBooksWithCode(verCode, langCode);
     }
 
-    queryBookWithId(bookId: string, verCode: string, langCode: string) {
+    queryBookWithId(verCode: string, langCode: string,bookId: string) {
         return DbHelper.queryBooksWithCode(verCode, langCode, bookId);
     }
 
-    querySearchBookWithName(text: string, verCode: string, langCode: string) {
+    querySearchBookWithName(verCode: string, langCode: string, text: string) {
         return DbHelper.queryBooksWithCode(verCode, langCode, null, text);        
     }
 
-    querySearchVerse(text: string, verCode: string, langCode: string) {
-        // add langaugeCode, versionCode, chapterNumber, bookId in VERSE COMPINENET MODEL
+    querySearchVerse(verCode: string, langCode: string, text: string) {
         return DbHelper.queryInVerseText(verCode, langCode, text);
     }
 
     queryHighlights(verCode: string, langCode: string) {
         return DbHelper.queryHighlights(verCode, langCode);
+    }
+
+    updateHighlightsInBook(model, chapterIndex, verseIndex, isHighlight) {
+        DbHelper.updateHighlightsInBook(model, chapterIndex, verseIndex, isHighlight)
     }
 
     // queryNotes(verCode: string, langCode: string) {
@@ -85,8 +79,8 @@ class DbQueries {
         DbHelper.insertNewBook(bookModel, versionModel, languageModel);
     }
 
-    updateBookWithHighlights(langCode, verCode, bookId, chapterNumber, verseNumber, isHighlight) {
-        DbHelper.updateHighlights(langCode, verCode, bookId, chapterNumber, verseNumber, isHighlight);
+    updateHighlightsInVerse(langCode, verCode, bookId, chapterNumber, verseNumber, isHighlight) {
+        DbHelper.updateHighlightsInVerse(langCode, verCode, bookId, chapterNumber, verseNumber, isHighlight);
     }
 
     queryBookIdModels(verCode: string, langCode: string) {

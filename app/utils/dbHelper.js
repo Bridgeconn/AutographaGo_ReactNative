@@ -32,7 +32,6 @@ class DbHelper {
     	let realm = await this.getRealm();
     	if (realm) {
 			let results = realm.objects(model);
-			console.log("result == " + results.length)
 		    if(filter) {
 		        results = results.filtered(filter);
 			}
@@ -65,7 +64,8 @@ class DbHelper {
 				if (resultsA.length > 0) {
 					let resultsB = resultsA[0].bookModels;				
 					if (bookId) {
-						return resultsB.filtered('bookId ==[c] "' + bookId + '"');
+						resultsB = resultsB.filtered('bookId ==[c] "' + bookId + '"');
+						return resultsB;
 					}
 					if (text) {
 						return resultsB.filtered('bookName CONTAINS[c] "' + text + '"').sorted("bookNumber");
@@ -153,45 +153,11 @@ class DbHelper {
 	  	}
 	}
 
-	// updateHighlights(languageModels, verseIdModels) {
-	// 	for (LanguageModel languageModel : languageModels) {
-    //         for (VersionModel versionModel : languageModel.getVersionModels()) {
-    //             for (BookModel bookModel : versionModel.getBookModels()) {
-    //                 for (ChapterModel chapterModel : bookModel.getChapterModels()) {
-    //                     for (VerseComponentsModel verseComponentsModel : chapterModel.getVerseComponentsModels()) {
-    //                         for (VerseIdModel verseIdModel : verseIdModels) {
-    //                             if (verseIdModel.getBookId().equals(bookModel.getBookId()) &&
-    //                                     verseIdModel.getChapterNumber() == chapterModel.getChapterNumber() &&
-    //                                     verseIdModel.getVerseNumber().equals(verseComponentsModel.getVerseNumber())) {
-    //                                 if (verseIdModel.getTimeStamp() > 0) {
-    //                                     verseComponentsModel.setHighlighted(true);
-    //                                 } else {
-    //                                     verseComponentsModel.setHighlighted(false);
-    //                                 }
-    //                             }
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-	// }
-
-	async updateHighlights(langCode, verCode, bookId, chapterNumber, verseNumber, isHighlight) {
-		console.log("start db high")
+	async updateHighlightsInBook(model, chapterIndex, verseIndex, isHighlight) {
 		let realm = await this.getRealm();
 		if (realm) {
-			let results = realm.objects('VerseComponentsModel');
-			console.log("db len = " + results.length)
-			results = results.filtered('languageCode ==[c] "' + langCode + 
-				'" && versionCode ==[c] "' + verCode + '" && bookId ==[c] "' + 
-				bookId + '" && chapterNumber == ' + chapterNumber + 
-				' && type ==[c] "v" && verseNumber ==[c] "' + verseNumber + '"' );
-				console.log("db filter len = " + results.length)
 			realm.write(() => {
-				for (var i=0;i<results.length;i++) {
-					results[i].highlighted = isHighlight;
-				}
+				model[chapterIndex].verseComponentsModels[verseIndex].highlighted = isHighlight				
 				console.log("update highlight complete..")
 			});
 		  }
@@ -209,7 +175,7 @@ class DbHelper {
 				for (var i=0; i<resultsB.length; i++) {
 					var bModel = {bookId:resultsB[i].bookId, bookName:resultsB[i].bookName,
 						section: resultsB[i].section, bookNumber: resultsB[i].bookNumber,
-						languageCode: langCode, versionCode: verCode};
+						languageCode: langCode, versionCode: verCode, numOfChapters:resultsB[i].chapterModels.length };
 						bookIdModels.push(bModel);
 				}		
 				return bookIdModels;
@@ -219,52 +185,22 @@ class DbHelper {
 		return null;
 	}
 
-	async queryBooksWithCodeObject(verCode: string, langCode: string, bookId: string) {
-		console.log("start : "+langCode+" :"+verCode+" :"+bookId)
+	async updateHighlightsInVerse(langCode, verCode, bookId, chapterNumber, verseNumber, isHighlight) {
 		let realm = await this.getRealm();
-    	if (realm) {
-			let result = realm.objectForPrimaryKey("LanguageModel", langCode);
-			let resultsA = result.versionModels;
-			resultsA = resultsA.filtered('versionCode ==[c] "' + verCode + '"');
-			console.log("resuts L  " + resultsA.length)
-			if (resultsA.length > 0) {
-				let resultsB = resultsA[0].bookModels;
-				let resultsC = resultsB.filtered('bookId ==[c] "' + bookId + '"');
-				// let bookModels = [];
-				// for (var i=0; i<resultsC.length; i++) {
-				if (resultsC.length > 0) {
-					let chapModels = [];
-					for (var j=0; j<resultsC[0].chapterModels.length; j++) {
-						let verModels = [];
-						for (var k=0; k<resultsC[0].chapterModels[j].verseComponentsModels.length; k++) {
-							var vModel = {
-								type: resultsC[0].chapterModels[j].verseComponentsModels[k].type, 
-								verseNumber: resultsC[0].chapterModels[j].verseComponentsModels[k].verseNumber, 
-								text: resultsC[0].chapterModels[j].verseComponentsModels[k].text, 
-								highlighted: resultsC[0].chapterModels[j].verseComponentsModels[k].highlighted, 
-								languageCode: resultsC[0].chapterModels[j].verseComponentsModels[k].languageCode, 
-								versionCode: resultsC[0].chapterModels[j].verseComponentsModels[k].versionCode, 
-								bookId: resultsC[0].chapterModels[j].verseComponentsModels[k].bookId, 
-								chapterNumber: resultsC[0].chapterModels[j].verseComponentsModels[k].chapterNumber,
-								selected: false
-							};
-							verModels.push(vModel);
-						}
-						var cModel = {chapterNumber: resultsC[0].chapterModels[j].chapterNumber, 
-							numberOfVerses: resultsC[0].chapterModels[j].numberOfVerses, 
-							verseComponentsModels: verModels};
-						chapModels.push(cModel);
-					}
-					var bModel = {bookId:resultsC[0].bookId, bookName:resultsC[0].bookName,
-						section: resultsC[0].section, bookNumber: resultsC[0].bookNumber,
-						bookmarksList: resultsC[0].bookmarksList, chapterModels: chapModels};
-					return bModel;
+		if (realm) {
+			let results = realm.objects('VerseComponentsModel');
+			console.log("db len = " + results.length)
+			results = results.filtered('languageCode ==[c] "' + langCode +
+				'" && versionCode ==[c] "' + verCode + '" && bookId ==[c] "' +
+				bookId + '" && chapterNumber == ' + chapterNumber +
+				' && type ==[c] "v" && verseNumber ==[c] "' + verseNumber + '"' );
+			realm.write(() => {
+				for (var i=0;i<results.length;i++) {
+					results[i].highlighted = isHighlight;
 				}
-				return null;
-			}
-			return null;
+				console.log("update highlight complete..")
+			});
 		}
-		return null;
 	}
 }
 

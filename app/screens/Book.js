@@ -30,21 +30,41 @@ export default class Home extends Component {
     console.log("BOOK props--" + JSON.stringify(props))
 
     this.getSelectedReferences = this.getSelectedReferences.bind(this)
+    
+    this.queryBook = this.queryBook.bind(this)
 
     this.state = {
       languageCode: this.props.screenProps.languageCode,
       versionCode: this.props.screenProps.versionCode,
-      modelData: this.props.screenProps.currentBook.chapterModels,
+      modelData: [],
       isLoading: false,
       showBottomBar: false,
       bookId: this.props.navigation.state.params.bookId,
       bookName: this.props.navigation.state.params.bookName,
       chapterNumber: this.props.navigation.state.params.chapterNumber,
-      bookIndex: this.props.navigation.state.params.bookIndex,
       bottomHighlightText: true,
     }
 
     this.selectedReferenceSet = new Set();
+  }
+
+  componentDidMount() {
+    this.setState({isLoading: true}, () => {
+      this.queryBook()
+    })
+  }
+
+  async queryBook() {
+    let model = await DbQueries.queryBookWithId(this.props.screenProps.versionCode, 
+        this.props.screenProps.languageCode, this.state.bookId);
+    this.setState({isLoading:false})
+    if (model == null) {
+      console.log("mode lnull")
+    } else {
+      if (model.length > 0) {
+        this.setState({modelData: model[0].chapterModels})
+      }
+    }
   }
 
   getItemLayout = (data, index) => {
@@ -52,22 +72,16 @@ export default class Home extends Component {
   }
 
   getSelectedReferences(isSelected, vIndex, chapterNum) {
-    console.log("in select " + isSelected + " ::" + vIndex + ":: +" + chapterNum)
     let obj = chapterNum + '_' + vIndex
     if (isSelected) {
       this.selectedReferenceSet.add(obj)
     } else {
       this.selectedReferenceSet.delete(obj)
     }
-    console.log("models " + this.state.modelData[chapterNum - 1].chapterNumber)
-    console.log("models " + this.state.modelData[chapterNum - 1].verseComponentsModels[vIndex].selected)    
     
     var modelData = [...this.state.modelData]
     modelData[chapterNum - 1].verseComponentsModels[vIndex].selected = isSelected
     this.setState({modelData})
-    // this.setState(prevState => {
-    //   return { modelData: prevState[chapterNum - 1].verseComponentsModels[vIndex].selected = isSelected };
-    // });
 
     this.setState({showBottomBar: this.selectedReferenceSet.size > 0 ? true : false})
 
@@ -83,36 +97,35 @@ export default class Home extends Component {
   }
 
   doHighlight = () => {
-    console.log("VALUE = " + this.state.modelData[0].verseComponentsModels[0].selected)
-    console.log("call do highlight")
     let modelData = [...this.state.modelData]
     if (this.state.bottomHighlightText == true) {
       // do highlight
-      console.log("call do highlight ==== true")      
       for (let item of this.selectedReferenceSet.values()) {
         let tempVal = item.split('_')
-        console.log("temp split = " + tempVal)        
-        modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].highlighted = true
+        // modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].highlighted = true
         modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].selected = false
         
         this[`child_${item}`].doHighlight()
 
-        DbQueries.updateBookWithHighlights(this.state.languageCode, this.state.versionCode, 
-            this.state.bookId, tempVal[0], 
-            modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].verseNumber, true)
+        // DbQueries.updateBookWithHighlights(this.state.languageCode, this.state.versionCode, 
+        //     this.state.bookId, tempVal[0], 
+        //     modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].verseNumber, true)
+        DbQueries.updateHighlightsInBook(this.state.modelData, tempVal[0] - 1, tempVal[1], true)
       }
     } else {
       // remove highlight
       for (let item of this.selectedReferenceSet.values()) {
         let tempVal = item.split('_')
-        modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].highlighted = false
+        // modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].highlighted = false
         modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].selected = false
 
         this[`child_${item}`].removeHighlight(this.state.languageCode, this.state.versionCode, 
           this.state.bookId, tempVal[0], 
           modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].verseNumber, false)
 
-        DbQueries.updateBookWithHighlights()
+        // DbQueries.updateBookWithHighlights()
+        DbQueries.updateHighlightsInBook(this.state.modelData, tempVal[0] - 1, tempVal[1], false)
+        
       }
     }
     this.setState({modelData})
@@ -121,9 +134,6 @@ export default class Home extends Component {
   }
 
   render() {
-    // if (this.state.modelData.length == 0) {
-    //   return null;
-    // }
     return (
       <View style={styles.container}>
       {this.state.isLoading ? 
@@ -140,7 +150,7 @@ export default class Home extends Component {
           getItemLayout={this.getItemLayout}
           renderItem={({item}) => 
             <Text style={{marginLeft:16, marginRight:16}}>
-              <Text letterSpacing={24} ///onPress={() => {this.child.onPress();}} 
+              <Text letterSpacing={24}
                   style={{lineHeight:26, textAlign:'justify'}}>
                   {item.verseComponentsModels.map((verse, index) => 
                       <VerseViewBook
