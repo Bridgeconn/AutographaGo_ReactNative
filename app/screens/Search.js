@@ -5,17 +5,19 @@ import {
   View,
   Button,
   TouchableOpacity,
-  TextInput
+  TextInput,
+  FlatList
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import DbQueries from '../utils/dbQueries.js'
+import { Item } from 'native-base';
 
 export default class Search extends Component {
 
   constructor(){
     super();
     this.state = {
-      text:''
+      searchedResult:[]
     }
     // this.onSearchText = this.onSearchText.bind(this)
   }
@@ -32,16 +34,16 @@ export default class Search extends Component {
   })
   async onSearchText(){
     console.log("waiting for search funtion ")
-    let searchResult = await DbQueries.querySearchBookWithName(this.state.text,"ULB", "ENG");
-    console.log("search result "+searchResult)
-     if (searchResult && searchResult.length > 0) {
-       console.log("search result "+JSON.stringify(searchResult[0].bookName))
-      // let result = searchResult[0].  
-      // this.setState({modelData: chapters}) 
+    // let searchResultByBookName = await DbQueries.querySearchBookWithName(this.state.text,"ULB", "ENG");
+    let searchResultByVerseText = await DbQueries.querySearchVerse(this.state.text,"ULB", "ENG")
+     if (searchResultByVerseText && searchResultByVerseText.length > 0 ) {
+       console.log("search result "+JSON.stringify(searchResultByVerseText[0].text))
+      this.setState({searchedResult: searchResultByVerseText}) 
      }   
   }
   onText = (text) =>{
     this.setState({text})
+
     console.log("text"+this.state.text)
   }
   
@@ -49,11 +51,21 @@ export default class Search extends Component {
     // console.log("props from navigation options "+this.props.navigation.state.params.text)
     this.props.navigation.setParams({onText: this.onText,onSearchText: this.onSearchText,text:this.state.text})
   }
+
   render() {
     return (
       <View>
       <Icon name="search" size={36} onPress={()=>this.onSearchText()}/>
+      <FlatList
+          data={this.state.searchedResult}
+          renderItem={({item}) => 
+          <Text>{item.verseNumber}
+          <Text>{item.bookId}
+          <Text>{item.text}</Text>
+          </Text>
+          </Text>
+          }/>
       </View>
-    );
-  }
+    )
+}
 }
