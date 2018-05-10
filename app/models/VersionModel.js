@@ -12,7 +12,6 @@ VersionModel.schema = {
     	source: 'string',
     	license: 'string',
     	year: 'int',
-
         versionOwner: {type: 'linkingObjects', objectType: 'LanguageModel', property: 'versionModels' }
     }
 };

@@ -2,7 +2,9 @@ module.exports = {
     Keys: {
         ColorMode : 'color_mode',
         SizeMode: 'size_mode',
-        VerseViewMode:'verse_view_mode'
+        VerseViewMode:'verse_view_mode',
+        LastReadReference:'last_read_reference'
+
     },
     Values: {
         DayMode: 1,
@@ -14,9 +16,9 @@ module.exports = {
         SizeModeLarge: 3,
         SizeModeXLarge: 4,
 
-        VerseInLine:false
+        VerseInLine:false,
         // VerseInParagraph:0
-        
+       
     }
 }
 

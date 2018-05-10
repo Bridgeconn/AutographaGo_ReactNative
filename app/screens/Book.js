@@ -15,6 +15,10 @@ import DbQueries from '../utils/dbQueries'
 import Realm from 'realm'
 import VerseViewBook from '../components/VerseViewBook'
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import AsyncStorageUtil from '../utils/AsyncStorageUtil';
+import AsyncStorageConstants from '../utils/AsyncStorageConstants';
+const Constants = require('../utils/constants')
+
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
@@ -209,6 +213,16 @@ export default class Book extends Component {
     );
   }
 
+  componentWillUnmount(){
+    let lastRead = {
+      langCode:'ENG',
+      versionCode:'UDB',
+      bookId:'GEN',
+      chapterNum:'5',
+      verseNum:'7'
+    }
+    // AsyncStorage.setItem(AsyncStorageConstants.Keys.LastReadReference, lastRead);
+  }
 }
 
 const styles = StyleSheet.create({
@@ -219,3 +233,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
 });
+
+

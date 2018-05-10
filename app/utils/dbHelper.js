@@ -13,6 +13,7 @@ import ReferenceModel from '../models/ReferenceModel'
 import {
 	Platform,
 } from 'react-native';
+import { lang } from 'moment';
 var RNFS = require('react-native-fs');
 
 class DbHelper {
@@ -60,6 +61,9 @@ class DbHelper {
 
 	async queryBooksWithCode(verCode: string, langCode: string, bookId?: string, text?: string) {
 		let realm = await this.getRealm();
+		console.log("version code "+verCode)
+		console.log("langCode code "+langCode)
+		console.log("text  "+text)
     	if (realm) {
 			let result = realm.objectForPrimaryKey("LanguageModel", langCode);
 			if (result) {
@@ -78,8 +82,10 @@ class DbHelper {
 				}
 				return null;
 			}
+			console.log("comes in if null result")
 			return null;
 		}
+		console.log("comes in if realm null")
 		return null;
 	}
 
