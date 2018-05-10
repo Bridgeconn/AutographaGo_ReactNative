@@ -1,22 +1,24 @@
 
+import colorConstants from './colorConstants.js'
 export const nightColors = {
-    backgroundColor: 'black',
-    settingsIconColor: 'gray',
-    iconColor: 'white',
-    textColor: 'darkgray',
-    accentColor: 'pink',
-    primaryColor: 'blue',
-    primaryDarkColor: 'darkblue',
-    
+    backgroundColor: colorConstants.Dark_Gray,
+    settingsIconColor: colorConstants.White, 
+    iconColor: colorConstants.White,
+    textColor:colorConstants.White,
+    accentColor: colorConstants.Pink,
+    primaryColor:  colorConstants.Navy_Blue,
+    primaryDarkColor:  colorConstants.Dark_Blue,
 
 };
+
 export const dayColors = {
-    backgroundColor: 'white',
-    settingsIconColor:'white',
-    iconColor:'black',
-    textColor:'white',
-    accentColor:'green',
-    primaryColor:'darkBlue',
-    primaryDarkColor:'darkblue'
+    backgroundColor: colorConstants.White,
+    settingsIconColor:colorConstants.Grey,
+    iconColor:colorConstants.Grey, 
+    textColor:colorConstants.Grey, 
+    accentColor:colorConstants.Green,
+    primaryColor:colorConstants.Dark_Blue,
+    primaryDarkColor:colorConstants.Dark_Blue,
+
 };
 

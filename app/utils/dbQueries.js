@@ -5,6 +5,8 @@ import VersionModel from '../models/VersionModel'
 import BookModel from '../models/BookModel'
 import ChapterModel from '../models/ChapterModel'
 import VerseComponentsModel from '../models/VerseComponentsModel'
+import dbHelper from './dbHelper';
+import NoteModel from '../models/NoteModel';
 
 class DbQueries {
 
@@ -87,6 +89,25 @@ class DbQueries {
         return DbHelper.queryBookIdModels(verCode, langCode);
     }
 
+    addNote(value,time){
+    console.log("value addnote "+value)
+    DbHelper.addNote(value,time);
+    }
+    async queryNotes() {
+       var result =  await DbHelper.query('NoteModel')
+    //    results = results.filtered(body);
+    //   await  console.log("db result "+JSON.stringify(result[0].createdTime.toLocaleString()))
+       return DbHelper.query('NoteModel')
+      
+    }
+    updateNote(value, createdTime,modifiedTime){
+        DbHelper.updateNote(value, createdTime, modifiedTime);
+    }
+    
+    deleteNote(index){
+        console.log('delete note'+index)
+        DbHelper.deleteNote(index);
+    }
 }
 
 export default new DbQueries();

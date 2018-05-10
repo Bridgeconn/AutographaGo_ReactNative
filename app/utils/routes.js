@@ -2,161 +2,190 @@
 
 import React, { Component } from 'react'
 import {StackNavigator} from 'react-navigation'
-import Home from '../screens/Home'
+import Home from '../screens/Home/Home'
 import About from '../screens/About'
 import Book from '../screens/Book'
 import Bookmarks from '../screens/Bookmarks'
-import EditNote from '../screens/EditNote'
 import Highlights from '../screens/Highlights'
 import History from '../screens/History'
-import Notes from '../screens/Notes'
+import Notes from '../screens/Note/Notes'
+import EditNote from '../screens/Note/EditNote'
 import Search from '../screens/Search'
 import Settings from '../screens/settings/Settings'
-import OpenHints from '../screens/OpenHints'
 import Splash from '../screens/Splash'
 import NumberSelection from '../screens/numberSelection/NumberSelection'
+import Hints from '../screens/Hints/Hints'
 const AsyncStorageConstants = require('./AsyncStorageConstants')
 import AsyncStorageUtil from './AsyncStorageUtil';
 import {nightColors, dayColors} from './colors.js'
 import {extraSmallFont,smallFont,mediumFont,largeFont,extraLargeFont} from './dimens.js'
 import { styleFile } from './styles.js'
-import BookIdModel from '../models/BookIdModel'
 import DbQueries from '../utils/dbQueries'
 import Realm from 'realm'
 
 const StackNav = StackNavigator(
-{  
-  Splash: {
-    screen: Splash,
+  {  
+      Splash: {
+        screen: Splash,
+      },
+      Home: {
+        screen: Home,
+      },
+      About: {
+        screen: About,
+      },
+      Book: {
+        screen: Book,
+      },
+      Bookmarks: {
+        screen: Bookmarks,
+      },
+      EditNote: {
+        screen: EditNote,
+      },
+      Highlights: {
+        screen: Highlights,
+      },
+      History: {
+        screen: History,
+      },
+      Notes: {
+        screen: Notes,
+      },
+      Search: {
+          screen: Search,
+      },
+      Settings: {
+        screen: Settings,
+      },
+      NumberSelection: {
+        screen: NumberSelection,
+      },
+      Hints: {
+        screen: Hints,
+      },
   },
-	Home: {
-    	screen: Home,
-  	},
-  	About: {
-    	screen: About,
-  	},
-  	Book: {
-    	screen: Book,
-  	},
-  	Bookmarks: {
-    	screen: Bookmarks,
-  	},
-  	EditNote: {
-    	screen: EditNote,
-  	},
-  	Highlights: {
-    	screen: Highlights,
-  	},
-  	History: {
-    	screen: History,
-  	},
-  	Notes: {
-    	screen: Notes,
-  	},
-  	Search: {
-        screen: Search,
-  	},
-  	Settings: {
-      screen: Settings,
-    },
-  	OpenHints: {
-    	screen: OpenHints,
-    },
-    NumberSelection: {
-      screen: NumberSelection,
-    },
-    
-},
-{
-	navigationOptions: {
-    headerTintColor: '#fff',
-    headerStyle: {
-      backgroundColor: '#3F51B5'
-    },
+  {
+    navigationOptions: {
+      headerTintColor: '#fff',
+      headerStyle: {
+        backgroundColor: '#3F51B5'
+      },
+    }
   }
-}
-
 )
 
 export default class App extends Component {
-  
+
   constructor(props){
     super(props)
       // console.log('in routes'+this.props)
 
-      Realm.copyBundledRealmFiles();
+    Realm.copyBundledRealmFiles();
       
     this.state = {
-      colorMode: null,
-      sizeMode: null,
-      colorFile:null,
-      booksList: [],
-      isDbLoading: true,
-      languageCode: 'ENG',
-      versionCode: 'ULB',
-      // booksData: BookIdModel[],
+        booksList: [],
+        isDbLoading: true,
+        languageCode: 'ENG',
+        versionCode: 'ULB',
+
+        colorMode: AsyncStorageConstants.Values.DayMode,
+        sizeMode: AsyncStorageConstants.Values.SizeModeNormal,
+        colorFile:dayColors,
+        sizeFile:mediumFont,
+        verseInLine:false
     }
 
-    // this.styleFile = settingsPageStyle(this.colorFile);
-		this.updateColorMode = this.updateColorMode.bind(this)
-    this.updateSizeMode = this.updateSizeMode.bind(this)
-    this.updateColorFile = this.updateColorFile.bind(this)
-    this.updateBooks = this.updateBooks.bind(this)
+		this.updateBooks = this.updateBooks.bind(this)
+    this.updateSize = this.updateSize.bind(this)
+    this.updateColor = this.updateColor.bind(this)
+    this.updateVerseInLine = this.updateVerseInLine.bind(this)
   }
 
-  updateColorMode = (colorMode) => {
-		this.setState({colorMode})
+  updateBooks = (booksList) => {
+    this.setState({booksList})
+  }
+
+  updateVerseInLine = (verseInLine) =>{
+    this.setState({verseInLine})
+  }
+
+  updateColor = (colorMode, colorFile) => {
+    this.setState({colorMode, colorFile})
 	}
 	
-	updateSizeMode = (sizeMode) => {
-		this.setState({sizeMode})
+  updateSize = (sizeMode, sizeFile) => {
+    this.setState({sizeMode, sizeFile})
   }
 
-    updateColorFile = (colorFile) => {
-      this.setState({colorFile})
-      console.log("update color"+colorFile)
-    }
+  render(){
+    return(
+      <StackNav 
+        screenProps={{
+          colorMode: this.state.colorMode, 
+          sizeMode: this.state.sizeMode, 
+          colorFile:this.state.colorFile,
+          sizeFile:this.state.sizeFile,
+          booksList: this.state.booksList, 
+          isDbLoading: this.state.isDbLoading,
+          verseInLine:this.state.verseInLine,
+          languageCode: this.state.languageCode, 
+          versionCode: this.state.versionCode,
 
-    updateBooks = (booksList) => {
-      this.setState({booksList})
-    }
-
-    render(){
-      return(
-        <StackNav screenProps={{colorMode: this.state.colorMode, sizeMode: this.state.sizeMode, 
-          colorFile:this.state.colorFile, 
-          booksList: this.state.booksList, isDbLoading: this.state.isDbLoading,
-          languageCode: this.state.languageCode, versionCode: this.state.versionCode,
-          updateColor: this.updateColorMode, updateSize: this.updateSizeMode,
-          updateColorFile:this.updateColorFile, updateBooks: this.updateBooks }}/>
-      );
-    }
+          updateColor: this.updateColor,
+          updateSize: this.updateSize,
+          updateVerseInLine:this.updateVerseInLine,
+          updateBooks: this.updateBooks
+        }}
+      />
+    );
+  }
     
-    async componentDidMount(){
+  async componentDidMount(){
+    await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.ColorMode, 
+      AsyncStorageConstants.Values.DayMode).then((colorMode) => {
+          this.setState({colorMode})
+          var colorFile = this.state.colorMode == 1 ? dayColors : nightColors 
+          this.setState({colorFile})
+    })
 
-      
-        const colorMode = await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.ColorMode, AsyncStorageConstants.Values.DayMode);
-        this.setState({colorMode});
+    await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.SizeMode, 
+      AsyncStorageConstants.Values.SizeModeNormal).then((sizeMode) => {
+          this.setState({sizeMode})
+          switch (sizeMode) {
+            case  AsyncStorageConstants.Values.SizeModeXSmall : {
+              this.setState({sizeFile:extraSmallFont})
+              break;
+            } 
+            case  AsyncStorageConstants.Values.SizeModeSmall : {
+              this.setState({sizeFile:smallFont})
+              break;
+            }
+            case AsyncStorageConstants.Values.SizeModeNormal : {
+              this.setState({sizeFile:mediumFont})
+              break;
+            }
+            case AsyncStorageConstants.Values.SizeModeLarge : {
+              this.setState({sizeFile:largeFont})
+              break;
+            }
+            case AsyncStorageConstants.Values.SizeModeXLarge : {
+              this.setState({sizeFile:extraLargeFont})
+              break;
+            }
+          }
+    })
 
-        const sizeMode = await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.SizeMode, AsyncStorageConstants.Values.SizeModeNormal);
-		    this.setState({sizeMode})
-
-		    colorFile = this.state.colorMode == AsyncStorageConstants.Values.DayMode
-      	? dayColors
-        : nightColors;
-        this.setState({colorFile})
-        console.log('MDOEEEEEEEEEEEEEEEE day or night color '+JSON.stringify(colorFile))
-
-        let models = await DbQueries.queryBookIdModels(this.state.versionCode, this.state.languageCode);
-        console.log("routes len =" + models)
-        this.setState({isDbLoading: false})
-        console.log("routes len = done set state book list" )
+    await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.VerseViewMode, 
+      AsyncStorageConstants.Values.VerseInLine).then((verseInLine) => {
+          this.setState({verseInLine})
+    })
         
-        if (models && models.length > 0) {
-          console.log("modesl len=" + models.length)
-          this.setState({booksList: models})
-        }
-
-        console.log("routes db lloading false")        
+    let models = await DbQueries.queryBookIdModels(this.state.versionCode, this.state.languageCode);
+    console.log("routes len =" + models)
+    this.setState({isDbLoading: false})
+    if (models && models.length > 0) {
+      this.setState({booksList: models})
     }
+  }
 }

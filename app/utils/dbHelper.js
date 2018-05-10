@@ -4,8 +4,12 @@ import Realm from 'realm'
 import LanguageModel from '../models/LanguageModel'
 import VersionModel from '../models/VersionModel'
 import BookModel from '../models/BookModel'
+import NoteModel from '../models/NoteModel'
 import ChapterModel from '../models/ChapterModel'
 import VerseComponentsModel from '../models/VerseComponentsModel'
+import StylingModel from '../models/StylingModel'
+import ReferenceModel from '../models/ReferenceModel'
+
 import {
 	Platform,
 } from 'react-native';
@@ -21,7 +25,7 @@ class DbHelper {
 					Platform.OS === 'ios'
 					? RNFS.MainBundlePath + '/autographa.realm'
 					: RNFS.DocumentDirectoryPath + '/autographa.realm',
-				schema: [LanguageModel, VersionModel, BookModel, ChapterModel, VerseComponentsModel] });
+				schema: [LanguageModel, VersionModel, BookModel, ChapterModel, VerseComponentsModel,NoteModel, StylingModel, ReferenceModel] });
     	} catch (err) {
 			console.log("errroe in realm " + err)
     		return null;
@@ -202,6 +206,55 @@ class DbHelper {
 			});
 		}
 	}
+
+	async addNote(value,time){
+		console.log("value in db helper "+value)
+		let realm = await this.getRealm();
+			if (realm) {
+				console.log("value in db help "+value)
+				realm.write(() => {
+					realm.create('NoteModel',{body:value, createdTime:time,modifiedTime:time})
+					console.log("write.. new notes..")
+		  	});
+		 
+		}
+	}
+
+	async updateNote(value, createdTime, modifiedTime){
+		let realm = await this.getRealm();
+		console.log('update continue .....')
+		let update = realm.objects('NoteModel').filtered(	"createdTime = $0",new Date(createdTime));
+		await console.log("update comes with output "+JSON.stringify(update[0].createdTime))
+
+		realm.write(() => {
+			update[0].modifiedTime = modifiedTime,
+			update[0].body = value
+		})
+	}
+
+	async deleteNote(index){
+		let realm = await this.getRealm();
+		let results = realm.objects('NoteModel');
+		console.log("result "+JSON.stringify(results[index]))
+		realm.write(() => {
+			realm.delete(results[index]);
+			console.log("deleted data from table")
+		})
+	}
+
+	// async addStyle(index,){
+	// 	console.log("value in db helper "+value)
+	// 	let realm = await this.getRealm();
+	// 		if (realm) {
+	// 			console.log("value in db help "+value)
+	// 			realm.write(() => {
+	// 				realm.create('StylingModel',{characterIndex:index, format:})
+	// 				console.log("write.. new notes..")
+	// 	  	});
+		 
+	// 	}
+	// }
+	
 }
 
 export default new DbHelper();

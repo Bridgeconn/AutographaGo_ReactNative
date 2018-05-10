@@ -18,7 +18,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-export default class Home extends Component {
+export default class Book extends Component {
 
   static navigationOptions = ({navigation}) => ({
     headerTitle: navigation.state.params.bookName,

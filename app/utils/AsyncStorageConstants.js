@@ -1,9 +1,8 @@
-export const colorMode = "color_mode";
-
 module.exports = {
     Keys: {
         ColorMode : 'color_mode',
         SizeMode: 'size_mode',
+        VerseViewMode:'verse_view_mode'
     },
     Values: {
         DayMode: 1,
@@ -15,6 +14,8 @@ module.exports = {
         SizeModeLarge: 3,
         SizeModeXLarge: 4,
 
+        VerseInLine:false
+        // VerseInParagraph:0
         
     }
 }
