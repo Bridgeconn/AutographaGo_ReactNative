@@ -9,11 +9,14 @@ import {
   FlatList,
   ActivityIndicator,
   Dimensions,
+  AsyncStorage
 } from 'react-native';
 import DbQueries from '../utils/dbQueries'
 import USFMParser from '../utils/USFMParser'
 import Realm from 'realm'
 import VerseViewBook from '../components/VerseViewBook'
+import AsyncStorageUtil from '../utils/AsyncStorageUtil';
+import AsyncStorageConstants from '../utils/AsyncStorageConstants';
 const Constants = require('../utils/constants')
 
 const width = Dimensions.get('window').width;
@@ -78,6 +81,16 @@ export default class Book extends Component {
     );
   }
 
+  componentWillUnmount(){
+    let lastRead = {
+      langCode:'ENG',
+      versionCode:'UDB',
+      bookId:'GEN',
+      chapterNum:'5',
+      verseNum:'7'
+    }
+    AsyncStorage.setItem(AsyncStorageConstants.Keys.LastReadReference, lastRead);
+  }
   async queryBookWithId() {
     this.setState({isLoading: true})
     let models = await DbQueries.queryBookWithId(this.state.bookId, "ULB", "ENG");
@@ -106,3 +119,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
 });
+
+
