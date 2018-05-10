@@ -17,7 +17,8 @@ export default class Search extends Component {
   constructor(){
     super();
     this.state = {
-      searchedResult:[]
+      searchedResult:[],
+      
     }
     // this.onSearchText = this.onSearchText.bind(this)
   }
