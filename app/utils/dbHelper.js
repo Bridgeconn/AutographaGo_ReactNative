@@ -99,14 +99,13 @@ class DbHelper {
 		}
 		return null;
 	}
-
 	async queryHighlights(verCode: string, langCode: string) {
 		let realm = await this.getRealm();
     	if (realm) {
 			let result1 = realm.objects("VerseComponentsModel");
 			result1 = result1.filtered('languageCode ==[c] "' + langCode + 
 				'" && versionCode ==[c] "' + verCode + '"');
-			result1 = result1.filtered('highlighted == true');
+			result1 = result1.filtered('highlighted == true')
 			return result1;//.distinct('verseNumber', 'chapterNumber', 'bookId');
 		}
 		return null;
@@ -199,20 +198,30 @@ class DbHelper {
 		let realm = await this.getRealm();
 		if (realm) {
 			let results = realm.objects('VerseComponentsModel');
-			console.log("db len = " + results.length)
-			results = results.filtered('languageCode ==[c] "' + langCode +
-				'" && versionCode ==[c] "' + verCode + '" && bookId ==[c] "' +
-				bookId + '" && chapterNumber == ' + chapterNumber +
-				' && type ==[c] "v" && verseNumber ==[c] "' + verseNumber + '"' );
-			realm.write(() => {
-				for (var i=0;i<results.length;i++) {
-					results[i].highlighted = isHighlight;
-				}
-				console.log("update highlight complete..")
-			});
+				console.log("db len = " + results.length)
+				results = results.filtered('languageCode ==[c] "' + langCode +
+					'" && versionCode ==[c] "' + verCode + '" && bookId ==[c] "' +
+					bookId + '" && chapterNumber == ' + chapterNumber +
+					' && type ==[c] "v" && verseNumber ==[c] "' + verseNumber + '"' );
+				realm.write(() => {
+					for (var i=0;i<results.length;i++) {
+						results[i].highlighted = isHighlight;
+					}
+					console.log("update highlight complete..")
+				});
+			
 		}
 	}
-
+	async queryLastRead(langCode, verCode, bookId, chapterNumber){
+		let realm = await this.getRealm();
+		if (realm) {
+			let results = realm.objects('VerseComponentsModel');
+			results = results.filtered('languageCode ==[c] "' + langCode +
+					'" && versionCode ==[c] "' + verCode + '" && bookId ==[c] "' +
+					bookId + '" && chapterNumber == ' + chapterNumber);
+			return results;
+		}
+	}
 	async addNote(value,time){
 		console.log("value in db helper "+value)
 		let realm = await this.getRealm();

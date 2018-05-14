@@ -20,6 +20,7 @@ export default class AsyncStorageUtil {
     static setItem(key, value){
 		try {
             AsyncStorage.setItem(key, JSON.stringify(value));
+            // console.log("value"+value)
           } catch (error) {
             console.error('AsyncStorage error: ' + error);
           }

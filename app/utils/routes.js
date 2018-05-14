@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 import {StackNavigator} from 'react-navigation'
 import Home from '../screens/Home/Home'
+import LastRead from '../screens/LastRead'
 import About from '../screens/About'
 import Book from '../screens/Book'
 import Bookmarks from '../screens/Bookmarks'
@@ -25,6 +26,7 @@ import Realm from 'realm'
 
 const StackNav = StackNavigator(
   {  
+    
       Splash: {
         screen: Splash,
       },
@@ -53,7 +55,7 @@ const StackNav = StackNavigator(
         screen: Notes,
       },
       Search: {
-          screen: Search,
+        screen: Search,
       },
       Settings: {
         screen: Settings,
@@ -64,6 +66,9 @@ const StackNav = StackNavigator(
       Hints: {
         screen: Hints,
       },
+      LastRead:{
+        screen:LastRead,
+      }
   },
   {
     navigationOptions: {

@@ -46,6 +46,9 @@ class DbQueries {
         DbHelper.updateHighlightsInBook(model, chapterIndex, verseIndex, isHighlight)
     }
 
+    queryLastRead(langCode, verCode, bookId, chapterNumber){
+       return DbHelper.queryLastRead(langCode, verCode, bookId, chapterNumber);
+    }
     // queryNotes(verCode: string, langCode: string) {
     //     RealmQuery<NotesModel> query = realm.where(NotesModel.class);
     //     query = query.equalTo("languageCode", language, Case.INSENSITIVE);

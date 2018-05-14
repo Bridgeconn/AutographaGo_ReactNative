@@ -165,7 +165,6 @@ export default class Home extends Component {
               // onScroll={this.handleScroll}
               renderItem={this.renderItem}
               extraData={this.styleFile}
-              
               // onViewableItemsChanged={this.handleViewableItemsChanged}
               // viewabilityConfig={this.viewabilityConfig}
             />

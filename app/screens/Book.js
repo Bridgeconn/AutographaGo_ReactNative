@@ -215,13 +215,13 @@ export default class Book extends Component {
 
   componentWillUnmount(){
     let lastRead = {
-      langCode:'ENG',
-      versionCode:'UDB',
-      bookId:'GEN',
-      chapterNum:'5',
-      verseNum:'7'
+      langCode:this.state.languageCode,
+      verCode:this.state.versionCode,
+      bookId:this.state.bookId,
+      chapterNum:this.state.chapterNumber,
+      // verseNum:this.state.verseNumber
     }
-    // AsyncStorage.setItem(AsyncStorageConstants.Keys.LastReadReference, lastRead);
+    AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.LastReadReference, lastRead);
   }
 }
 
