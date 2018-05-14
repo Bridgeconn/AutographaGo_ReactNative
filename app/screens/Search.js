@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   TextInput,
   FlatList,
-  ActivityIndicator
+  ActivityIndicator,
+  VirtualizedList
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import DbQueries from '../utils/dbQueries.js'
@@ -44,7 +45,7 @@ export default class Search extends Component {
     let searchResultByVerseText = await DbQueries.querySearchVerse("ULB","ENG",this.state.text)
   
     if(searchResultByBookName && searchResultByBookName.length>0){
-      for(var i = 0 ; i < searchResultByBookName.length ;i++ ){
+      for(var i = 0; i < searchResultByBookName.length ;i++ ){
      console.log("bookName "+searchResultByBookName[0].bookName)
       this.setState({searchedResult:[{bookName:searchResultByBookName[i].bookName}]})
       }
@@ -58,8 +59,6 @@ export default class Search extends Component {
        
      }   
      this.setState({isLoading:false})
-      
-     
   }
   onText = (text) =>{
     this.setState({text})
@@ -73,7 +72,25 @@ export default class Search extends Component {
 toggleButton(button){
   console.log("button active"+button)
     this.setState({activeTab:button})
+    // this.elementIndex.scrollToIndex({index:39,viewPosition:0,animated: true,viewOffset:0})
+    // if(button ==  2){
+    //   console.log("pressed")
+    //   this.elementIndex.scrollToIndex({index:39,viewPosition:0,animated: true,viewOffset:0})
+    // }
+    // if(button == 1){
+    //   this.elementIndex.scrollToIndex({index:0,viewPosition:0,animated: true,viewOffset:0})
+    // }
 }
+
+getItemLayout = (data, index) => (
+  { length: 48, offset: 48 * index, index }
+)
+
+handleScroll = (event)=>{
+   console.log(event.nativeEvent.contentOffset.y+ "  index value")  
+}
+
+
   render() {
     console.log("isloadoing"+this.state.isLoading)
     return (
@@ -85,9 +102,9 @@ toggleButton(button){
           color="#0000ff" />
           :
       <FlatList
-       removeClippedSubviews={false}
+          ref={ref => this.elementIndex = ref}
           data={this.state.searchedResult}
-          renderItem={({item}) => 
+          renderItem={({item,index}) => 
           <View>
           <Text>{item.bookName}</Text>
           <Text style={{color:"red"}}> {item.bookId} : {item.verseNumber} : {item.chapterNumber} </Text>
@@ -95,6 +112,9 @@ toggleButton(button){
           </View>
           }
           ListHeaderComponent={this.state.searchedResult.length !== 0  ?
+            <View style={{backgroundColor: '#fff', 
+            alignItems: 'center', 
+            justifyContent: 'center'}}>
             <Segment style = 
             {{
               backgroundColor:"transparent", 
@@ -131,7 +151,9 @@ toggleButton(button){
                 Old Testament
               </Text>
             </Button>
-            </Segment> :null  }
+            </Segment> 
+            </View>:null  }
+           stickyHeaderIndices={[0]}
           />
         }
       </View>
@@ -139,7 +161,6 @@ toggleButton(button){
     )
 }
 }
-
 
 const styles = StyleSheet.create({
   container: {
