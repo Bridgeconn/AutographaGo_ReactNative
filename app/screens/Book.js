@@ -31,7 +31,8 @@ export default class Book extends Component {
   constructor(props) {
     super(props);
 
-    console.log("BOOK props--" + JSON.stringify(props))
+    console.log("BOOK props--" + JSON.stringify(props.navigation))
+    // console.log("book name "+this.props.)
 
     this.getSelectedReferences = this.getSelectedReferences.bind(this)
     
@@ -56,6 +57,7 @@ export default class Book extends Component {
     this.setState({isLoading: true}, () => {
       this.queryBook()
     })
+    
   }
 
   async queryBook() {
@@ -215,11 +217,11 @@ export default class Book extends Component {
 
   componentWillUnmount(){
     let lastRead = {
-      langCode:this.state.languageCode,
-      verCode:this.state.versionCode,
+      languageCode:this.state.languageCode,
+      versionCode:this.state.versionCode,
       bookId:this.state.bookId,
-      chapterNum:this.state.chapterNumber,
-      // verseNum:this.state.verseNumber
+      chapterNumber:1,
+      verseNumber:5
     }
     AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.LastReadReference, lastRead);
   }

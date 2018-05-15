@@ -76,8 +76,9 @@ class DbHelper {
 						return resultsB;
 					}
 					if (text) {
-						return resultsB.filtered('bookName CONTAINS[c] "' + text + '"').sorted("bookNumber");
-					}
+						 resultsB = resultsB.filtered('bookName CONTAINS[c] "' + text + '"').sorted("bookNumber");
+						 return resultsB
+						}
 					return resultsB.sorted("bookNumber");
 				}
 				return null;
@@ -210,16 +211,6 @@ class DbHelper {
 					console.log("update highlight complete..")
 				});
 			
-		}
-	}
-	async queryLastRead(langCode, verCode, bookId, chapterNumber){
-		let realm = await this.getRealm();
-		if (realm) {
-			let results = realm.objects('VerseComponentsModel');
-			results = results.filtered('languageCode ==[c] "' + langCode +
-					'" && versionCode ==[c] "' + verCode + '" && bookId ==[c] "' +
-					bookId + '" && chapterNumber == ' + chapterNumber);
-			return results;
 		}
 	}
 	async addNote(value,time){

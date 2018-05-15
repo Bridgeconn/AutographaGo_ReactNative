@@ -20,6 +20,7 @@ export default class Search extends Component {
     super();
     this.state = {
       searchedResult:[],
+      displaySearchResults: [],
       activeTab:0,
       isLoading:false
     }
@@ -42,21 +43,59 @@ export default class Search extends Component {
     this.setState({isLoading:true})
     console.log("waiting for search funtion ")
     let searchResultByBookName = await DbQueries.querySearchBookWithName("ULB", "ENG",this.state.text);
-    let searchResultByVerseText = await DbQueries.querySearchVerse("ULB","ENG",this.state.text)
-  
-    if(searchResultByBookName && searchResultByBookName.length>0){
+    
+    if(searchResultByBookName && searchResultByBookName.length >0 ){
+      console.log("db data book name "+searchResultByBookName.length + " db data text ")
       for(var i = 0; i < searchResultByBookName.length ;i++ ){
-     console.log("bookName "+searchResultByBookName[0].bookName)
-      this.setState({searchedResult:[{bookName:searchResultByBookName[i].bookName}]})
+        console.log("bookName "+searchResultByBookName[0].bookName)
+        let reference = {bookId:searchResultByBookName[i].bookId,
+        bookName:searchResultByBookName[i].bookName,
+        bookNumber: searchResultByBookName[i].bookNumber,
+        chapterNumber:1,
+        verseNumber:"1",
+        versionCode:'ULB',
+        languageCode:'ENG',
+        type: 'v',
+          text: 'ASDXFCGVBHNM',
+          highlighted: 'false'}
+        
+          this.setState(prevState =>({
+            searchedResult:[...prevState.searchedResult, reference]
+          }))
+
+
+
       }
      }
-    if (searchResultByVerseText && searchResultByVerseText.length > 0 ) {
-      for(var i = 0 ; i < searchResultByVerseText.length ;i++ ){
-        this.setState({searchedResult: this.state.searchedResult.concat([{text:searchResultByVerseText[i].text,bookId:searchResultByVerseText[i].bookId,verseNumber:searchResultByVerseText[i].verseNumber,chapterNumber:searchResultByVerseText[i].chapterNumber}])})
-      }
-      // console.log("serachd result verse text is coming value of  "+JSON.stringify(searchResultByVerseText[0].text))
-        // console.log("serachd result verse text "+JSON.stringify(searchResultByVerseText[0].text))
+
+    let searchResultByVerseText = await DbQueries.querySearchVerse("ULB","ENG",this.state.text)
+    
+    if (searchResultByVerseText &&  searchResultByVerseText.length >0) {
+      // let searchedResult = [...this.state.searchedResult]
+      // searchedResult = searchedResult.concat(searchResultByVerseText)
+      // this.setState({searchedResult})
+      
+      // for(var i = 0 ; i < searchResultByVerseText.length ;i++ ){
+      //   this.setState({searchedResult: this.state.searchedResult.concat([{text:searchResultByVerseText[i].text,bookId:searchResultByVerseText[i].bookId,verseNumber:searchResultByVerseText[i].verseNumber,chapterNumber:searchResultByVerseText[i].chapterNumber}])})
+      // }
        
+      for(var i = 0; i < searchResultByVerseText.length ;i++ ){
+        let reference = {bookId:searchResultByVerseText[i].bookId,
+        bookName:'DU<<Y',
+        bookNumber: 5,
+        chapterNumber:searchResultByVerseText[i].chapterNumber,
+        verseNumber:searchResultByVerseText[i].verseNumber,
+        versionCode:searchResultByVerseText[i].versionCode,
+        languageCode:searchResultByVerseText[i].languageCode,
+        type: searchResultByVerseText[i].type,
+          text: searchResultByVerseText[i].text,
+          highlighted: searchResultByVerseText[i].highlighted}
+
+          this.setState(prevState =>({
+            searchedResult:[...prevState.searchedResult, reference]
+          }))
+      }
+
      }   
      this.setState({isLoading:false})
   }
@@ -93,34 +132,21 @@ handleScroll = (event)=>{
 
   render() {
     console.log("isloadoing"+this.state.isLoading)
+    console.log("setstate value of searched result "+JSON.stringify(this.state.searchedResult))
     return (
       <View style={styles.container}>
-      {this.state.isLoading ? 
+      {/* {this.state.isLoading ?  */}
         <ActivityIndicator 
           animating={this.state.isLoading ? true : false} 
           size="large" 
           color="#0000ff" />
-          :
-      <FlatList
-          ref={ref => this.elementIndex = ref}
-          data={this.state.searchedResult}
-          renderItem={({item,index}) => 
-          <View>
-          <Text>{item.bookName}</Text>
-          <Text style={{color:"red"}}> {item.bookId} : {item.verseNumber} : {item.chapterNumber} </Text>
-          <Text>{item.text}</Text>
-          </View>
-          }
-          ListHeaderComponent={this.state.searchedResult.length !== 0  ?
-            <View style={{backgroundColor: '#fff', 
-            alignItems: 'center', 
-            justifyContent: 'center'}}>
-            <Segment style = 
+          {/* : */}
+          <Segment style = 
             {{
               backgroundColor:"transparent", 
               borderColor:"#3F51B5",
               borderWidth:1,
-              margin:8,
+              // margin:8,
               justifyContent:'space-between'
             }}>
             <Button
@@ -152,10 +178,18 @@ handleScroll = (event)=>{
               </Text>
             </Button>
             </Segment> 
-            </View>:null  }
-           stickyHeaderIndices={[0]}
+      <FlatList
+          ref={ref => this.elementIndex = ref}
+          data={this.state.searchedResult}
+          renderItem={({item,index}) => 
+          <View>
+          <Text>{item.bookName}</Text>
+          <Text style={{color:"red"}}> {item.bookName} : {item.verseNumber} : {item.chapterNumber} </Text>
+          <Text>{item.text}</Text>
+          </View>
+          }
           />
-        }
+        {/* } */}
       </View>
       
     )

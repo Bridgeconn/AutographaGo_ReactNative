@@ -16,6 +16,7 @@ import { homePageStyle } from './styles.js';
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 const AsyncStorageConstants = require('../../utils/AsyncStorageConstants')
+import {getBookNameFromMapping} from '../../utils/UtilFunctions'
 import {nightColors, dayColors} from '../../utils/colors.js'
 import FixedSidebar from '../../components/FixedSidebar/FixedSidebar'
 
@@ -26,12 +27,14 @@ export default class Home extends Component {
 
   constructor(props){
     super(props)
-
+    console.log("last read in home page "+this.props.screenProps.lastRead.versionCode)
+    console.log("last read in home page "+this.props.screenProps.lastRead.chapterNumber)
     this.handleViewableItemsChanged = this.handleViewableItemsChanged.bind(this)
 
     this.state = {
       colorFile:this.props.screenProps.colorFile,
       sizeFile:this.props.screenProps.sizeFile,
+      lastRead:this.props.screenProps.lastRead,
       activeTab:true,
       iconPress: [],
       booksList: this.props.screenProps.booksList,
@@ -82,7 +85,6 @@ export default class Home extends Component {
     console.log("handleViewableItemsChanged.. "+viewableItems)
     // console.log("handleViewableItemsChanged changes.. "+changed)
   }
-
   renderItem = ({item, index})=> {
     return (
       <TouchableOpacity 
@@ -120,7 +122,16 @@ export default class Home extends Component {
     return (
       <View style={this.styleFile.container}>
         <FixedSidebar 
-          onPress={(icon)=>{this.props.navigation.navigate(icon)}}
+          onPress={(icon)=>{
+            this.props.navigation.navigate(
+              icon,
+              { languageCode:this.state.lastRead.languageCode,
+                versionCode:this.state.lastRead.versionCode,
+                bookId:this.state.lastRead.bookId,
+                chapterNumber:this.state.lastRead.chapterNumber,
+                verseNumber:this.state.lastRead.verseNumber,
+                bookName:getBookNameFromMapping(this.state.lastRead.bookId)
+              })}}
           doAnimate = {false}
         />
         <View style={this.styleFile.bookNameContainer}>
@@ -131,8 +142,7 @@ export default class Home extends Component {
                   {backgroundColor:this.state.activeTab ?  "#3F51B5":"#fff"},
                   this.styleFile.segmentButton
                 ]} 
-                onPress={() => 
-                  this.toggleButton.bind(this,true)
+                onPress={this.toggleButton.bind(this,true)
                 }
               >
                 <Text 
@@ -147,8 +157,7 @@ export default class Home extends Component {
                   {backgroundColor:this.state.activeTab ?  "#fff" : "#3F51B5"},  
                   this.styleFile.segmentButton
                 ]} 
-                onPress={
-                  this.toggleButton.bind(this,false)}>
+                onPress={this.toggleButton.bind(this,false)}>
                 <Text 
                   active={!this.state.activeTab} 
                   style={{

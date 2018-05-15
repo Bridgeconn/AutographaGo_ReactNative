@@ -3,7 +3,6 @@
 import React, { Component } from 'react'
 import {StackNavigator} from 'react-navigation'
 import Home from '../screens/Home/Home'
-import LastRead from '../screens/LastRead'
 import About from '../screens/About'
 import Book from '../screens/Book'
 import Bookmarks from '../screens/Bookmarks'
@@ -66,9 +65,7 @@ const StackNav = StackNavigator(
       Hints: {
         screen: Hints,
       },
-      LastRead:{
-        screen:LastRead,
-      }
+     
   },
   {
     navigationOptions: {
@@ -98,7 +95,8 @@ export default class App extends Component {
         sizeMode: AsyncStorageConstants.Values.SizeModeNormal,
         colorFile:dayColors,
         sizeFile:mediumFont,
-        verseInLine:false
+        verseInLine:false,
+        lastRead:{}
     }
 
 		this.updateBooks = this.updateBooks.bind(this)
@@ -136,6 +134,7 @@ export default class App extends Component {
           verseInLine:this.state.verseInLine,
           languageCode: this.state.languageCode, 
           versionCode: this.state.versionCode,
+          lastRead:this.state.lastRead,
 
           updateColor: this.updateColor,
           updateSize: this.updateSize,
@@ -184,6 +183,12 @@ export default class App extends Component {
     await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.VerseViewMode, 
       AsyncStorageConstants.Values.VerseInLine).then((verseInLine) => {
           this.setState({verseInLine})
+    })
+
+    await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.LastReadReference, AsyncStorageConstants.Values.LastReadReference
+      ).then((lastRead) => {
+        console.log("last read obj "+JSON.stringify(lastRead))
+          this.setState({lastRead})
     })
         
     let models = await DbQueries.queryBookIdModels(this.state.versionCode, this.state.languageCode);

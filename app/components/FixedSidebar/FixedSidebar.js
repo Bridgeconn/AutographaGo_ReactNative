@@ -43,7 +43,7 @@ export default class FixedSidebar extends Component {
       transform: [{ scale: this.animatedValue}]
     }
     const iconName = [
-      {icon:'local-library',pressIcon:'LastRead',},
+      {icon:'local-library',pressIcon:'Book',},
       {icon:'history',pressIcon:'History'},
       {icon:'search',pressIcon:'Search'},
       {icon:'note',pressIcon:'Notes'},
@@ -51,7 +51,7 @@ export default class FixedSidebar extends Component {
       {icon:'border-color',pressIcon:'Highlights'},
       {icon:'settings',pressIcon:'Settings'}
     ]
-    const iconPress = ['LastRead',' History','Search','Note','Bookmarks','Highlights','Settings']
+    const iconPress = ['Book',' History','Search','Note','Bookmarks','Highlights','Settings']
     return (
       <View style={sidebarStyle.container}>
         {
