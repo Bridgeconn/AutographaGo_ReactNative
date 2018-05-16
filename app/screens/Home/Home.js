@@ -87,7 +87,7 @@ export default class Home extends Component {
     return (
       <TouchableOpacity 
           onPress={
-            ()=>this.props.navigation.navigate('NumberSelection', {bookId: item.bookId, 
+            ()=>this.props.navigation.navigate('ChapterSelection', {bookId: item.bookId, 
                 bookName: item.bookName, bookIndex: index, numOfChapters: item.numOfChapters})
           }>
           <View 

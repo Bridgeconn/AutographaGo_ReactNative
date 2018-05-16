@@ -12,6 +12,38 @@ const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 import {nightColors, dayColors} from '../../utils/colors.js'
 import {extraSmallFont,smallFont,mediumFont,largeFont,extraLargeFont} from '../../utils/dimens.js'
+import {createMaterialTopTabNavigator, TabNavigator} from 'react-navigation'
+import VerseSelector from './VerseSelector'
+
+const TabNav = TabNavigator({
+  TabItem1: {
+      screen: VerseSelector,
+      navigationOptions: {
+          tabBarLabel:"Chapter",
+          tabBarIcon: ({ tintColor }) => <Icon name={"glass"} size={30} color={tintColor} />
+      }
+  },
+  TabItem2: {
+    screen: VerseSelector,
+    navigationOptions: {
+        tabBarLabel:"Verse",
+        tabBarIcon: ({ tintColor }) => <Icon name={"glass"} size={30} color={tintColor} />
+    }
+  },
+}, {
+      tabBarOptions: {
+      
+     activeTintColor: '#f2f2f2',
+     activeBackgroundColor: '#2EC4B6',
+     inactiveTintColor: '#666',
+     tabBarPosition: 'bottom',
+   swipeEnabled: true,
+     labelStyle: {
+       fontSize: 22,
+       padding: 12
+     }
+  }
+});
 
 export default class NumberSelection extends Component {
   static navigationOptions = {
@@ -20,7 +52,6 @@ export default class NumberSelection extends Component {
 
   constructor(props){
     super(props)
-    console.log("props number : "+JSON.stringify(props))
 
     this.state = {
       bookId: this.props.navigation.state.params.bookId,
@@ -33,26 +64,8 @@ export default class NumberSelection extends Component {
   
   render() {
     return (
-      <View style={{flex:1}}>
-        <FlatList
-        numColumns={4}
-        data={this.state.bookData}
-        renderItem={({item}) => 
-        <TouchableOpacity style={{flex:0.25,borderColor:'black',borderRightWidth:1, borderBottomWidth:1,
-          height:width/4, justifyContent:"center"}}
-          onPress={
-            ()=>this.props.navigation.navigate('Book', {bookId: this.state.bookId, 
-              bookName: this.state.bookName, chapterNumber: item })
-            }
-          >
-            {/* <View style={{flex:0.25,borderColor:'black',borderRightWidth:1, borderBottomWidth:1,
-            height:width/4, justifyContent:"center"}}> */}
-                <Text style={{textAlign:"center",alignItems:"center", color:'black'}}>{item}</Text>
-            {/* </View> */}
-            </TouchableOpacity>
-        }
-      />
-      </View>
+        <TabNav screenProps={this.state}/>
     );
   }
+  
 };

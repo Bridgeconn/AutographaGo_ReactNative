@@ -1,7 +1,7 @@
 // all of our routes
 
 import React, { Component } from 'react'
-import {StackNavigator} from 'react-navigation'
+import {StackNavigator, TabNavigator} from 'react-navigation'
 import Home from '../screens/Home/Home'
 import About from '../screens/About'
 import Book from '../screens/Book'
@@ -22,6 +22,8 @@ import {extraSmallFont,smallFont,mediumFont,largeFont,extraLargeFont} from './di
 import { styleFile } from './styles.js'
 import DbQueries from '../utils/dbQueries'
 import Realm from 'realm'
+import RV from '../screens/RecyclerView'
+import VerseSelector from '../screens/numberSelection/VerseSelector'
 
 const StackNav = StackNavigator(
   {  
@@ -58,11 +60,50 @@ const StackNav = StackNavigator(
       Settings: {
         screen: Settings,
       },
+      ChapterSelection: {
+        screen: VerseSelector,
+        navigationOptions: {
+            headerTitle:"Select Chapter"
+        }
+      },
       NumberSelection: {
-        screen: NumberSelection,
+        screen: TabNavigator(
+          {
+            TabItem1: {
+              screen: VerseSelector,
+              navigationOptions: {
+                  tabBarLabel:"Chapter"
+              }
+            },
+            TabItem2: {
+              screen: VerseSelector,
+              navigationOptions: {
+                  tabBarLabel:"Verse"
+              }
+            },
+
+          },
+          {
+            tabBarOptions: {
+              activeTintColor: '#f2f2f2',
+              activeBackgroundColor: '#2EC4B6',
+              inactiveTintColor: '#666',
+              tabBarPosition: 'top',
+              swipeEnabled: false,
+              labelStyle: {
+                fontSize: 18,
+                padding: 4
+              }
+            }
+          }
+
+        ),
       },
       Hints: {
         screen: Hints,
+      },
+      RV: {
+        screen: RV,
       },
   },
   {

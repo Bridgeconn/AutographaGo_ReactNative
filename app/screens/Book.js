@@ -26,6 +26,15 @@ export default class Book extends Component {
 
   static navigationOptions = ({navigation}) => ({
     headerTitle: navigation.state.params.bookName,
+    headerRight: (
+      <Icon 
+          onPress={()=> {navigation.state.params.onIconPress()}} 
+          name={'bookmark'} 
+          color={navigation.state.params.isBookmark ? "white" : "yellow"} 
+          size={24} 
+          style={{marginHorizontal:8}} 
+      />      
+    ),
   });
 
   constructor(props) {
@@ -34,8 +43,10 @@ export default class Book extends Component {
     console.log("BOOK props--" + JSON.stringify(props))
 
     this.getSelectedReferences = this.getSelectedReferences.bind(this)
-    
     this.queryBook = this.queryBook.bind(this)
+    this.onBookmarkPress = this.onBookmarkPress.bind(this)
+    this.onListScroll = this.onListScroll.bind(this)
+    this.onViewableItemsChanged = this.onViewableItemsChanged.bind(this)
 
     this.state = {
       languageCode: this.props.screenProps.languageCode,
@@ -47,12 +58,23 @@ export default class Book extends Component {
       bookName: this.props.navigation.state.params.bookName,
       chapterNumber: this.props.navigation.state.params.chapterNumber,
       bottomHighlightText: true,
+      bookmarksList: [],
+      isBookmark: false,
     }
 
     this.selectedReferenceSet = new Set();
+    this.viewabilityConfig = {
+      viewAreaCoveragePercentThreshold: 50,
+    }
+    // minimumViewTime	No	number
+    // viewAreaCoveragePercentThreshold	No	number    required or
+    // itemVisiblePercentThreshold	No	number        required
+    // waitForInteraction	No	boolean
   }
 
   componentDidMount() {
+    this.props.navigation.setParams({onIconPress: this.onBookmarkPress})    
+    this.props.navigation.setParams({isBookmark: this.state.isBookmark})
     this.setState({isLoading: true}, () => {
       this.queryBook()
     })
@@ -67,8 +89,38 @@ export default class Book extends Component {
     } else {
       if (model.length > 0) {
         this.setState({modelData: model[0].chapterModels})
+        this.setState({bookmarksList: model[0].bookmarksList})
       }
     }
+  }
+
+  onBookmarkPress() {
+    this.setState({isBookmark: !this.state.isBookmark}, () => {
+        this.props.navigation.setParams({isBookmark: this.state.isBookmark})      
+    })
+  }
+
+  onListScroll() {
+    // this.flatListRef.
+  }
+
+  onViewableItemsChanged = ({ viewableItems, changed }) => {
+      console.log("visible length = "+ viewableItems.length)    
+      if (viewableItems.length > 0) {
+        for (var i=0;i<viewableItems.length;i++) {
+          console.log("visible index = "+ i +" == " + viewableItems[i].index)
+        }
+      } else {
+        console.log("visible index = -1")        
+      }
+      console.log("changed length = "+ changed.length)    
+      if (changed.length > 0) {
+        for (var i=0;i<changed.length;i++) {
+          console.log("changed index = "+ i +" == " + changed[i].index)
+        }
+      } else {
+        console.log("changed index = -1")        
+      }
   }
 
   getItemLayout = (data, index) => {
@@ -150,6 +202,11 @@ export default class Book extends Component {
           data={this.state.modelData}
           // initialScrollIndex={this.state.chapterNumber - 1}
           // initialNumToRender={2}
+          onScroll={() => {
+            this.onListScroll()
+          }}
+          onViewableItemsChanged={this.onViewableItemsChanged}
+          viewabilityConfig={this.viewabilityConfig}
           ref={(ref) => { this.flatListRef = ref; }}
           getItemLayout={this.getItemLayout}
           renderItem={({item}) => 
