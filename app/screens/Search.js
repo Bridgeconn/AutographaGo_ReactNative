@@ -13,6 +13,8 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import DbQueries from '../utils/dbQueries.js'
 import {Button,Segment} from 'native-base'
+import {getBookNameFromMapping, getBookNumberFromMapping} from '../utils/UtilFunctions'
+
 
 export default class Search extends Component {
 
@@ -22,7 +24,8 @@ export default class Search extends Component {
       searchedResult:[],
       displaySearchResults: [],
       activeTab:0,
-      isLoading:false
+      isLoading:false,
+      tabsData:[]
     }
     this.onSearchText = this.onSearchText.bind(this)
   }
@@ -41,16 +44,13 @@ export default class Search extends Component {
   })
   async onSearchText(){
     this.setState({isLoading:true})
-    console.log("waiting for search funtion ")
     let searchResultByBookName = await DbQueries.querySearchBookWithName("ULB", "ENG",this.state.text);
     
     if(searchResultByBookName && searchResultByBookName.length >0 ){
-      console.log("db data book name "+searchResultByBookName.length + " db data text ")
       for(var i = 0; i < searchResultByBookName.length ;i++ ){
-        console.log("bookName "+searchResultByBookName[0].bookName)
         let reference = {bookId:searchResultByBookName[i].bookId,
-        bookName:searchResultByBookName[i].bookName,
-        bookNumber: searchResultByBookName[i].bookNumber,
+        bookName:getBookNameFromMapping(searchResultByBookName[i].bookId),
+        bookNumber: getBookNumberFromMapping(searchResultByBookName[i].bookId),
         chapterNumber:1,
         verseNumber:"1",
         versionCode:'ULB',
@@ -58,13 +58,10 @@ export default class Search extends Component {
         type: 'v',
           text: 'ASDXFCGVBHNM',
           highlighted: 'false'}
-        
           this.setState(prevState =>({
             searchedResult:[...prevState.searchedResult, reference]
           }))
-
-
-
+        
       }
      }
 
@@ -81,8 +78,8 @@ export default class Search extends Component {
        
       for(var i = 0; i < searchResultByVerseText.length ;i++ ){
         let reference = {bookId:searchResultByVerseText[i].bookId,
-        bookName:'DU<<Y',
-        bookNumber: 5,
+        bookName:getBookNameFromMapping(searchResultByVerseText[i].bookId),
+        bookNumber:getBookNumberFromMapping(searchResultByVerseText[i].bookId),
         chapterNumber:searchResultByVerseText[i].chapterNumber,
         verseNumber:searchResultByVerseText[i].verseNumber,
         versionCode:searchResultByVerseText[i].versionCode,
@@ -96,65 +93,70 @@ export default class Search extends Component {
           }))
       }
 
-     }   
+     }
+   
+
      this.setState({isLoading:false})
+  }
+  renderDataOnPressTab(activeTab){
+    for(var i = 0; i < this.state.searchedResult.length ;i++ ){
+      if(this.state.searchedResult[i].bookNumber > 39 && activeTab == 1){
+            console.log("data from 41 "+JSON.stringify(this.state.searchedResult[i].bookNumber))
+            console.log ("book "+this.state.searchedResult[i])
+            let tabData1 = this.state.searchedResult[i]
+            this.state.searchedResult.splice(i, 1);
+            // console.log("data moved "+JSON.stringify(data))
+            this.setState({tabsData:this.state.tabsData.push(tabData1)})
+            console.log("data from TAB 1 "+JSON.stringify(this.state.tabsData))
+        }
+      }
+
+    
   }
   onText = (text) =>{
     this.setState({text})
-    console.log("text"+this.state.text)
   }
   
   componentDidMount(){
-    // console.log("props from navigation options "+this.props.navigation.state.params.text)
     this.props.navigation.setParams({onText: this.onText,onSearchText: this.onSearchText,text:this.state.text})
   }
-toggleButton(button){
-  console.log("button active"+button)
-    this.setState({activeTab:button})
-    // this.elementIndex.scrollToIndex({index:39,viewPosition:0,animated: true,viewOffset:0})
-    // if(button ==  2){
-    //   console.log("pressed")
-    //   this.elementIndex.scrollToIndex({index:39,viewPosition:0,animated: true,viewOffset:0})
-    // }
-    // if(button == 1){
-    //   this.elementIndex.scrollToIndex({index:0,viewPosition:0,animated: true,viewOffset:0})
-    // }
-}
+  toggleButton(activeTab){
+      // if(this.state.searchedResult[i].bookNumber == 41){
+      //   console.log ( "book number "+this.state.searchedResult[i].bookName)
+      // }
+      this.renderDataOnPressTab(activeTab)
+    // console.log("button active"+button)
+      this.setState({activeTab:activeTab})
+      // this.elementIndex.scrollToIndex({index:39,viewPosition:0, animated: true,viewOffset:0})
+      // if(button == 1){
+        // this.elementIndex.scrollToIndex({index:0,viewPosition:0,animated: true,viewOffset:0})
+      // }
+  }
 
-getItemLayout = (data, index) => (
-  { length: 48, offset: 48 * index, index }
-)
-
-handleScroll = (event)=>{
-   console.log(event.nativeEvent.contentOffset.y+ "  index value")  
-}
-
-
+  
   render() {
     console.log("isloadoing"+this.state.isLoading)
-    console.log("setstate value of searched result "+JSON.stringify(this.state.searchedResult))
+    console.log("tabs data  "+JSON.stringify(this.state.tabsData))
     return (
       <View style={styles.container}>
       {/* {this.state.isLoading ?  */}
-        <ActivityIndicator 
+        {/* <ActivityIndicator 
           animating={this.state.isLoading ? true : false} 
           size="large" 
-          color="#0000ff" />
+          color="#0000ff" /> */}
           {/* : */}
-          <Segment style = 
+            <Segment style = 
             {{
               backgroundColor:"transparent", 
               borderColor:"#3F51B5",
               borderWidth:1,
-              // margin:8,
               justifyContent:'space-between'
             }}>
             <Button
             onPress={this.toggleButton.bind(this,0)} 
             first active={this.state.activeTab == 0} 
             style={{backgroundColor:this.state.activeTab == 0 ? "#3F51B5":"#fff",height:43}}
-            size={28}
-            >
+            size={28}>
               <Text style={{color:this.state.activeTab == 0 ? "#fff" : "#000"}}>
                 All
               </Text>
@@ -171,16 +173,15 @@ handleScroll = (event)=>{
             <Button 
             onPress={this.toggleButton.bind(this,2)} 
             last active={this.state.activeTab == 2} 
-            style={{backgroundColor:this.state.activeTab == 2 ? "#3F51B5":"#fff",height:43}}
-            >
+            style={{backgroundColor:this.state.activeTab == 2 ? "#3F51B5":"#fff",height:43}}>
               <Text style={{color:this.state.activeTab == 2? "#fff" : "#000"}}>
                 Old Testament
               </Text>
             </Button>
-            </Segment> 
-      <FlatList
+            </Segment>             
+        <FlatList
           ref={ref => this.elementIndex = ref}
-          data={this.state.searchedResult}
+          data={this.state.activeTab == 1 ?  this.state.tabsData : this.state.searchedResult}
           renderItem={({item,index}) => 
           <View>
           <Text>{item.bookName}</Text>

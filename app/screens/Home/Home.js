@@ -170,7 +170,7 @@ export default class Home extends Component {
             <FlatList
               ref={ref => this.elementIndex = ref}
               data={this.state.booksList}
-              getItemLayout={this.getItemLayout}
+              // getItemLayout={this.getItemLayout}
               // onScroll={this.handleScroll}
               renderItem={this.renderItem}
               extraData={this.styleFile}

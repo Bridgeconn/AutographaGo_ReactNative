@@ -31,7 +31,7 @@ export default class Book extends Component {
   constructor(props) {
     super(props);
 
-    console.log("BOOK props--" + JSON.stringify(props.navigation))
+    // console.log("BOOK props--" + JSON.stringify(props.navigation))
     // console.log("book name "+this.props.)
 
     this.getSelectedReferences = this.getSelectedReferences.bind(this)

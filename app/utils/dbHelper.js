@@ -28,7 +28,6 @@ class DbHelper {
 					: RNFS.DocumentDirectoryPath + '/autographa.realm',
 				schema: [LanguageModel, VersionModel, BookModel, ChapterModel, VerseComponentsModel,NoteModel, StylingModel, ReferenceModel] });
     	} catch (err) {
-			console.log("errroe in realm " + err)
     		return null;
     	}
     }
@@ -61,9 +60,6 @@ class DbHelper {
 
 	async queryBooksWithCode(verCode: string, langCode: string, bookId?: string, text?: string) {
 		let realm = await this.getRealm();
-		console.log("version code "+verCode)
-		console.log("langCode code "+langCode)
-		console.log("text  "+text)
     	if (realm) {
 			let result = realm.objectForPrimaryKey("LanguageModel", langCode);
 			if (result) {
@@ -83,10 +79,8 @@ class DbHelper {
 				}
 				return null;
 			}
-			console.log("comes in if null result")
 			return null;
 		}
-		console.log("comes in if realm null")
 		return null;
 	}
 
@@ -117,7 +111,6 @@ class DbHelper {
 		if (realm) {
 	  		realm.write(() => {
 				realm.create(model, value);
-				console.log("write complete..")
 			});
 	  	}
 	}
@@ -140,24 +133,20 @@ class DbHelper {
                     // need to push bookmodel
                     for (var j=0; j<bModels.length; j++) {
                         if (bModels[j].bookId == bookModel.bookId) {
-                            console.log("book already present -- " + bookModel.bookId)
                             return;
                         }
                     }
                     realm.write(() => {
                         ls.versionModels[pos].bookModels.push(bookModel);
-                        console.log("write complete.. new book..")
                     });
                 } else {
                     realm.write(() => {
                         ls.versionModels.push(versionModel);     
-                        console.log("write complete.. new version..")                    
                     });
                 }
             } else {
                 realm.write(() => {
                     realm.create('LanguageModel', languageModel);
-                    console.log("write complete.. new language..")
                 });
             }
 	  	}
@@ -168,7 +157,6 @@ class DbHelper {
 		if (realm) {
 			realm.write(() => {
 				model[chapterIndex].verseComponentsModels[verseIndex].highlighted = isHighlight				
-				console.log("update highlight complete..")
 			});
 		  }
 	}
@@ -230,7 +218,6 @@ class DbHelper {
 		let realm = await this.getRealm();
 		console.log('update continue .....')
 		let update = realm.objects('NoteModel').filtered(	"createdTime = $0",new Date(createdTime));
-		await console.log("update comes with output "+JSON.stringify(update[0].createdTime))
 
 		realm.write(() => {
 			update[0].modifiedTime = modifiedTime,

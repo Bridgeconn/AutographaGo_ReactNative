@@ -187,12 +187,10 @@ export default class App extends Component {
 
     await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.LastReadReference, AsyncStorageConstants.Values.LastReadReference
       ).then((lastRead) => {
-        console.log("last read obj "+JSON.stringify(lastRead))
           this.setState({lastRead})
     })
         
     let models = await DbQueries.queryBookIdModels(this.state.versionCode, this.state.languageCode);
-    console.log("routes len =" + models)
     this.setState({isDbLoading: false})
     if (models && models.length > 0) {
       this.setState({booksList: models})
