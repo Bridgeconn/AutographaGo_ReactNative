@@ -6,21 +6,20 @@ import {
   Button,
   ScrollView,
   VirtualizedList,
-  Dimensions,
   FlatList,
   ActivityIndicator,
+  Dimensions,
   TouchableOpacity,
 } from 'react-native';
+import { RecyclerListView, DataProvider, LayoutProvider } from "recyclerlistview";
 import DbQueries from '../utils/dbQueries'
-import USFMParser from '../utils/USFMParser'
 import Realm from 'realm'
 import VerseViewBook from '../components/VerseViewBook'
-import { RecyclerListView, DataProvider, LayoutProvider } from "recyclerlistview";
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import AsyncStorageUtil from '../utils/AsyncStorageUtil';
 import AsyncStorageConstants from '../utils/AsyncStorageConstants';
-
 const Constants = require('../utils/constants')
+
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
@@ -30,28 +29,27 @@ const ViewTypes = {
     HALF_RIGHT: 2
 };
  
-let containerCount = 0;
-
 export default class RV extends Component {
 
-    static navigationOptions = ({navigation}) => ({
-        headerTitle: navigation.state.params.bookName,
-        headerRight: (
-            <Icon 
-                onPress={()=> {navigation.state.params.onIconPress()}} 
-                name={'bookmark'} 
-                color={navigation.state.params.isBookmark ? "white" : "yellow"} 
-                size={24} 
-                style={{marginHorizontal:8}} 
-            />      
-        ),
-    });
+  static navigationOptions = ({navigation}) => ({
+    headerTitle: navigation.state.params.bookName,
+    headerRight: (
+      <Icon 
+          onPress={()=> {navigation.state.params.onIconPress()}} 
+          name={'bookmark'} 
+          color={navigation.state.params.isBookmark ? "white" : "yellow"} 
+          size={24} 
+          style={{marginHorizontal:8}} 
+      />      
+    ),
+  });
 
   constructor(props) {
     super(props);
+    console.log("BOOK props--" + JSON.stringify(props))
 
     let { width, height } = Dimensions.get("window");
-    
+
     this._layoutProvider = new LayoutProvider(
       index => {
           return ViewTypes.FULL;
@@ -68,15 +66,14 @@ export default class RV extends Component {
           }
       }
     );
-    this._rowRenderer = this._rowRenderer.bind(this);
 
-    console.log("BOOK props--" + JSON.stringify(props))
+    this._rowRenderer = this._rowRenderer.bind(this);
 
     this.getSelectedReferences = this.getSelectedReferences.bind(this)
     this.queryBook = this.queryBook.bind(this)
     this.onBookmarkPress = this.onBookmarkPress.bind(this)
-    // this.onListScroll = this.onListScroll.bind(this)
-    // this.onViewableItemsChanged = this.onViewableItemsChanged.bind(this)
+    this.onListScroll = this.onListScroll.bind(this)
+    this.onViewableItemsChanged = this.onViewableItemsChanged.bind(this)
 
     this.state = {
       languageCode: this.props.screenProps.languageCode,
@@ -94,7 +91,9 @@ export default class RV extends Component {
     }
 
     this.selectedReferenceSet = new Set();
-    
+    this.viewabilityConfig = {
+      viewAreaCoveragePercentThreshold: 50,
+    }
   }
 
   componentDidMount() {
@@ -107,53 +106,20 @@ export default class RV extends Component {
 
   async queryBook() {
     let dataProvider = new DataProvider((r1, r2) => {
-        return r1 !== r2;
-      });
+      return r1 !== r2;
+    });
 
-    let resultsC = await DbQueries.queryBookWithId(this.props.screenProps.versionCode, 
+    let model = await DbQueries.queryBookWithId(this.props.screenProps.versionCode, 
         this.props.screenProps.languageCode, this.state.bookId);
-
     this.setState({isLoading:false})
-    if (resultsC == null) {
+    if (model == null) {
       console.log("mode lnull")
     } else {
-        if (resultsC.length > 0) {
-            let chapModels = [];
-            for (var j=0; j<resultsC[0].chapterModels.length; j++) {
-            	let verModels = [];
-            	for (var k=0; k<resultsC[0].chapterModels[j].verseComponentsModels.length; k++) {
-            		var vModel = {
-            			type: resultsC[0].chapterModels[j].verseComponentsModels[k].type, 
-            			verseNumber: resultsC[0].chapterModels[j].verseComponentsModels[k].verseNumber, 
-            			text: resultsC[0].chapterModels[j].verseComponentsModels[k].text, 
-            			highlighted: resultsC[0].chapterModels[j].verseComponentsModels[k].highlighted, 
-            			languageCode: resultsC[0].chapterModels[j].verseComponentsModels[k].languageCode, 
-            			versionCode: resultsC[0].chapterModels[j].verseComponentsModels[k].versionCode, 
-            			bookId: resultsC[0].chapterModels[j].verseComponentsModels[k].bookId, 
-            			chapterNumber: resultsC[0].chapterModels[j].verseComponentsModels[k].chapterNumber,
-            			selected: false
-            		};
-            		verModels.push(vModel);
-            	}
-            	var cModel = {chapterNumber: resultsC[0].chapterModels[j].chapterNumber, 
-            		numberOfVerses: resultsC[0].chapterModels[j].numberOfVerses, 
-            		verseComponentsModels: verModels};
-            	chapModels.push(cModel);
-            }
-            var bModel = {bookId:resultsC[0].bookId, bookName:resultsC[0].bookName,
-            	section: resultsC[0].section, bookNumber: resultsC[0].bookNumber,
-                bookmarksList: resultsC[0].bookmarksList, chapterModels: chapModels};
-            
-            this.setState({modelData: bModel.chapterModels}, ()  => {
-                console.log("RECYCLER VIEW DATA :: " + JSON.stringify(this.state.modelData))
-            })
-            this.setState({dataProvider: dataProvider.cloneWithRows(bModel.chapterModels)})
-            this.setState({bookmarksList: bModel.bookmarksList})
-        }
-        // this.setState({modelData: model[0].chapterModels})
-        // this.setState({dataProvider: dataProvider.cloneWithRows(model[0].chapterModels)})
-        // this.setState({bookmarksList: model[0].bookmarksList})
-    //   }
+      if (model.length > 0) {
+        this.setState({modelData: model[0].chapterModels})
+        this.setState({bookmarksList: model[0].bookmarksList})
+        this.setState({dataProvider: dataProvider.cloneWithRows(model[0].chapterModels)})
+      }
     }
   }
 
@@ -163,57 +129,34 @@ export default class RV extends Component {
     })
   }
 
-  onListScroll() {
-    // this.flatListRef.
-  }
-
-  onViewableItemsChanged = ({ viewableItems, changed }) => {
-      console.log("visible length = "+ viewableItems.length)    
-      if (viewableItems.length > 0) {
-        for (var i=0;i<viewableItems.length;i++) {
-          console.log("visible index = "+ i +" == " + viewableItems[i].index)
-        }
-      } else {
-        console.log("visible index = -1")        
-      }
-      console.log("changed length = "+ changed.length)    
-      if (changed.length > 0) {
-        for (var i=0;i<changed.length;i++) {
-          console.log("changed index = "+ i +" == " + changed[i].index)
-        }
-      } else {
-        console.log("changed index = -1")        
-      }
-  }
-
   getItemLayout = (data, index) => {
     return { length: height, offset: height * index, index };
-}
-
-getSelectedReferences(isSelected, vIndex, chapterNum) {
-  let obj = chapterNum + '_' + vIndex
-  if (isSelected) {
-    this.selectedReferenceSet.add(obj)
-  } else {
-    this.selectedReferenceSet.delete(obj)
   }
-  
-  var modelData = [...this.state.modelData]
-  modelData[chapterNum - 1].verseComponentsModels[vIndex].selected = isSelected
-  this.setState({modelData})
 
-  this.setState({showBottomBar: this.selectedReferenceSet.size > 0 ? true : false})
-
-  let selectedCount = this.selectedReferenceSet.size, highlightCount = 0;
-
-  for (let item of this.selectedReferenceSet.values()) {
-    let tempVal = item.split('_')
-    if (this.state.modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].highlighted) {
-      highlightCount++
+  getSelectedReferences(isSelected, vIndex, chapterNum) {
+    let obj = chapterNum + '_' + vIndex
+    if (isSelected) {
+      this.selectedReferenceSet.add(obj)
+    } else {
+      this.selectedReferenceSet.delete(obj)
     }
+  
+    var modelData = [...this.state.modelData]
+    modelData[chapterNum - 1].verseComponentsModels[vIndex].selected = isSelected
+    this.setState({modelData})
+
+    this.setState({showBottomBar: this.selectedReferenceSet.size > 0 ? true : false})
+
+    let selectedCount = this.selectedReferenceSet.size, highlightCount = 0;
+
+    for (let item of this.selectedReferenceSet.values()) {
+      let tempVal = item.split('_')
+      if (this.state.modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].highlighted) {
+        highlightCount++
+      }
+    }
+    this.setState({bottomHighlightText: selectedCount == highlightCount ? false : true})
   }
-  this.setState({bottomHighlightText: selectedCount == highlightCount ? false : true})
-}
 
 doHighlight = () => {
   let modelData = [...this.state.modelData]
@@ -253,54 +196,105 @@ doHighlight = () => {
 }
 
   _rowRenderer(type, data) {
-    //   console.log("data::"+data.chapterNumber)
-      return (
-        <Text style={{marginLeft:16, marginRight:16}}>
-            {/* <Text style={{fontSize:26}}>
-                {"\n"}{data.chapterNumber}
-            </Text> */}
-            <Text letterSpacing={24}
-                style={{lineHeight:26, textAlign:'justify'}}>
-                {data.verseComponentsModels.map((verse, index) => 
-                    <VerseViewBook
-                        ref={child => (this[`child_${verse.chapterNumber}_${index}`] = child)}
-                          index = {index}
-                          getSelection = {(isSelected, verseIndex, chapterNumber) => {
-                            this.getSelectedReferences(isSelected, verseIndex, chapterNumber)
-                          }}
-                        verseComponent = {verse} />
-                )}
-            </Text>
-        </Text>
-    );
+    return (
+      <Text style={{marginLeft:16, marginRight:16}}>
+          <Text letterSpacing={24}
+              style={{lineHeight:26, textAlign:'justify'}}>
+              {data.verseComponentsModels.map((verse, index) => 
+                  <VerseViewBook
+                      ref={child => (this[`child_${verse.chapterNumber}_${index}`] = child)}
+                      verseComponent = {verse}
+                      index = {index}
+                      getSelection = {(isSelected, verseIndex, chapterNumber) => {
+                        this.getSelectedReferences(isSelected, verseIndex, chapterNumber)
+                      }} 
+                  />
+              )}
+          </Text>
+      </Text> 
+    )
+  }
+
+  componentWillUnmount(){
+    let lastRead = {
+      langCode:'ENG',
+      versionCode:'UDB',
+      bookId:'GEN',
+      chapterNum:'5',
+      verseNum:'7'
+    }
+    // AsyncStorage.setItem(AsyncStorageConstants.Keys.LastReadReference, lastRead);
   }
 
   render() {
-    if (this.state.dataProvider) {
-        return (
-            <RecyclerListView 
+      return (
+        <View style={styles.container}>
+        {this.state.isLoading ? 
+          <ActivityIndicator 
+            animating={this.state.isLoading ? true : false} 
+            size="large" 
+            color="#0000ff" />
+            :
+            <RecyclerListView
+                // initialScrollIndex={this.state.chapterNumber - 1}
+                // initialNumToRender={2} 
                 layoutProvider={this._layoutProvider} 
                 dataProvider={this.state.dataProvider} 
                 rowRenderer={this._rowRenderer}
                 forceNonDeterministicRendering={true}
+                ref={(ref) => { this.flatListRef = ref; }}
+                // getItemLayout={this.getItemLayout}
+                // getItem={(data, index) => data[index]}
+                // keyExtractor={(item, index) => {
+                //   return item.chapterNumber
+                // }}
             />
-        );
-    } else {
-        return null;
-    }
+          }
+          {this.state.showBottomBar 
+          ? 
+          <View style={{backgroundColor:'blue', height:64, width:'100%', 
+            flexDirection:'row', justifyContent:'space-evenly', alignItems:'center', marginTop:4 }}>
+  
+            <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
+            <TouchableOpacity onPress={this.doHighlight}>
+              <Text style={{color:'white'}}>
+                {this.state.bottomHighlightText == true ? 'HIGHLIGHT' : 'REMOVE HIGHLIGHT' }
+              </Text>
+              <Icon name={'border-color'} color="white" size={24} style={{marginHorizontal:8}} />
+              </TouchableOpacity>
+            </View>
+            
+            <View style={{width:1, height:48, backgroundColor:'white'}} />
+            
+            <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>          
+              <Text style={{color:'white'}}>
+                NOTES
+              </Text>
+              <Icon name={'note'} color="white" size={24} style={{marginHorizontal:8}} />
+            </View>
+            
+            <View style={{width:1, height:48, backgroundColor:'white'}} />          
+  
+            <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>          
+              <Text style={{color:'white'}}>
+                SHARE
+              </Text>
+              <Icon name={'share'} color="white" size={24} style={{marginHorizontal:8}} />
+            </View>
+  
+          </View>
+          : null }
+        </View>
+      );
   }
 
 }
 
-{/*
-RecyclerListView.propTypes = {
-    //Provides visible index, helpful in sending impression events etc, onVisibleIndexesChanged(all, now, notNow)
-    onVisibleIndexesChanged: PropTypes.func,
-
-    //Provide this method if you want to render a footer. Helpful in showing a loader while doing incremental loads.
-    renderFooter: PropTypes.func,
-
-    //Specify the initial item index you want rendering to start from. Preferred over initialOffset if both are specified.
-    initialRenderIndex: PropTypes.number,
-};
-*/}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+});
