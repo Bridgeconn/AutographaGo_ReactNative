@@ -9,45 +9,48 @@ import { TextWithLetterSpacing } from './TextWithLetterSpacing'
 
 export default class VerseViewBook extends Component {
 
+  // TODO - here change state to props everywhere
+
   constructor(props) {
     super(props);
     // console.log("props: " + JSON.stringify(props))
     this.state = {
-        verseData: this.props.verseComponent,
+        verseData: this.props.verseData,
     }
   }
 
   onPress() {
-    var verseData = {...this.state.verseData}
-    verseData.selected = !verseData.selected;
-    this.setState({verseData}, () => {
+    console.log("on press in compinene")
+    // var verseData = {...this.state.verseData}
+    // verseData.selected = !verseData.selected;
+    // this.setState({verseData}, () => {
         this.props.getSelection(
-          this.state.verseData.selected, 
+          this.props.verseData.selected, 
           this.props.index, 
-          this.state.verseData.chapterNumber
+          this.props.verseData.chapterNumber
         );
-    })
+    // })
   }
 
-  removeHighlight() {
-    if (this.state.verseData.selected) {
-      var verseData = {...this.state.verseData}
-      verseData.selected = false;
-      verseData.highlighted = false;      
-      this.setState({verseData})
-    }
-  }
+  // removeHighlight() {
+  //   if (this.state.verseData.selected) {
+  //     var verseData = {...this.state.verseData}
+  //     verseData.selected = false;
+  //     verseData.highlighted = false;      
+  //     this.setState({verseData})
+  //   }
+  // }
 
-  doHighlight() {
-    console.log("in verse view book do high")
-    if (this.state.verseData.selected) {
-      var verseData = {...this.state.verseData}
-      verseData.selected = false;
-      verseData.highlighted = true;      
-      this.setState({verseData})
-      console.log("in verse view book done...")      
-    }
-  }
+  // doHighlight() {
+  //   console.log("in verse view book do high")
+  //   if (this.state.verseData.selected) {
+  //     var verseData = {...this.state.verseData}
+  //     verseData.selected = false;
+  //     verseData.highlighted = true;      
+  //     this.setState({verseData})
+  //     console.log("in verse view book done...")      
+  //   }
+  // }
 
   getResultText(text) {
     var initString = text;
@@ -94,19 +97,19 @@ export default class VerseViewBook extends Component {
   }
 
   render() {
-    switch(this.state.verseData.type) {
+    switch(this.props.verseData.type) {
       case Constants.MarkerTypes.VERSE: {
-        if (this.state.verseData.verseNumber == "1" || 
-            this.state.verseData.verseNumber.startsWith("1-")) {
+        if (this.props.verseData.verseNumber == "1" || 
+            this.props.verseData.verseNumber.startsWith("1-")) {
               return (
                 <Text onPress={() => {this.onPress()}}>
                   <Text style={{fontSize:26}}> 
-                    {"\n"}{this.state.verseData.chapterNumber}{' '}
+                    {"\n"}{this.props.verseData.chapterNumber}{' '}
                   </Text>
                   <Text style={{fontSize:16, 
-                    textDecorationLine: this.state.verseData.selected ? 'underline' : 'none',
-                    backgroundColor: this.state.verseData.highlighted ? 'yellow' : 'transparent' }} >
-                    {this.getResultText(this.state.verseData.text)}
+                    textDecorationLine: this.props.verseData.selected ? 'underline' : 'none',
+                    backgroundColor: this.props.verseData.highlighted ? 'yellow' : 'transparent' }} >
+                    {this.getResultText(this.props.verseData.text)}
                   </Text>
                  </Text>
               );
@@ -114,28 +117,28 @@ export default class VerseViewBook extends Component {
         return (
           <Text onPress={() => {this.onPress()}}>
             <Text style={{fontSize:10}} >
-              {this.state.verseData.verseNumber}{" "}
+              {this.props.verseData.verseNumber}{" "}
             </Text>
             <Text style={{fontSize:16, 
-              textDecorationLine: this.state.verseData.selected ? 'underline' : 'none',
-              backgroundColor: this.state.verseData.highlighted ? 'yellow' : 'transparent' }} >
-              {this.getResultText(this.state.verseData.text)}
+              textDecorationLine: this.props.verseData.selected ? 'underline' : 'none',
+              backgroundColor: this.props.verseData.highlighted ? 'yellow' : 'transparent' }} >
+              {this.getResultText(this.props.verseData.text)}
             </Text>         
           </Text>
         );
       }
       case Constants.MarkerTypes.PARAGRAPH: {
-        if (this.state.verseData.verseNumber == "1" || 
-            this.state.verseData.verseNumber.startsWith("1-")) {
+        if (this.props.verseData.verseNumber == "1" || 
+            this.props.verseData.verseNumber.startsWith("1-")) {
               return (
                 <Text style={{fontSize:16}} >
-                  {this.getResultText(this.state.verseData.text)}
+                  {this.getResultText(this.props.verseData.text)}
                 </Text>      
               );
         }
         return (
           <Text style={{fontSize:16}} >
-            {"\n"} {this.getResultText(this.state.verseData.text)}
+            {"\n"} {this.getResultText(this.props.verseData.text)}
           </Text>
         );
       }
@@ -144,28 +147,28 @@ export default class VerseViewBook extends Component {
       case Constants.MarkerTypes.SECTION_HEADING_ONE: {
         return (
           <Text style={{fontSize:24}} >
-            {this.state.verseData.text}
+            {this.props.verseData.text}
           </Text>
         );        
       }
       case Constants.MarkerTypes.SECTION_HEADING_TWO: {
         return (
           <Text style={{fontSize:22}} >
-            {this.state.verseData.text}
+            {this.props.verseData.text}
           </Text>
         );
       }
       case Constants.MarkerTypes.SECTION_HEADING_THREE: {
         return (
           <Text style={{fontSize:20}} >
-            {this.state.verseData.text}
+            {this.props.verseData.text}
           </Text>
         );
       }
       case Constants.MarkerTypes.SECTION_HEADING_FOUR: {
         return (
           <Text style={{fontSize:18}} >
-            {this.state.verseData.text}
+            {this.props.verseData.text}
           </Text>
         );      
       }

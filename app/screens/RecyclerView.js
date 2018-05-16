@@ -24,9 +24,7 @@ const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 const ViewTypes = {
-    FULL: 0,
-    HALF_LEFT: 1,
-    HALF_RIGHT: 2
+    FULL: 0
 };
  
 export default class RV extends Component {
@@ -55,25 +53,19 @@ export default class RV extends Component {
           return ViewTypes.FULL;
       },
       (type, dim) => {
-          switch (type) {
-              case ViewTypes.FULL:
-                  dim.width = width;
-                  dim.height = height;
-                  break;
-              default:
-                  dim.width = 0;
-                  dim.height = 0;
-          }
+          dim.width = width;
+          dim.height = height;
       }
     );
-
-    this._rowRenderer = this._rowRenderer.bind(this);
 
     this.getSelectedReferences = this.getSelectedReferences.bind(this)
     this.queryBook = this.queryBook.bind(this)
     this.onBookmarkPress = this.onBookmarkPress.bind(this)
+
+    this._rowRenderer = this._rowRenderer.bind(this);
     this.onListScroll = this.onListScroll.bind(this)
-    this.onViewableItemsChanged = this.onViewableItemsChanged.bind(this)
+    this.onVisibleIndexesChanged = this.onVisibleIndexesChanged.bind(this)
+    this._footerRenderer = this._footerRenderer.bind(this)
 
     this.state = {
       languageCode: this.props.screenProps.languageCode,
@@ -91,9 +83,6 @@ export default class RV extends Component {
     }
 
     this.selectedReferenceSet = new Set();
-    this.viewabilityConfig = {
-      viewAreaCoveragePercentThreshold: 50,
-    }
   }
 
   componentDidMount() {
@@ -129,11 +118,8 @@ export default class RV extends Component {
     })
   }
 
-  getItemLayout = (data, index) => {
-    return { length: height, offset: height * index, index };
-  }
-
   getSelectedReferences(isSelected, vIndex, chapterNum) {
+    console.log("in RLV, length="+ this.state.dataProvider.getSize())
     let obj = chapterNum + '_' + vIndex
     if (isSelected) {
       this.selectedReferenceSet.add(obj)
@@ -158,42 +144,54 @@ export default class RV extends Component {
     this.setState({bottomHighlightText: selectedCount == highlightCount ? false : true})
   }
 
-doHighlight = () => {
-  let modelData = [...this.state.modelData]
-  if (this.state.bottomHighlightText == true) {
-    // do highlight
-    for (let item of this.selectedReferenceSet.values()) {
-      let tempVal = item.split('_')
-      // modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].highlighted = true
-      modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].selected = false
-      
-      this[`child_${item}`].doHighlight()
+  doHighlight = () => {
+    let modelData = [...this.state.modelData]
+    if (this.state.bottomHighlightText == true) {
+      // do highlight
+      for (let item of this.selectedReferenceSet.values()) {
+        let tempVal = item.split('_')
+        // modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].highlighted = true
+        modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].selected = false
+        
+      {/*this[`child_${item}`].doHighlight()*/}
 
-      // DbQueries.updateBookWithHighlights(this.state.languageCode, this.state.versionCode, 
-      //     this.state.bookId, tempVal[0], 
-      //     modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].verseNumber, true)
-      DbQueries.updateHighlightsInBook(this.state.modelData, tempVal[0] - 1, tempVal[1], true)
+        // DbQueries.updateBookWithHighlights(this.state.languageCode, this.state.versionCode, 
+        //     this.state.bookId, tempVal[0], 
+        //     modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].verseNumber, true)
+        DbQueries.updateHighlightsInBook(this.state.modelData, tempVal[0] - 1, tempVal[1], true)
+      }
+    } else {
+      // remove highlight
+      for (let item of this.selectedReferenceSet.values()) {
+        let tempVal = item.split('_')
+        // modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].highlighted = false
+        modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].selected = false
+
+        {/*this[`child_${item}`].removeHighlight(this.state.languageCode, this.state.versionCode, 
+          this.state.bookId, tempVal[0], 
+        modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].verseNumber, false)*/}
+
+        // DbQueries.updateBookWithHighlights()
+        DbQueries.updateHighlightsInBook(this.state.modelData, tempVal[0] - 1, tempVal[1], false)
+        
+      }
     }
-  } else {
-    // remove highlight
-    for (let item of this.selectedReferenceSet.values()) {
-      let tempVal = item.split('_')
-      // modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].highlighted = false
-      modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].selected = false
-
-      this[`child_${item}`].removeHighlight(this.state.languageCode, this.state.versionCode, 
-        this.state.bookId, tempVal[0], 
-        modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].verseNumber, false)
-
-      // DbQueries.updateBookWithHighlights()
-      DbQueries.updateHighlightsInBook(this.state.modelData, tempVal[0] - 1, tempVal[1], false)
-      
-    }
+    this.setState({modelData})
+    this.selectedReferenceSet.clear()
+    this.setState({showBottomBar: false})
   }
-  this.setState({modelData})
-  this.selectedReferenceSet.clear()
-  this.setState({showBottomBar: false})
-}
+
+  onListScroll = () => {
+    console.log("on list scroll");
+  }
+
+  onVisibleIndexesChanged = () => {
+    console.log("on visible index changed")
+  }
+
+  _footerRenderer() {
+    return(null);
+  }
 
   _rowRenderer(type, data) {
     return (
@@ -203,7 +201,7 @@ doHighlight = () => {
               {data.verseComponentsModels.map((verse, index) => 
                   <VerseViewBook
                       ref={child => (this[`child_${verse.chapterNumber}_${index}`] = child)}
-                      verseComponent = {verse}
+                      verseData = {verse}
                       index = {index}
                       getSelection = {(isSelected, verseIndex, chapterNumber) => {
                         this.getSelectedReferences(isSelected, verseIndex, chapterNumber)
@@ -229,26 +227,26 @@ doHighlight = () => {
   render() {
       return (
         <View style={styles.container}>
-        {this.state.isLoading ? 
-          <ActivityIndicator 
-            animating={this.state.isLoading ? true : false} 
-            size="large" 
-            color="#0000ff" />
-            :
+        {this.state.dataProvider ? 
+          
             <RecyclerListView
-                // initialScrollIndex={this.state.chapterNumber - 1}
-                // initialNumToRender={2} 
+                style={{flex:1, width:width, height:height}}
                 layoutProvider={this._layoutProvider} 
                 dataProvider={this.state.dataProvider} 
                 rowRenderer={this._rowRenderer}
                 forceNonDeterministicRendering={true}
+                initialRenderIndex={this.state.chapterNumber - 1}
+                onScroll={this.onListScroll}
+                onVisibleIndexesChanged={this.onVisibleIndexesChanged}
+                renderFooter={this._footerRenderer}
                 ref={(ref) => { this.flatListRef = ref; }}
-                // getItemLayout={this.getItemLayout}
-                // getItem={(data, index) => data[index]}
-                // keyExtractor={(item, index) => {
-                //   return item.chapterNumber
-                // }}
             />
+            :
+            <ActivityIndicator 
+            animating={this.state.isLoading ? true : false} 
+            size="large" 
+            color="#0000ff" />
+            
           }
           {this.state.showBottomBar 
           ? 
@@ -293,6 +291,8 @@ doHighlight = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width:width,
+    height:height,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
