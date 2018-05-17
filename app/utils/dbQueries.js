@@ -85,13 +85,17 @@ class DbQueries {
         DbHelper.updateHighlightsInVerse(langCode, verCode, bookId, chapterNumber, verseNumber, isHighlight);
     }
 
+    updateBookmarkInBook(model, chapterNumber, isBookmark) {
+        DbHelper.updateBookmarkInBook(model, chapterNumber, isBookmark);
+    }
+
     queryBookIdModels(verCode: string, langCode: string) {
         return DbHelper.queryBookIdModels(verCode, langCode);
     }
 
     addNote(value,time){
-    console.log("value addnote "+value)
-    DbHelper.addNote(value,time);
+        console.log("value addnote "+value)
+        DbHelper.addNote(value,time);
     }
     async queryNotes() {
        var result =  await DbHelper.query('NoteModel')

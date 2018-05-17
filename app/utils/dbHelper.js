@@ -213,6 +213,23 @@ class DbHelper {
 		}
 	}
 
+    async updateBookmarkInBook(model, chapterNumber, isBookmark) {
+		let realm = await this.getRealm();
+		if (realm) {
+			realm.write(() => {
+				var index = model.bookmarksList.indexOf(chapterNumber)
+				if (isBookmark) {
+					model.bookmarksList.push(chapterNumber)
+				} else {
+					if (index > -1) {
+						model.bookmarksList.splice(index, 1);
+					}
+				}
+				console.log("update bookmark complete..")
+			});
+		}
+	}	
+
 	async addNote(value,time){
 		console.log("value in db helper "+value)
 		let realm = await this.getRealm();
