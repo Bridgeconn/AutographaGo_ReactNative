@@ -43,7 +43,7 @@ class DbQueries {
     }
 
     updateHighlightsInBook(model, chapterIndex, verseIndex, isHighlight) {
-        DbHelper.updateHighlightsInBook(model, chapterIndex, verseIndex, isHighlight)
+        return DbHelper.updateHighlightsInBook(model, chapterIndex, verseIndex, isHighlight)
     }
 
     // queryNotes(verCode: string, langCode: string) {

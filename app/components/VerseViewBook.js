@@ -20,12 +20,13 @@ export default class VerseViewBook extends Component {
   }
 
   onPress() {
-    console.log("on press in compinene")
+    console.log("on press in compinene :: " + this.props.verseData.selected)
     // var verseData = {...this.state.verseData}
     // verseData.selected = !verseData.selected;
     // this.setState({verseData}, () => {
+
         this.props.getSelection(
-          this.props.verseData.selected, 
+          this.props.verseData.selected == null ? true : !this.props.verseData.selected, 
           this.props.index, 
           this.props.verseData.chapterNumber
         );
@@ -97,6 +98,7 @@ export default class VerseViewBook extends Component {
   }
 
   render() {
+    console.log("rendee verse ::  " +  this.props.verseData.selected)
     switch(this.props.verseData.type) {
       case Constants.MarkerTypes.VERSE: {
         if (this.props.verseData.verseNumber == "1" || 

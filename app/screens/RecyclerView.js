@@ -134,17 +134,27 @@ export default class RV extends Component {
   }
 
   getSelectedReferences(isSelected, vIndex, chapterNum) {
-    console.log("in RLV, length="+ this.state.dataProvider.getSize())
+    console.log("in getselectedreferences is= " + isSelected)
     let obj = chapterNum + '_' + vIndex
     if (isSelected) {
       this.selectedReferenceSet.add(obj)
     } else {
       this.selectedReferenceSet.delete(obj)
     }
-  
+    console.log("selected size : " + this.selectedReferenceSet.size)
+
+    // Update the data and create new data provider. Then pass it to RLV.
     var modelData = [...this.state.modelData]
     modelData[chapterNum - 1].verseComponentsModels[vIndex].selected = isSelected
-    this.setState({modelData})
+    this.setState({modelData}, () => {
+      let dataProvider = new DataProvider((r1, r2) => {
+        return r1 !== r2;
+      });
+      this.setState({dataProvider: dataProvider.cloneWithRows(this.state.modelData)}, () => {
+        console.log("NEW DATA: " + this.state.dataProvider.getDataForIndex(0))
+      })
+    })
+    
 
     this.setState({showBottomBar: this.selectedReferenceSet.size > 0 ? true : false})
 
@@ -159,7 +169,7 @@ export default class RV extends Component {
     this.setState({bottomHighlightText: selectedCount == highlightCount ? false : true})
   }
 
-  doHighlight = () => {
+  doHighlight = async () => {
     let modelData = [...this.state.modelData]
     if (this.state.bottomHighlightText == true) {
       // do highlight
@@ -173,7 +183,7 @@ export default class RV extends Component {
         // DbQueries.updateBookWithHighlights(this.state.languageCode, this.state.versionCode, 
         //     this.state.bookId, tempVal[0], 
         //     modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].verseNumber, true)
-        DbQueries.updateHighlightsInBook(this.state.modelData, tempVal[0] - 1, tempVal[1], true)
+        await DbQueries.updateHighlightsInBook(this.state.modelData, tempVal[0] - 1, tempVal[1], true)
       }
     } else {
       // remove highlight
@@ -187,11 +197,16 @@ export default class RV extends Component {
         modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].verseNumber, false)*/}
 
         // DbQueries.updateBookWithHighlights()
-        DbQueries.updateHighlightsInBook(this.state.modelData, tempVal[0] - 1, tempVal[1], false)
+        await DbQueries.updateHighlightsInBook(this.state.modelData, tempVal[0] - 1, tempVal[1], false)
         
       }
     }
-    this.setState({modelData})
+    this.setState({modelData}, ()=> {
+      let dataProvider = new DataProvider((r1, r2) => {
+        return r1 !== r2;
+      });
+      this.setState({dataProvider: dataProvider.cloneWithRows(this.state.modelData)})
+    })
     this.selectedReferenceSet.clear()
     this.setState({showBottomBar: false})
   }
@@ -213,6 +228,7 @@ export default class RV extends Component {
   }
 
   _rowRenderer(type, data) {
+    console.log("in row render : " + data.chapterNumber + " :: ")
     return (
       <Text style={{marginLeft:16, marginRight:16}}>
           <Text letterSpacing={24}

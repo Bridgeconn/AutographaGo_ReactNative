@@ -169,6 +169,7 @@ class DbHelper {
 			realm.write(() => {
 				model[chapterIndex].verseComponentsModels[verseIndex].highlighted = isHighlight				
 				console.log("update highlight complete..")
+				return true;
 			});
 		  }
 	}
