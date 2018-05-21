@@ -16,6 +16,7 @@ import DbQueries from '../utils/dbQueries.js'
 import {getBookNameFromMapping, getBookNumberFromMapping} from '../utils/UtilFunctions'
 const width = Dimensions.get('window').width;
 import SearchTab from '../components/SearchTab'
+import { Segment } from 'native-base';
 
 const SearchResultTypes = {
   ALL: 0,
@@ -193,10 +194,13 @@ export default class Search extends Component {
   }
 
   toggleButton(activeTab){
-    console.log("toggle function "+activeTab)
+    console.log("toggle button")
+    // console.log("toggle function "+JSON.stringify(activeTab))
       if (this.state.activeTab == activeTab) {
+        console.log(" this.state.activeTab ")
         return
       }
+      // this.setState({activeTab})
       this.setState({activeTab}, ()=> {
           this.renderDataOnPressTab(activeTab)
       })
@@ -214,10 +218,9 @@ export default class Search extends Component {
 
   ListHeaderComponent = () =>{
     return(
-
       <SearchTab
-      toggleFunction ={ () => this.toggleButton }
-      activeTab ={this.state.activeTab}
+      toggleFunction ={()=>this.toggleButton}
+      activeTab={this.state.activeTab}
       />
     )
   }

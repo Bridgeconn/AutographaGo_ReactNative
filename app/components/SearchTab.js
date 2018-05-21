@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import {Button,Segment,Text, Container, Content} from 'native-base'
+import {Button,Segment,Text, Container, Content,Header,Left,Right,Body,Title} from 'native-base'
 
 
 const SearchResultTypes = {
@@ -10,44 +10,44 @@ const SearchResultTypes = {
   };
 
 export default class SearchTab extends Component {
-
+   
     constructor(props){
+        console.log("props value in searchtab"+props.activeTab)
         super(props);
 
     }
     render(){
     return (
-        <Container>
-            <Segment>
-                <Button
-                onPress={this.props.toggleFunction(SearchResultTypes.ALL)} 
-                first active={this.props.activeTab == SearchResultTypes.ALL} 
-                >
-                <Text >
-                    All
-                </Text>
-                </Button>
-                <Button
-                onPress={this.props.toggleFunction(SearchResultTypes.OT)}  
-                active={this.props.activeTab == SearchResultTypes.OT} 
-                
-                >
-                <Text >
-                    Old Testament
-                </Text>
-                </Button>
-                <Button 
-                onPress={this.props.toggleFunction(SearchResultTypes.NT)} 
-                last active={this.props.activeTab == SearchResultTypes.NT} 
-                >
-                
-                <Text >
-                    New Testament
-                </Text>
-                </Button>
-            </Segment> 
-    </Container>
-
+                <Segment style={{height:32,marginHorizontal:6}}>
+                    <Button 
+                    style={{paddingRight:0,paddingLeft:0}}
+                    onPress={this.props.toggleFunction(SearchResultTypes.ALL)} 
+                    first  active={this.props.activeTab == SearchResultTypes.ALL ? true : false} 
+                    >
+                    <Text>
+                        All
+                    </Text>
+                    </Button>
+                    <Button 
+                    style={{paddingRight:0,paddingLeft:0}}
+                    onPress={this.props.toggleFunction(SearchResultTypes.OT)}  
+                    first active={this.props.activeTab == SearchResultTypes.OT ? true : false} 
+                    >
+                    <Text >
+                        Old Testament
+                    </Text>
+                    </Button>
+                    <Button 
+                    style={{paddingRight:0,paddingLeft:0}}
+                    onPress={this.props.toggleFunction(SearchResultTypes.NT)} 
+                    active={this.props.activeTab == SearchResultTypes.NT ? true : false} 
+                    >
+                    <Text >
+                        New Testament
+                    </Text>
+                    </Button>
+                </Segment> 
+         
      )
     }
 }
