@@ -20,38 +20,14 @@ export default class VerseViewBook extends Component {
   }
 
   onPress() {
-    console.log("on press in compinene :: " + this.props.verseData.selected)
-    // var verseData = {...this.state.verseData}
-    // verseData.selected = !verseData.selected;
-    // this.setState({verseData}, () => {
+    console.log("on press in compinene")
 
         this.props.getSelection(
-          this.props.verseData.selected == null ? true : !this.props.verseData.selected, 
+          // this.props.verseData.selected == null ? true : !this.props.verseData.selected, 
           this.props.index, 
           this.props.verseData.chapterNumber
         );
-    // })
   }
-
-  // removeHighlight() {
-  //   if (this.state.verseData.selected) {
-  //     var verseData = {...this.state.verseData}
-  //     verseData.selected = false;
-  //     verseData.highlighted = false;      
-  //     this.setState({verseData})
-  //   }
-  // }
-
-  // doHighlight() {
-  //   console.log("in verse view book do high")
-  //   if (this.state.verseData.selected) {
-  //     var verseData = {...this.state.verseData}
-  //     verseData.selected = false;
-  //     verseData.highlighted = true;      
-  //     this.setState({verseData})
-  //     console.log("in verse view book done...")      
-  //   }
-  // }
 
   getResultText(text) {
     var initString = text;
@@ -98,7 +74,7 @@ export default class VerseViewBook extends Component {
   }
 
   render() {
-    console.log("rendee verse ::  " +  this.props.verseData.selected)
+    let obj = this.props.verseData.chapterNumber + '_' + this.props.index;
     switch(this.props.verseData.type) {
       case Constants.MarkerTypes.VERSE: {
         if (this.props.verseData.verseNumber == "1" || 
@@ -109,7 +85,7 @@ export default class VerseViewBook extends Component {
                     {"\n"}{this.props.verseData.chapterNumber}{' '}
                   </Text>
                   <Text style={{fontSize:16, 
-                    textDecorationLine: this.props.verseData.selected ? 'underline' : 'none',
+                    textDecorationLine: this.props.selectedReferences.has(obj) ? 'underline' : 'none',
                     backgroundColor: this.props.verseData.highlighted ? 'yellow' : 'transparent' }} >
                     {this.getResultText(this.props.verseData.text)}
                   </Text>
@@ -122,7 +98,7 @@ export default class VerseViewBook extends Component {
               {this.props.verseData.verseNumber}{" "}
             </Text>
             <Text style={{fontSize:16, 
-              textDecorationLine: this.props.verseData.selected ? 'underline' : 'none',
+              textDecorationLine: this.props.selectedReferences.has(obj) ? 'underline' : 'none',
               backgroundColor: this.props.verseData.highlighted ? 'yellow' : 'transparent' }} >
               {this.getResultText(this.props.verseData.text)}
             </Text>         

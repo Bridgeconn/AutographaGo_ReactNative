@@ -81,9 +81,8 @@ export default class RV extends Component {
       isBookmark: false,
       dataProvider: null,
       currentVisibleChapter: this.props.navigation.state.params.chapterNumber,
+      selectedReferenceSet: new Set(),
     }
-
-    this.selectedReferenceSet = new Set();
   }
 
   componentDidMount() {
@@ -133,34 +132,29 @@ export default class RV extends Component {
     })
   }
 
-  getSelectedReferences(isSelected, vIndex, chapterNum) {
-    console.log("in getselectedreferences is= " + isSelected)
+  getSelectedReferences(vIndex, chapterNum) {
     let obj = chapterNum + '_' + vIndex
-    if (isSelected) {
-      this.selectedReferenceSet.add(obj)
-    } else {
-      this.selectedReferenceSet.delete(obj)
-    }
-    console.log("selected size : " + this.selectedReferenceSet.size)
-
-    // Update the data and create new data provider. Then pass it to RLV.
-    var modelData = [...this.state.modelData]
-    modelData[chapterNum - 1].verseComponentsModels[vIndex].selected = isSelected
-    this.setState({modelData}, () => {
-      let dataProvider = new DataProvider((r1, r2) => {
-        return r1 !== r2;
-      });
-      this.setState({dataProvider: dataProvider.cloneWithRows(this.state.modelData)}, () => {
-        console.log("NEW DATA: " + this.state.dataProvider.getDataForIndex(0))
-      })
-    })
     
+    let selectedReferenceSet = {...this.state.selectedReferenceSet}
+    
+    if (selectedReferenceSet.has(obj)) {
+      selectedReferenceSet.delete(obj)
+    } else {
+      selectedReferenceSet.add(obj)
+    }
+    this.setState({selectedReferenceSet})
 
-    this.setState({showBottomBar: this.selectedReferenceSet.size > 0 ? true : false})
+    console.log("selected size : " + this.state.selectedReferenceSet.size)
 
-    let selectedCount = this.selectedReferenceSet.size, highlightCount = 0;
+    // var modelData = [...this.state.modelData]
+    // modelData[chapterNum - 1].verseComponentsModels[vIndex].selected = isSelected
+    // this.setState({modelData})
 
-    for (let item of this.selectedReferenceSet.values()) {
+    this.setState({showBottomBar: this.state.selectedReferenceSet.size > 0 ? true : false})
+
+    let selectedCount = this.state.selectedReferenceSet.size, highlightCount = 0;
+
+    for (let item of this.state.selectedReferenceSet.values()) {
       let tempVal = item.split('_')
       if (this.state.modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].highlighted) {
         highlightCount++
@@ -173,41 +167,29 @@ export default class RV extends Component {
     let modelData = [...this.state.modelData]
     if (this.state.bottomHighlightText == true) {
       // do highlight
-      for (let item of this.selectedReferenceSet.values()) {
+      for (let item of this.state.selectedReferenceSet.values()) {
         let tempVal = item.split('_')
         // modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].highlighted = true
-        modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].selected = false
+        // modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].selected = false
         
       {/*this[`child_${item}`].doHighlight()*/}
 
-        // DbQueries.updateBookWithHighlights(this.state.languageCode, this.state.versionCode, 
-        //     this.state.bookId, tempVal[0], 
-        //     modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].verseNumber, true)
         await DbQueries.updateHighlightsInBook(this.state.modelData, tempVal[0] - 1, tempVal[1], true)
       }
     } else {
       // remove highlight
-      for (let item of this.selectedReferenceSet.values()) {
+      for (let item of this.state.selectedReferenceSet.values()) {
         let tempVal = item.split('_')
         // modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].highlighted = false
-        modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].selected = false
+        // modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].selected = false
 
-        {/*this[`child_${item}`].removeHighlight(this.state.languageCode, this.state.versionCode, 
-          this.state.bookId, tempVal[0], 
-        modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].verseNumber, false)*/}
+        {/*this[`child_${item}`].removeHighlight()*/}
 
-        // DbQueries.updateBookWithHighlights()
         await DbQueries.updateHighlightsInBook(this.state.modelData, tempVal[0] - 1, tempVal[1], false)
-        
       }
     }
-    this.setState({modelData}, ()=> {
-      let dataProvider = new DataProvider((r1, r2) => {
-        return r1 !== r2;
-      });
-      this.setState({dataProvider: dataProvider.cloneWithRows(this.state.modelData)})
-    })
-    this.selectedReferenceSet.clear()
+    this.setState({modelData})
+    this.setState({selectedReferenceSet: new Set()})    
     this.setState({showBottomBar: false})
   }
 
@@ -238,8 +220,9 @@ export default class RV extends Component {
                       ref={child => (this[`child_${verse.chapterNumber}_${index}`] = child)}
                       verseData = {verse}
                       index = {index}
-                      getSelection = {(isSelected, verseIndex, chapterNumber) => {
-                        this.getSelectedReferences(isSelected, verseIndex, chapterNumber)
+                      selectedReferences = {this.state.selectedReferenceSet}
+                      getSelection = {(verseIndex, chapterNumber) => {
+                        this.getSelectedReferences(verseIndex, chapterNumber)
                       }} 
                   />
               )}
@@ -275,6 +258,7 @@ export default class RV extends Component {
                 onVisibleIndexesChanged={this.onVisibleIndexesChanged}
                 renderFooter={this._footerRenderer}
                 ref={(ref) => { this.flatListRef = ref; }}
+                extendedState={this.state.selectedReferenceSet}
             />
             :
             <ActivityIndicator 
