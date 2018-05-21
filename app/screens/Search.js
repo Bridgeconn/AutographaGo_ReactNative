@@ -219,7 +219,7 @@ export default class Search extends Component {
   ListHeaderComponent = () =>{
     return(
       <SearchTab
-      toggleFunction ={()=>this.toggleButton}
+      toggleFunction ={this.toggleButton}
       activeTab={this.state.activeTab}
       />
     )

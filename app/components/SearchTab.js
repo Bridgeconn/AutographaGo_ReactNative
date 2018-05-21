@@ -21,7 +21,7 @@ export default class SearchTab extends Component {
                 <Segment style={{height:32,marginHorizontal:6}}>
                     <Button 
                     style={{paddingRight:0,paddingLeft:0}}
-                    onPress={this.props.toggleFunction(SearchResultTypes.ALL)} 
+                    onPress={() =>{this.props.toggleFunction(SearchResultTypes.ALL)} }
                     active={this.props.activeTab == SearchResultTypes.ALL ? true : false} 
                     >
                     <Text>
@@ -30,7 +30,7 @@ export default class SearchTab extends Component {
                     </Button>
                     <Button 
                     style={{paddingRight:0,paddingLeft:0}}
-                    onPress={this.props.toggleFunction(SearchResultTypes.OT)}  
+                    onPress={() =>{this.props.toggleFunction(SearchResultTypes.OT)} } 
                     active={this.props.activeTab == SearchResultTypes.OT ? true : false} 
                     >
                     <Text >
@@ -39,7 +39,7 @@ export default class SearchTab extends Component {
                     </Button>
                     <Button 
                     style={{paddingRight:0,paddingLeft:0}}
-                    onPress={this.props.toggleFunction(SearchResultTypes.NT)} 
+                    onPress={() =>{this.props.toggleFunction(SearchResultTypes.NT)} }
                     active={this.props.activeTab == SearchResultTypes.NT ? true : false} 
                     >
                     <Text >
