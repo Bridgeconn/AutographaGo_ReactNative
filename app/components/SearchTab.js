@@ -22,7 +22,7 @@ export default class SearchTab extends Component {
                     <Button 
                     style={{paddingRight:0,paddingLeft:0}}
                     onPress={this.props.toggleFunction(SearchResultTypes.ALL)} 
-                    first  active={this.props.activeTab == SearchResultTypes.ALL ? true : false} 
+                    active={this.props.activeTab == SearchResultTypes.ALL ? true : false} 
                     >
                     <Text>
                         All
@@ -31,7 +31,7 @@ export default class SearchTab extends Component {
                     <Button 
                     style={{paddingRight:0,paddingLeft:0}}
                     onPress={this.props.toggleFunction(SearchResultTypes.OT)}  
-                    first active={this.props.activeTab == SearchResultTypes.OT ? true : false} 
+                    active={this.props.activeTab == SearchResultTypes.OT ? true : false} 
                     >
                     <Text >
                         Old Testament
