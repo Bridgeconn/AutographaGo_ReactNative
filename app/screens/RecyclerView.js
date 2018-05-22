@@ -81,7 +81,7 @@ export default class RV extends Component {
       isBookmark: false,
       dataProvider: null,
       currentVisibleChapter: this.props.navigation.state.params.chapterNumber,
-      selectedReferenceSet: new Set(),
+      selectedReferenceSet: [],
     }
   }
 
@@ -135,39 +135,41 @@ export default class RV extends Component {
   getSelectedReferences(vIndex, chapterNum) {
     let obj = chapterNum + '_' + vIndex
     
-    let selectedReferenceSet = {...this.state.selectedReferenceSet}
+    let selectedReferenceSet = [...this.state.selectedReferenceSet]
     
-    if (selectedReferenceSet.has(obj)) {
-      selectedReferenceSet.delete(obj)
-    } else {
-      selectedReferenceSet.add(obj)
-    }
-    this.setState({selectedReferenceSet})
-
-    console.log("selected size : " + this.state.selectedReferenceSet.size)
-
-    // var modelData = [...this.state.modelData]
-    // modelData[chapterNum - 1].verseComponentsModels[vIndex].selected = isSelected
-    // this.setState({modelData})
-
-    this.setState({showBottomBar: this.state.selectedReferenceSet.size > 0 ? true : false})
-
-    let selectedCount = this.state.selectedReferenceSet.size, highlightCount = 0;
-
-    for (let item of this.state.selectedReferenceSet.values()) {
-      let tempVal = item.split('_')
-      if (this.state.modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].highlighted) {
-        highlightCount++
+    var found = false;
+    for(var i = 0; i < selectedReferenceSet.length; i++) {
+      if (selectedReferenceSet[i] == obj) {
+        found = true;
+        selectedReferenceSet.splice(i, 1);
+        break;
       }
     }
-    this.setState({bottomHighlightText: selectedCount == highlightCount ? false : true})
+    if (!found) {
+      selectedReferenceSet.push(obj)
+    }
+
+    this.setState({selectedReferenceSet}, () => {
+      console.log("selected size : " + this.state.selectedReferenceSet.length + " :: " + JSON.stringify(this.state.selectedReferenceSet))
+
+      let selectedCount = this.state.selectedReferenceSet.length, highlightCount = 0;
+      
+      for (let item of this.state.selectedReferenceSet) {
+        // for (let item of this.state.selectedReferenceSet.values()) {
+          let tempVal = item.split('_')
+          if (this.state.modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].highlighted) {
+            highlightCount++
+          }
+      }
+      this.setState({showBottomBar: this.state.selectedReferenceSet.length > 0 ? true : false, bottomHighlightText: selectedCount == highlightCount ? false : true})
+    })
   }
 
   doHighlight = async () => {
     let modelData = [...this.state.modelData]
     if (this.state.bottomHighlightText == true) {
       // do highlight
-      for (let item of this.state.selectedReferenceSet.values()) {
+      for (let item of this.state.selectedReferenceSet) {
         let tempVal = item.split('_')
         // modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].highlighted = true
         // modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].selected = false
@@ -178,7 +180,7 @@ export default class RV extends Component {
       }
     } else {
       // remove highlight
-      for (let item of this.state.selectedReferenceSet.values()) {
+      for (let item of this.state.selectedReferenceSet) {
         let tempVal = item.split('_')
         // modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].highlighted = false
         // modelData[tempVal[0] - 1].verseComponentsModels[tempVal[1]].selected = false
@@ -188,9 +190,7 @@ export default class RV extends Component {
         await DbQueries.updateHighlightsInBook(this.state.modelData, tempVal[0] - 1, tempVal[1], false)
       }
     }
-    this.setState({modelData})
-    this.setState({selectedReferenceSet: new Set()})    
-    this.setState({showBottomBar: false})
+    this.setState({modelData, selectedReferenceSet: [], showBottomBar: false})
   }
 
   onListScroll = (rawEvent, offsetX, offsetY) => {
@@ -199,7 +199,7 @@ export default class RV extends Component {
 
   onVisibleIndexesChanged = (all, now, notNow) => {
     this.setState({currentVisibleChapter: now[0]})
-    this.setState({isBookmark: this.state.bookmarksList.indexOf(this.state.currentVisibleChapter) > -1}, () => {
+    this.setState({isBookmark: this.state.bookmarksList.indexOf(now[0]) > -1}, () => {
       this.props.navigation.setParams({isBookmark: this.state.isBookmark})      
     })
     console.log("on visible index changed :: " + all + " :: " + now + " :: " + notNow)
@@ -210,7 +210,6 @@ export default class RV extends Component {
   }
 
   _rowRenderer(type, data) {
-    console.log("in row render : " + data.chapterNumber + " :: ")
     return (
       <Text style={{marginLeft:16, marginRight:16}}>
           <Text letterSpacing={24}

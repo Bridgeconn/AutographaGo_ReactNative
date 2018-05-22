@@ -73,6 +73,15 @@ export default class VerseViewBook extends Component {
     return tempRes.join("");
   }
 
+  has(selectedReferences, obj) {
+    for(var i = 0; i < selectedReferences.length; i++) {
+      if (selectedReferences[i] == obj) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   render() {
     let obj = this.props.verseData.chapterNumber + '_' + this.props.index;
     switch(this.props.verseData.type) {
@@ -85,7 +94,7 @@ export default class VerseViewBook extends Component {
                     {"\n"}{this.props.verseData.chapterNumber}{' '}
                   </Text>
                   <Text style={{fontSize:16, 
-                    textDecorationLine: this.props.selectedReferences.has(obj) ? 'underline' : 'none',
+                    textDecorationLine: this.has(this.props.selectedReferences, obj) ? 'underline' : 'none',
                     backgroundColor: this.props.verseData.highlighted ? 'yellow' : 'transparent' }} >
                     {this.getResultText(this.props.verseData.text)}
                   </Text>
@@ -98,7 +107,7 @@ export default class VerseViewBook extends Component {
               {this.props.verseData.verseNumber}{" "}
             </Text>
             <Text style={{fontSize:16, 
-              textDecorationLine: this.props.selectedReferences.has(obj) ? 'underline' : 'none',
+              textDecorationLine: this.has(this.props.selectedReferences, obj) ? 'underline' : 'none',
               backgroundColor: this.props.verseData.highlighted ? 'yellow' : 'transparent' }} >
               {this.getResultText(this.props.verseData.text)}
             </Text>         
