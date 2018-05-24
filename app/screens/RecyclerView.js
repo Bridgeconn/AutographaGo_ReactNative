@@ -66,7 +66,7 @@ export default class RV extends Component {
     this.onListScroll = this.onListScroll.bind(this)
     this.onVisibleIndexesChanged = this.onVisibleIndexesChanged.bind(this)
     this._footerRenderer = this._footerRenderer.bind(this)
-
+    console.log("props RV chapter=  "  + this.props.navigation.state.params.chapterNumber)
     this.state = {
       languageCode: this.props.screenProps.languageCode,
       versionCode: this.props.screenProps.versionCode,
@@ -105,7 +105,7 @@ export default class RV extends Component {
       console.log("mode lnull")
     } else {
       if (model.length > 0) {
-        this.setState({modelData: model[0].chapterModels, bookmarksList: model[0].bookmarksList}, () => {
+        this.setState({modelData: model[0].chapterModels, bookmarksList: model[0].bookmarksList ? model[0].bookmarksList : []}, () => {
           this.setState({dataProvider: dataProvider.cloneWithRows(this.state.modelData)}, () => {
               this.setState({isBookmark: this.state.bookmarksList.indexOf(this.state.currentVisibleChapter) > -1}, () => {
                 this.props.navigation.setParams({isBookmark: this.state.isBookmark})      
@@ -118,7 +118,9 @@ export default class RV extends Component {
 
   onBookmarkPress() {
     var bookmarksList = [...this.state.bookmarksList]
+    console.log("size bookmark " + bookmarksList.length)
     var index = bookmarksList.indexOf(this.state.currentVisibleChapter);
+    console.log("index bookmark " + index + " :: visible chapter =" + this.state.currentVisibleChapter)    
     if (index > -1) {
         bookmarksList.splice(index, 1)
         DbQueries.updateBookmarkInBook(this.state.modelData, this.state.currentVisibleChapter, false);
@@ -126,7 +128,9 @@ export default class RV extends Component {
         bookmarksList.push(this.state.currentVisibleChapter)
         DbQueries.updateBookmarkInBook(this.state.modelData, this.state.currentVisibleChapter, true);
     }
-    this.setState({bookmarksList})    
+    this.setState({bookmarksList}, () => {
+      console.log("size now after = " + this.state.bookmarksList.length)
+    })
     this.setState({isBookmark: index > -1 ? false : true}, () => {
         this.props.navigation.setParams({isBookmark: this.state.isBookmark})      
     })
@@ -198,10 +202,14 @@ export default class RV extends Component {
   }
 
   onVisibleIndexesChanged = (all, now, notNow) => {
-    this.setState({currentVisibleChapter: now[0]})
-    this.setState({isBookmark: this.state.bookmarksList.indexOf(now[0]) > -1}, () => {
-      this.props.navigation.setParams({isBookmark: this.state.isBookmark})      
-    })
+    if (all.length > 0) {
+      let cnum = all[0] + 1;
+      console.log("on visible iunde change = " + cnum)
+      this.setState({currentVisibleChapter: cnum})
+      this.setState({isBookmark: this.state.bookmarksList.indexOf(cnum) > -1}, () => {
+        this.props.navigation.setParams({isBookmark: this.state.isBookmark})      
+      })
+    }
     console.log("on visible index changed :: " + all + " :: " + now + " :: " + notNow)
   }
 

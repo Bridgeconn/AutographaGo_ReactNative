@@ -31,15 +31,18 @@ export default class BookMarks extends Component {
   async componentDidMount() {
     let modelData = await DbQueries.queryBooks(this.props.screenProps.versionCode, 
         this.props.screenProps.languageCode);
+    console.log("model len= " + modelData.length)
     this.setState({modelData})
     var bookmarkList = []
     for (var i=0; i<modelData.length; i++) {
       var list = modelData[i].bookmarksList
-      console.log("list =" + list)
-      for (var j=0; j<list.length; j++) {
-        var model={bookId: modelData[i].bookId, bookName: this.getBookNameFromMapping(modelData[i].bookId), 
-          chapterNumber: list[j]}
-        bookmarkList.push(model)
+      if (list) {
+        console.log("loist len = "+modelData[i].bookId+" : "+modelData[i].bookmarksList.length)
+        for (var j=0; j<list.length; j++) {
+          var model={bookId: modelData[i].bookId, bookName: this.getBookNameFromMapping(modelData[i].bookId), 
+            chapterNumber: list[j]}
+          bookmarkList.push(model)
+        }
       }
     }
     this.setState({bookmarkList})

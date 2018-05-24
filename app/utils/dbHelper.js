@@ -218,13 +218,22 @@ class DbHelper {
 		let realm = await this.getRealm();
 		if (realm) {
 			realm.write(() => {
-				var index = model.bookmarksList.indexOf(chapterNumber)
+				console.log("in db, isbokmark=" + isBookmark)
 				if (isBookmark) {
-					model.bookmarksList.push(chapterNumber)
-				} else {
-					if (index > -1) {
-						model.bookmarksList.splice(index, 1);
+					if (model.bookmarksList) {
+					} else {
+						model.bookmarksList = [];
 					}
+					model.bookmarksList.push(chapterNumber)
+					console.log("in db, push size=" + model.bookmarksList.length)							
+				} else {
+					if (model.bookmarksList) {
+						var index = model.bookmarksList.indexOf(chapterNumber)
+						if (index > -1) {
+							model.bookmarksList.splice(index, 1);
+						}
+						console.log("in db, slice size=" + model.bookmarksList.length)
+					}				
 				}
 				console.log("update bookmark complete..")
 			});
