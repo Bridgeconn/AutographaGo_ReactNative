@@ -89,6 +89,10 @@ class DbQueries {
         DbHelper.updateBookmarkInBook(model, chapterNumber, isBookmark);
     }
 
+    removeBookmarkFromBook(model, chapterNumber) {
+        DbHelper.removeBookmarkFromBook(model, chapterNumber);
+    }
+
     queryBookIdModels(verCode: string, langCode: string) {
         return DbHelper.queryBookIdModels(verCode, langCode);
     }

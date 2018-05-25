@@ -220,25 +220,38 @@ class DbHelper {
 			realm.write(() => {
 				console.log("in db, isbokmark=" + isBookmark)
 				if (isBookmark) {
-					if (model.bookmarksList) {
+					if (model) {
 					} else {
-						model.bookmarksList = [];
+						model = [];
 					}
-					model.bookmarksList.push(chapterNumber)
-					console.log("in db, push size=" + model.bookmarksList.length)							
+					model.push(chapterNumber)
+					console.log("in db, push size=" + model.length)							
 				} else {
-					if (model.bookmarksList) {
-						var index = model.bookmarksList.indexOf(chapterNumber)
+					if (model) {
+						var index = model.indexOf(chapterNumber)
 						if (index > -1) {
-							model.bookmarksList.splice(index, 1);
+							model.splice(index, 1);
 						}
-						console.log("in db, slice size=" + model.bookmarksList.length)
+						console.log("in db, slice size=" + model.length)
 					}				
 				}
 				console.log("update bookmark complete..")
 			});
 		}
-	}	
+	}
+
+	async removeBookmarkFromBook(model, chapterNumber) {
+		let realm = await this.getRealm();
+		if (realm) {
+			realm.write(() => {
+					var index = model.bookmarksList.indexOf(chapterNumber)
+					if (index > -1) {
+						model.bookmarksList.splice(index, 1);
+					}
+					console.log("in db, slice size=" + model.bookmarksList.length)
+			});
+		}
+	}
 
 	async addNote(value,time){
 		console.log("value in db helper "+value)

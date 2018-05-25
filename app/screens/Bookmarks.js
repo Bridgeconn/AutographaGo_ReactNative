@@ -68,7 +68,7 @@ export default class BookMarks extends Component {
   removeBookmark(bookId, chapterNumber, index) {
     for (var i=0; i<this.state.modelData.length; i++) {
       if (this.state.modelData[i].bookId == bookId) {
-          DbQueries.updateBookmarkInBook(this.state.modelData[i], chapterNumber, false);
+          DbQueries.removeBookmarkFromBook(this.state.modelData[i], chapterNumber);
           break;  
       }
     }

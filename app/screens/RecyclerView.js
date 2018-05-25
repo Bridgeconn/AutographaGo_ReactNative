@@ -105,7 +105,7 @@ export default class RV extends Component {
       console.log("mode lnull")
     } else {
       if (model.length > 0) {
-        this.setState({modelData: model[0].chapterModels, bookmarksList: model[0].bookmarksList ? model[0].bookmarksList : []}, () => {
+        this.setState({modelData: model[0].chapterModels, bookmarksList: model[0].bookmarksList}, () => {
           this.setState({dataProvider: dataProvider.cloneWithRows(this.state.modelData)}, () => {
               this.setState({isBookmark: this.state.bookmarksList.indexOf(this.state.currentVisibleChapter) > -1}, () => {
                 this.props.navigation.setParams({isBookmark: this.state.isBookmark})      
@@ -116,21 +116,20 @@ export default class RV extends Component {
     }
   }
 
-  onBookmarkPress() {
-    var bookmarksList = [...this.state.bookmarksList]
-    console.log("size bookmark " + bookmarksList.length)
-    var index = bookmarksList.indexOf(this.state.currentVisibleChapter);
+  async onBookmarkPress() {
+    // var bookmarksList = [...this.state.bookmarksList]
+    // console.log("size bookmark " + bookmarksList.length)
+    var index = this.state.bookmarksList.indexOf(this.state.currentVisibleChapter);
     console.log("index bookmark " + index + " :: visible chapter =" + this.state.currentVisibleChapter)    
-    if (index > -1) {
-        bookmarksList.splice(index, 1)
-        DbQueries.updateBookmarkInBook(this.state.modelData, this.state.currentVisibleChapter, false);
-      } else {
-        bookmarksList.push(this.state.currentVisibleChapter)
-        DbQueries.updateBookmarkInBook(this.state.modelData, this.state.currentVisibleChapter, true);
-    }
-    this.setState({bookmarksList}, () => {
-      console.log("size now after = " + this.state.bookmarksList.length)
-    })
+    // if (index > -1) {
+    //     bookmarksList.splice(index, 1)
+    //   } else {
+    //     bookmarksList.push(this.state.currentVisibleChapter)
+    // }
+    await DbQueries.updateBookmarkInBook(this.state.bookmarksList, this.state.currentVisibleChapter, index > -1 ? false : true);
+    // this.setState({bookmarksList}, () => {
+    //   console.log("size now after = " + this.state.bookmarksList.length)
+    // })
     this.setState({isBookmark: index > -1 ? false : true}, () => {
         this.props.navigation.setParams({isBookmark: this.state.isBookmark})      
     })
