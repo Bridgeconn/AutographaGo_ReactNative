@@ -13,7 +13,8 @@ import EditNote from '../screens/Note/EditNote'
 import Search from '../screens/Search'
 import Settings from '../screens/settings/Settings'
 import Splash from '../screens/Splash'
-import NumberSelection from '../screens/numberSelection/NumberSelection'
+import ReferenceSelection from '../screens/numberSelection/ReferenceSelection'
+import ChapterSelection from '../screens/numberSelection/ChapterSelection'
 import Hints from '../screens/Hints/Hints'
 const AsyncStorageConstants = require('./AsyncStorageConstants')
 import AsyncStorageUtil from './AsyncStorageUtil';
@@ -23,7 +24,6 @@ import { styleFile } from './styles.js'
 import DbQueries from '../utils/dbQueries'
 import Realm from 'realm'
 import RV from '../screens/RecyclerView'
-import VerseSelector from '../screens/numberSelection/VerseSelector'
 
 const StackNav = StackNavigator(
   {  
@@ -61,43 +61,13 @@ const StackNav = StackNavigator(
         screen: Settings,
       },
       ChapterSelection: {
-        screen: VerseSelector,
+        screen: ChapterSelection,
         navigationOptions: {
             headerTitle:"Select Chapter"
         }
       },
-      NumberSelection: {
-        screen: TabNavigator(
-          {
-            TabItem1: {
-              screen: VerseSelector,
-              navigationOptions: {
-                  tabBarLabel:"Chapter"
-              }
-            },
-            TabItem2: {
-              screen: VerseSelector,
-              navigationOptions: {
-                  tabBarLabel:"Verse"
-              }
-            },
-
-          },
-          {
-            tabBarOptions: {
-              activeTintColor: '#f2f2f2',
-              activeBackgroundColor: '#2EC4B6',
-              inactiveTintColor: '#666',
-              tabBarPosition: 'top',
-              swipeEnabled: false,
-              labelStyle: {
-                fontSize: 18,
-                padding: 4
-              }
-            }
-          }
-
-        ),
+      ReferenceSelection: {
+        screen: ReferenceSelection,
       },
       Hints: {
         screen: Hints,

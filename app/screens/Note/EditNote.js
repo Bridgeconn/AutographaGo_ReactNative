@@ -36,7 +36,10 @@ export default class EditNote extends Component {
         styleArray:[],
         selected:null
     }
+
+    this.getReference = this.getReference.bind(this)
   }
+
   saveNote = () =>{
     var time =  new Date().toLocaleString()
     console.log("time "+time)
@@ -117,12 +120,22 @@ export default class EditNote extends Component {
            console.log("return vale false"+value)
         
         return false
-       
   }
+
+  getReference = (bookId, bookName, chapterNumber, verseNumber) => {
+    console.log("ger reference")
+  }
+
+  onAddVersePress() {
+    console.log("om add press");
+    this.props.navigation.navigate('ReferenceSelection', {getReference: this.getReference})
+  }
+
   render() {
     
     return (
      <View style={{flex:1}}>
+     <Icon name="add-circle" style={{margin:8}} size={28} color="gray" onPress={()=> {this.onAddVersePress()}} />
       <TextInput 
         placeholder="Note" 
         style={{

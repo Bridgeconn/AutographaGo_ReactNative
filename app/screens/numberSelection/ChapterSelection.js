@@ -13,7 +13,7 @@ const width = Dimensions.get('window').width;
 import {nightColors, dayColors} from '../../utils/colors.js'
 import {extraSmallFont,smallFont,mediumFont,largeFont,extraLargeFont} from '../../utils/dimens.js'
 
-export default class VerseSelector extends Component {
+export default class ChapterSelection extends Component {
 
   constructor(props){
     super(props)
