@@ -11,7 +11,6 @@ import {
   Modal,
   TouchableHighlight
 } from 'react-native';
-import NoteReference from '../../components/NoteReference'
 import FlowLayout from '../../components/FlowLayout'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { HeaderBackButton, NavigationActions } from 'react-navigation';
@@ -146,11 +145,10 @@ export default class EditNote extends Component {
     return (
      <View style={{flex:1}}>
       <View style={{justifyContent:'space-between', flexDirection:'row', alignItems:'center', margin:8}}>
-        <Text>Tap button to add references</Text>
-        <NoteReference refText={'Genesis 1:2'} />
+        {this.state.referenceList.length == 0 ? null : <Text>Tap button to add references</Text> }
+        <FlowLayout ref="flow" multiselect={false} dataValue={["wer", "etg egtrwgwr rg", "sdsh fsghet", "etgcv", "asgb fhrh"]}/>
         <Icon name="add-circle" style={{margin:8}} size={28} color="gray" onPress={()=> {this.onAddVersePress()}} />
       </View>
-      <FlowLayout ref="flow" multiselect={false} />
       
       <View style={{height:2, backgroundColor:'gray', marginHorizontal:8}}/>
       <TextInput 

@@ -8,6 +8,7 @@ import {
 	Platform,
 	Dimensions,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 var {
 	width,
@@ -23,69 +24,52 @@ class FlowView extends Component {
 	// 	text: PropTypes.string,
 	// 	isSelected: PropTypes.bool,
 	// 	onClick: PropTypes.func,
-	// }
+    // }
+    
 	static defaultProps = {
 		backgroundColors: ['#FFFFFF', '#266A99'],
 		textColors: ['#666666', '#FFFFFF'],
-		isSelected: false,
-	}
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			isSelected: this.props.isSelected,
-		};
-	}
-
-	setSelected(bool) {
-		this.setState({
-			isSelected: bool
-		})
 	}
 
 	_backgoundColor() {
-		if (this.state.isSelected) {
-			return this.props.backgroundColors[1];
-		} else {
-			return this.props.backgroundColors[0];
-		}
+        return this.props.backgroundColors[0];
 	}
 
 	_textColor() {
-		if (this.state.isSelected) {
-			return this.props.textColors[1];
-		} else {
-			return this.props.textColors[0];
-		}
+        return this.props.textColors[0];
 	}
 
 	render() {
 		return (
 			<View>
+                {/*
+                <View style={{flex:1, flexDirection:'row', justifyContent:'space-around', margin:4, 
+                    borderColor:'gray', borderWidth:1, borderRadius:20, padding:4, alignItems:'center'}}>
+                    <Text style={{fontSize:14, marginHorizontal:2}} 
+                        onPress={() => {this.props.onTextClick()}} >
+                        {this.props.text}
+                    </Text>
+                    <Icon name="clear" style={{}} size={24} 
+                        color="gray" onPress={()=> {this.props.onDeleteClick()}} />
+                </View>
+                */}
 				<TouchableOpacity onPress={()=>{
-					this.props.onClick();
-					this.setState({isSelected:!this.state.isSelected});
+					this.props.onTextClick();
 				}}>
 					<View style={[styles.corner,{backgroundColor:this._backgoundColor()}]}>
 						<Text style={[styles.text,{color:this._textColor()}]}>{this.props.text}</Text>
+                        <Icon name="clear" style={{}} size={24} 
+                        color="gray" onPress={()=> {this.props.onDeleteClick()}} />
 					</View>
-				</TouchableOpacity>
+                </TouchableOpacity>
+            
 			</View>
 		);
 	};
 
 }
 export default class FlowLayout extends Component {
-	// static propTypes = {
-	// 	style: View.propTypes.style,
-	// 	dataValue: PropTypes.array,
-	// 	multiselect: PropTypes.bool,
-	// }
-	static defaultProps = {
-		style: {},
-        dataValue: ["wer", "etg egtrwgwr rg", "sdsh fsghet", "etgcv", "asgb fhrh"],
-		multiselect: true,
-	}
+	
 	constructor(props) {
 		super(props);
 
@@ -102,43 +86,31 @@ export default class FlowLayout extends Component {
 			}
 		}
 	}
-	getSelectedPosition() {
-		let list = [];
-		this.state.selectedState.forEach((value, key) => {
-			if (value) {
-				list.push(key);
-			}
-		});
-		return list;
-	}
-	resetData() {
-		this.setState({
-			selectedState: new Array(this.props.dataValue.length).fill(false),
-		}, () => {
-			this.change();
-		})
-	}
 
 	render() {
 		let items = this.props.dataValue.map((value, position) => {
 			return (
 				<View key={position}>
-					<FlowView  ref ={this.props.dataValue[position]} text={value} onClick={()=>{
-						if (this.props.multiselect == false) {
-							for (var i = this.state.selectedState.length - 1; i >= 0; i--) {
-								if(i==position){
-									continue;
-								}
-								if (this.state.selectedState[i] == true) {
-									this.state.selectedState[i] = false;
-									break;
-								}
-							}
-						}
-						this.state.selectedState[position] = !this.state.selectedState[position];
-						
-						this.change();
-					}}/>
+                    <FlowView  ref ={this.props.dataValue[position]} text={value} 
+                        onDeleteClick={()=>{
+                            if (this.props.multiselect == false) {
+                                for (var i = this.state.selectedState.length - 1; i >= 0; i--) {
+                                    if(i==position){
+                                        continue;
+                                    }
+                                    if (this.state.selectedState[i] == true) {
+                                        this.state.selectedState[i] = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            this.state.selectedState[position] = !this.state.selectedState[position];
+                            this.change();
+                        }}
+                        onTextClick={()=>{
+
+                        }}
+                    />
 				</View>
 			);
 		});
@@ -153,6 +125,7 @@ export default class FlowLayout extends Component {
 
 const styles = StyleSheet.create({
 	corner: {
+        flexDirection:'row',
 		borderColor: '#D0D0D0',
 		borderWidth: 1 / PixelRatio.get(),
 		borderRadius: 5,
