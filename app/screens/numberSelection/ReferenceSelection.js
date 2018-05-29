@@ -57,7 +57,8 @@ export default class ReferenceSelection extends Component {
 
   constructor(props){
     super(props)
-    console.log("REFERNCE SELECTION : " + JSON.stringify(props))
+    console.log("REFERNCE SELECTION NAVIGATION : " + JSON.stringify(props.navigation))
+    console.log("REFERNCE SELECTION SCREEN : " + JSON.stringify(props.screenProps))    
 
     this.state = {
       languageCode: this.props.screenProps.languageCode, 
@@ -92,7 +93,8 @@ export default class ReferenceSelection extends Component {
   updateSelectedVerse = (verseNumber, index) => {
     this.setState({selectedVerseIndex: index, selectedVerseNumber: verseNumber})
     // pop current screen, and pass data
-    this.props.screenProps.getReference(this.state.bookId, 
+    this.props.navigation.state.params.getReference(
+      this.state.bookId, 
       this.state.selectedBookName, 
       this.state.selectedChapterNumber, 
       this.state.selectedVerseNumber)    

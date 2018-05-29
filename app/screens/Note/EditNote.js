@@ -124,6 +124,7 @@ export default class EditNote extends Component {
 
   getReference = (bookId, bookName, chapterNumber, verseNumber) => {
     console.log("ger reference")
+    
   }
 
   onAddVersePress() {
