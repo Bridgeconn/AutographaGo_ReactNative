@@ -11,10 +11,11 @@ import {
   Modal,
   TouchableHighlight
 } from 'react-native';
+import NoteReference from '../../components/NoteReference'
+import FlowLayout from '../../components/FlowLayout'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { HeaderBackButton, NavigationActions } from 'react-navigation';
 import DbQueries from '../../utils/dbQueries'
-
 
 export default class EditNote extends Component {
   static navigationOptions = ({navigation}) =>({
@@ -25,16 +26,19 @@ export default class EditNote extends Component {
         <Text style={{fontSize:12,color:'#fff'}} >DONE</Text>
       </TouchableOpacity>)
   
-});
+  });
+
   constructor(props){
     super(props);
+    console.log("props EDIT NOTE : " + JSON.stringify(props.screenProps));
     console.log(" props notes add "+this.props.navigation.state.params.index)
     this.state = {
         noteBody:this.props.navigation.state.params.item,
         show:false,
         selection: [0,0],
         styleArray:[],
-        selected:null
+        selected:null,
+        referenceList: [],
     }
 
     this.getReference = this.getReference.bind(this)
@@ -62,6 +66,7 @@ export default class EditNote extends Component {
     // this.props.navigation.state.params.onEdit(this.state.noteBody,time,this.props.navigation.state.params.index);
     this.props.navigation.dispatch(NavigationActions.back())
   }
+
   onBack = () =>{
       if(this.state.noteBody !== this.props.navigation.state.params.item){
         Alert.alert(
@@ -78,6 +83,7 @@ export default class EditNote extends Component {
       
     this.props.navigation.dispatch(NavigationActions.back())
   }
+
   onSelectionChange = event => {
     const selection = event.nativeEvent.selection;
     this.setState({
@@ -109,6 +115,7 @@ export default class EditNote extends Component {
         }
         this.setState({styleArray})
   }
+
   checkStyleValuePresent(value){
     let styleArray = [ ...this.state.styleArray ];
         for (var i = 0 ; i < styleArray.length ;i++){
@@ -122,9 +129,11 @@ export default class EditNote extends Component {
         return false
   }
 
-  getReference = (bookId, bookName, chapterNumber, verseNumber) => {
+  getReference = (id, name, cNum, vNum) => {
     console.log("ger reference")
-    
+    let refModel = {bookId: id, bookName: name, chapterNumber: cNum, verseNumber: vNum, 
+      versionCode: this.props.screenProps.versionCode, languageCode: this.props.screenProps.languageCode};
+    this.state.referenceList.push(refModel);
   }
 
   onAddVersePress() {
@@ -133,12 +142,19 @@ export default class EditNote extends Component {
   }
 
   render() {
-    
+    //dataValue={this.state.monitorValue}/>}
     return (
      <View style={{flex:1}}>
-     <Icon name="add-circle" style={{margin:8}} size={28} color="gray" onPress={()=> {this.onAddVersePress()}} />
+      <View style={{justifyContent:'space-between', flexDirection:'row', alignItems:'center', margin:8}}>
+        <Text>Tap button to add references</Text>
+        <NoteReference refText={'Genesis 1:2'} />
+        <Icon name="add-circle" style={{margin:8}} size={28} color="gray" onPress={()=> {this.onAddVersePress()}} />
+      </View>
+      <FlowLayout ref="flow" multiselect={false} />
+      
+      <View style={{height:2, backgroundColor:'gray', marginHorizontal:8}}/>
       <TextInput 
-        placeholder="Note" 
+        placeholder="New Note" 
         style={{
           fontWeight:this.checkStyleValuePresent(0) ? 'bold' : 'normal',
           fontStyle: this.checkStyleValuePresent(1) ?'italic' :'normal',
