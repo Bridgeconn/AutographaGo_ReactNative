@@ -41,6 +41,8 @@ export default class EditNote extends Component {
     }
 
     this.getReference = this.getReference.bind(this)
+    this.openReference = this.openReference.bind(this)
+    this.deleteReference = this.deleteReference.bind(this)
   }
 
   saveNote = () =>{
@@ -129,10 +131,12 @@ export default class EditNote extends Component {
   }
 
   getReference = (id, name, cNum, vNum) => {
-    console.log("ger reference")
+    console.log("ger reference" + id+" " + name+" " + cNum + " " + vNum)
     let refModel = {bookId: id, bookName: name, chapterNumber: cNum, verseNumber: vNum, 
       versionCode: this.props.screenProps.versionCode, languageCode: this.props.screenProps.languageCode};
-    this.state.referenceList.push(refModel);
+    let referenceList = [...this.state.referenceList]
+    referenceList.push(refModel);
+    this.setState({referenceList})
   }
 
   onAddVersePress() {
@@ -140,14 +144,31 @@ export default class EditNote extends Component {
     this.props.navigation.navigate('ReferenceSelection', {getReference: this.getReference})
   }
 
+  openReference(index) {
+    // todo open reference in RV page
+  }
+
+  deleteReference(index) {
+    let referenceList = [...this.state.referenceList]
+    referenceList.splice(index, 1);
+    this.setState({referenceList})
+  }
+
   render() {
     //dataValue={this.state.monitorValue}/>}
     return (
      <View style={{flex:1}}>
       <View style={{justifyContent:'space-between', flexDirection:'row', alignItems:'center', margin:8}}>
-        {this.state.referenceList.length == 0 ? null : <Text>Tap button to add references</Text> }
-        <FlowLayout ref="flow" multiselect={false} dataValue={["wer", "etg egtrwgwr rg", "sdsh fsghet", "etgcv", "asgb fhrh"]}/>
-        <Icon name="add-circle" style={{margin:8}} size={28} color="gray" onPress={()=> {this.onAddVersePress()}} />
+        {this.state.referenceList.length == 0 
+          ? 
+          <Text style={{flex:8}}>Tap button to add references</Text> 
+          :  
+          <FlowLayout style={{flex:8}} ref="flow" dataValue={this.state.referenceList} 
+            openReference={(index) => {this.openReference(index)}} 
+            deleteReference={(index) => {this.deleteReference(index)}}
+          />
+        }
+        <Icon name="add-circle" style={{flex:1}} size={28} color="gray" onPress={()=> {this.onAddVersePress()}} />
       </View>
       
       <View style={{height:2, backgroundColor:'gray', marginHorizontal:8}}/>

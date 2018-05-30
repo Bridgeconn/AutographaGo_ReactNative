@@ -229,7 +229,7 @@ export default class RV extends Component {
                       selectedReferences = {this.state.selectedReferenceSet}
                       getSelection = {(verseIndex, chapterNumber) => {
                         this.getSelectedReferences(verseIndex, chapterNumber)
-                      }} 
+                      }}
                   />
               )}
           </Text>

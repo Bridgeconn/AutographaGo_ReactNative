@@ -97,7 +97,7 @@ export default class ReferenceSelection extends Component {
       this.state.bookId, 
       this.state.selectedBookName, 
       this.state.selectedChapterNumber, 
-      this.state.selectedVerseNumber)    
+      verseNumber)
     this.props.navigation.pop()
   }
   
