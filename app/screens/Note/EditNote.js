@@ -9,7 +9,8 @@ import {
   Alert,
   ToastAndroid,
   Modal,
-  TouchableHighlight
+  TouchableHighlight,
+  ScrollView
 } from 'react-native';
 import FlowLayout from '../../components/FlowLayout'
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -37,7 +38,7 @@ export default class EditNote extends Component {
         selection: [0,0],
         styleArray:[],
         selected:null,
-        referenceList: [],
+        referenceList: this.props.navigation.state.params.references == null ? [] : this.props.navigation.state.params.references,
     }
 
     this.getReference = this.getReference.bind(this)
@@ -51,17 +52,11 @@ export default class EditNote extends Component {
     console.log("time from props"+this.props.navigation.state.params.time)
      
     if(this.props.navigation.state.params.index == -1){
-      if(  this.state.noteBody == this.props.navigation.state.params.item){
-        this.props.navigation.dispatch(NavigationActions.back())
-        return
-      }
-      console.log("add note"+this.props.navigation.state.params.item)
-      DbQueries.addNote(this.state.noteBody,time)
-     
+      DbQueries.addNote(this.state.noteBody,time, this.state.referenceList)
     }
     else{
       console.log("update note"+this.props.navigation.state.params.item)
-      DbQueries.updateNote(this.state.noteBody,this.props.navigation.state.params.time,time)
+      DbQueries.updateNote(this.state.noteBody,this.props.navigation.state.params.time,time, this.state.referenceList)
     }
     
     // this.props.navigation.state.params.onEdit(this.state.noteBody,time,this.props.navigation.state.params.index);
@@ -69,7 +64,8 @@ export default class EditNote extends Component {
   }
 
   onBack = () =>{
-      if(this.state.noteBody !== this.props.navigation.state.params.item){
+      if(this.state.noteBody !== this.props.navigation.state.params.item || 
+        this.state.referenceList != this.props.navigation.state.params.references){
         Alert.alert(
           'Save Changes ? ',
           'Do you want to save the note ',
@@ -130,12 +126,25 @@ export default class EditNote extends Component {
         return false
   }
 
+  checkIfReferencePresent(id, name, cNum, vNum) {
+    let referenceList = [...this.state.referenceList]
+    for(var i = 0; i < referenceList.length; i++) {
+      let ref = referenceList[i];
+      if (ref.bookId == id && ref.bookName == name && ref.chapterNumber == cNum && ref.verseNumber == vNum) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   getReference = (id, name, cNum, vNum) => {
-    console.log("ger reference" + id+" " + name+" " + cNum + " " + vNum)
+    if (this.checkIfReferencePresent(id, name, cNum, vNum)) {
+      return;
+    }
     let refModel = {bookId: id, bookName: name, chapterNumber: cNum, verseNumber: vNum, 
       versionCode: this.props.screenProps.versionCode, languageCode: this.props.screenProps.languageCode};
     let referenceList = [...this.state.referenceList]
-    referenceList.push(refModel);
+    referenceList.push(refModel)
     this.setState({referenceList})
   }
 
@@ -157,7 +166,7 @@ export default class EditNote extends Component {
   render() {
     //dataValue={this.state.monitorValue}/>}
     return (
-     <View style={{flex:1}}>
+     <ScrollView style={{flex:1}}>
       <View style={{justifyContent:'space-between', flexDirection:'row', alignItems:'center', margin:8}}>
         {this.state.referenceList.length == 0 
           ? 
@@ -173,6 +182,7 @@ export default class EditNote extends Component {
       
       <View style={{height:2, backgroundColor:'gray', marginHorizontal:8}}/>
       <TextInput 
+        multiline={true}
         placeholder="New Note" 
         style={{
           fontWeight:this.checkStyleValuePresent(0) ? 'bold' : 'normal',
@@ -197,7 +207,7 @@ export default class EditNote extends Component {
       <Text>UnderLine</Text>
       </TouchableOpacity>
 
-     </View> 
+     </ScrollView> 
     )
   }
 }

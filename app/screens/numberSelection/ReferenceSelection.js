@@ -94,7 +94,7 @@ export default class ReferenceSelection extends Component {
     this.setState({selectedVerseIndex: index, selectedVerseNumber: verseNumber})
     // pop current screen, and pass data
     this.props.navigation.state.params.getReference(
-      this.state.bookId, 
+      this.state.selectedBookId, 
       this.state.selectedBookName, 
       this.state.selectedChapterNumber, 
       verseNumber)

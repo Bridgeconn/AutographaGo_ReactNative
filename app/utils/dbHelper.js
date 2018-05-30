@@ -253,29 +253,31 @@ class DbHelper {
 		}
 	}
 
-	async addNote(value,time){
+	async addNote(value,time, refList){
 		console.log("value in db helper "+value)
 		let realm = await this.getRealm();
 			if (realm) {
-				console.log("value in db help "+value)
 				realm.write(() => {
-					realm.create('NoteModel',{body:value, createdTime:time,modifiedTime:time})
+					const note = realm.create('NoteModel',{body:value, createdTime:time,modifiedTime:time, references:refList})
 					console.log("write.. new notes..")
 		  	});
 		 
 		}
 	}
 
-	async updateNote(value, createdTime, modifiedTime){
+	async updateNote(value, createdTime, modifiedTime, refList){
 		let realm = await this.getRealm();
 		console.log('update continue .....')
-		let update = realm.objects('NoteModel').filtered(	"createdTime = $0",new Date(createdTime));
-		await console.log("update comes with output "+JSON.stringify(update[0].createdTime))
+		if (realm) {
+			let update = realm.objects('NoteModel').filtered("createdTime = $0",new Date(createdTime));
+			console.log("update comes with output "+JSON.stringify(update[0].createdTime))
 
-		realm.write(() => {
-			update[0].modifiedTime = modifiedTime,
-			update[0].body = value
-		})
+			realm.write(() => {
+				update[0].modifiedTime = modifiedTime
+				update[0].body = value
+				update[0].references = refList
+			})
+		}
 	}
 
 	async deleteNote(index){
