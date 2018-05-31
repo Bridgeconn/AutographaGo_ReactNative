@@ -20,56 +20,76 @@ export default class Notes extends Component {
     super(props);
     this.state = {
       notesData:[],
-      index:null
     }
+    this.queryDb = this.queryDb.bind(this)
+    this.onDelete = this.onDelete.bind(this)
+    this.onRefresh = this.onRefresh.bind(this)
   }
 
   static navigationOptions = ({navigation}) => ({
     headerTitle: 'Notes',
     headerRight:(
-      <TouchableOpacity style={{margin:8}} onPress={() => navigation.state.params.updateNotesData()}>
+      <TouchableOpacity style={{margin:8}} onPress={() => navigation.state.params.newNote(-1)}>
          <Icon name="note-add" size={24} color="#fff"/>
      </TouchableOpacity>
     )
   });
   
-  updateNotesData = () => {
-    this.props.navigation.navigate('EditNote',{index:-1 , item:'' })
+  createNewNote = (index) => {
+    this.openEdit(index, null)
   };
 
-  onDelete(index){
-    console.log("index in delete function "+this.state.index)
-    let updateAfterDelete = [...this.state.notesData]; // make a separate copy of the array
-    updateAfterDelete.splice(index, 1);
-    this.setState({notesData:updateAfterDelete});
-    DbQueries.deleteNote(index)
+  onDelete(index, time) {
+    console.log("index in delete function "+index)
+    if (index == -1) {
+      return;
+    }
+    DbQueries.deleteNote(time)
+    let notesData = [...this.state.notesData]
+    notesData.splice(index, 1)
+    this.setState({notesData})
   }
-  
-  async componentDidMount(){
-    this.props.navigation.setParams({ updateNotesData: this.updateNotesData})
+
+  async onRefresh(noteIndex, noteBody, crTime, moTime, refList) {
+    console.log("on refresh")
+    await DbQueries.addOrUpdateNote(noteIndex, noteBody, crTime, moTime, refList);
+    this.queryDb()
+  }
+
+  async queryDb() {
     let res = await DbQueries.queryNotes();
     if(res==null){
       return
     }
     this.setState({ notesData: res})
-    console.log("coming in component mount"+JSON.stringify(this.state.notesData))
-    console.log("coming in component mount result "+JSON.stringify(res))
+  }
+  
+  componentDidMount(){
+    this.props.navigation.setParams({ newNote: this.createNewNote})
+    this.queryDb()
+  }
+
+  openEdit(index, noteObject) {
+    this.props.navigation.navigate('EditNote',{index:index, noteObject: noteObject, 
+      onDelete: this.onDelete, onRefresh: this.onRefresh})
   }
   
   renderItem = ({item,index})=>{
-    var date = new Date(item.createdTime);
+    var date = new Date(item.modifiedTime);
+    console.log("render : "+ item.modifiedTime + " == " + date)
     dateFormate =  date.getHours() < 24  ? moment(item.modifiedTime).fromNow() : moment(item.modifiedTime).format('DD-MMM');  
-      console.log("format date "+dateFormate)
+    console.log("format date "+dateFormate)
+    var bodyText = item.body == '' ? 'No additional text' : item.body
     return(
     <TouchableOpacity style={{flex:1}}
-        onPress={()=>this.props.navigation.navigate('EditNote',{item:item.body,time:item.createdTime,index:index, references:item.references})}>
+        onPress={() =>this.openEdit(index,item)}>
       <Card style={{margin:8,flex:1 }}>
         <CardItem >
         <View style={{flex:1}}> 
-          <Text numberOfLines={2}>{item.body}</Text>
+          <Text numberOfLines={2}>{bodyText}</Text>
           <View style={{justifyContent:'space-between', alignItems:'center',marginTop:16, flexDirection:'row'}}>
             <Text >{dateFormate}</Text>
-            <Icon name="delete-forever" size={24} onPress={()=>this.onDelete(index)}/>
+            <Icon name="delete-forever" size={24} onPress={()=>this.onDelete(index, item.createdTime)}/>
           </View>
         </View>
         </CardItem>

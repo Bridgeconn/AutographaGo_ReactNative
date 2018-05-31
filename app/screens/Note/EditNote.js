@@ -19,26 +19,29 @@ import DbQueries from '../../utils/dbQueries'
 
 export default class EditNote extends Component {
   static navigationOptions = ({navigation}) =>({
-    headerTitle: 'Notes',
+    headerTitle: 'Edit Note',
     headerLeft:(<HeaderBackButton style={{color:"#fff"}} onPress={()=>navigation.state.params.handleBack()}/>),
     headerRight:(
       <TouchableOpacity style={{margin:8}} onPress={()=>navigation.state.params.handleAdd()}>
         <Text style={{fontSize:12,color:'#fff'}} >DONE</Text>
       </TouchableOpacity>)
-  
   });
 
   constructor(props){
     super(props);
-    console.log("props EDIT NOTE : " + JSON.stringify(props.screenProps));
-    console.log(" props notes add "+this.props.navigation.state.params.index)
     this.state = {
-        noteBody:this.props.navigation.state.params.item,
+        noteIndex: this.props.navigation.state.params.index,
+        noteObject: this.props.navigation.state.params.noteObject,
+        noteBody: this.props.navigation.state.params.index == -1 
+          ? ''
+          : this.props.navigation.state.params.noteObject.body,
+        referenceList: this.props.navigation.state.params.index == -1 
+          ? [] 
+          : this.props.navigation.state.params.noteObject.references,
         show:false,
         selection: [0,0],
         styleArray:[],
         selected:null,
-        referenceList: this.props.navigation.state.params.references == null ? [] : this.props.navigation.state.params.references,
     }
 
     this.getReference = this.getReference.bind(this)
@@ -47,38 +50,65 @@ export default class EditNote extends Component {
   }
 
   saveNote = () =>{
-    var time =  new Date().toLocaleString()
+    var time =  new Date()
     console.log("time "+time)
-    console.log("time from props"+this.props.navigation.state.params.time)
      
-    if(this.props.navigation.state.params.index == -1){
-      DbQueries.addNote(this.state.noteBody,time, this.state.referenceList)
+    if (this.state.noteBody == '' && this.state.referenceList.length == 0) {
+      if(this.state.noteIndex != -1){
+        // delete note
+        this.props.navigation.state.params.onDelete(this.state.noteIndex, this.state.noteObject.createdTime)
+      }
+    } else {
+      this.props.navigation.state.params.onRefresh(this.state.noteIndex, this.state.noteBody, 
+        this.state.noteIndex == -1 ? time : this.state.noteObject.createdTime, time, this.state.referenceList);
     }
-    else{
-      console.log("update note"+this.props.navigation.state.params.item)
-      DbQueries.updateNote(this.state.noteBody,this.props.navigation.state.params.time,time, this.state.referenceList)
-    }
-    
-    // this.props.navigation.state.params.onEdit(this.state.noteBody,time,this.props.navigation.state.params.index);
     this.props.navigation.dispatch(NavigationActions.back())
   }
 
+  showAlert() {
+    Alert.alert(
+      'Save Changes ? ',
+      'Do you want to save the note ',
+      [
+        {text: 'Cancel', onPress: () => {return}},
+        {text: 'No', onPress: () => { this.props.navigation.dispatch(NavigationActions.back()) }},
+        {text: 'Yes', onPress: () => this.saveNote()},
+      ],
+    )
+  }
+
   onBack = () =>{
-      if(this.state.noteBody !== this.props.navigation.state.params.item || 
-        this.state.referenceList != this.props.navigation.state.params.references){
-        Alert.alert(
-          'Save Changes ? ',
-          'Do you want to save the note ',
-          [
-            {text: 'Ok', onPress: () => this.saveNote()},
-            {text: 'No', onPress: () => { this.props.navigation.dispatch(NavigationActions.back()) }},
-            {text: 'Cancel', onPress: () => {return}},
-          ],
-        )
-        return
+      if (this.state.noteIndex == -1) {
+        if (this.state.noteBody != '' || this.state.referenceList.length > 0) {
+          this.showAlert();
+          return;
+        }
+      } else {
+        if(this.state.noteBody !== this.props.navigation.state.params.noteObject.body
+            || !this.checkRefArrayEqual()){
+          this.showAlert();
+          return
+        }
       }
       
     this.props.navigation.dispatch(NavigationActions.back())
+  }
+
+  checkRefArrayEqual() {
+    let initArray = this.props.navigation.state.params.noteObject.references;
+    let nowArray = this.state.referenceList;
+    if (initArray.length != nowArray.length) {
+      return false;
+    }
+    for (var i=0; i<initArray.length; i++) {
+      if (initArray[i].bookId != nowArray[i].bookId ||
+          initArray[i].bookName != nowArray[i].bookName ||
+          initArray[i].chapterNumber != nowArray[i].chapterNumber ||
+          initArray[i].verseNumber != nowArray[i].verseNumber) {
+            return false;
+      }
+    }
+    return true;
   }
 
   onSelectionChange = event => {

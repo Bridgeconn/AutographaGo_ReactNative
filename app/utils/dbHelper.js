@@ -253,41 +253,44 @@ class DbHelper {
 		}
 	}
 
-	async addNote(value,time, refList){
-		console.log("value in db helper "+value)
+	async queryNotes() {
 		let realm = await this.getRealm();
-			if (realm) {
-				realm.write(() => {
-					const note = realm.create('NoteModel',{body:value, createdTime:time,modifiedTime:time, references:refList})
-					console.log("write.. new notes..")
-		  	});
-		 
+    	if (realm) {
+			let results = realm.objects('NoteModel');
+			return results.sorted('modifiedTime', true);
 		}
+		return null;
 	}
 
-	async updateNote(value, createdTime, modifiedTime, refList){
+	async addOrUpdateNote(index, body, createdTime, modifiedTime, refList){
 		let realm = await this.getRealm();
-		console.log('update continue .....')
 		if (realm) {
-			let update = realm.objects('NoteModel').filtered("createdTime = $0",new Date(createdTime));
-			console.log("update comes with output "+JSON.stringify(update[0].createdTime))
-
+			let results = realm.objects('NoteModel').filtered('createdTime = $0', createdTime);
 			realm.write(() => {
-				update[0].modifiedTime = modifiedTime
-				update[0].body = value
-				update[0].references = refList
-			})
+				if (index == -1) {
+					realm.create('NoteModel', {body:body, createdTime:createdTime, modifiedTime:modifiedTime, 
+						references:refList})
+					console.log("write.. new notes..")
+				} else {
+					if (results.length > 0) {
+						results[0].body = body;
+						results[0].modifiedTime = modifiedTime;
+						results[0].references = refList;
+						console.log("update.. notes..")
+					}
+				}
+		  });
 		}
 	}
 
-	async deleteNote(index){
+	async deleteNote(createdTime){
 		let realm = await this.getRealm();
-		let results = realm.objects('NoteModel');
-		console.log("result "+JSON.stringify(results[index]))
+		console.log("delete note : " + createdTime);
 		realm.write(() => {
-			realm.delete(results[index]);
-			console.log("deleted data from table")
-		})
+			let allNotes = realm.objects('NoteModel').filtered('createdTime = $0', createdTime);
+			console.log("len note : " + allNotes.length);
+			realm.delete(allNotes); // Deletes all
+		});
 	}
 
 	// async addStyle(index,){

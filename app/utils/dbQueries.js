@@ -97,24 +97,16 @@ class DbQueries {
         return DbHelper.queryBookIdModels(verCode, langCode);
     }
 
-    addNote(value,time, refList){
-        console.log("value addnote "+value)
-        DbHelper.addNote(value,time, refList);
-    }
     queryNotes() {
-    //    var result =  await DbHelper.query('NoteModel')
-    //    results = results.filtered(body);
-    //   await  console.log("db result "+JSON.stringify(result[0].createdTime.toLocaleString()))
-       return DbHelper.query('NoteModel')
-      
+       return DbHelper.queryNotes();
     }
-    updateNote(value, createdTime,modifiedTime, refList){
-        DbHelper.updateNote(value, createdTime, modifiedTime, refList);
+
+    addOrUpdateNote(index, body, createdTime, modifiedTime, refList){
+        return DbHelper.addOrUpdateNote(index, body, createdTime, modifiedTime, refList);
     }
     
-    deleteNote(index){
-        console.log('delete note'+index)
-        DbHelper.deleteNote(index);
+    deleteNote(time){
+        DbHelper.deleteNote(time);
     }
 }
 
