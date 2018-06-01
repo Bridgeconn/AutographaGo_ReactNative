@@ -25,9 +25,7 @@ import Realm from 'realm'
 
 const StackNav = StackNavigator(
   {  
-    Search: {
-      screen: Search,
-    },
+    
       Splash: {
         screen: Splash,
       },
@@ -64,6 +62,9 @@ const StackNav = StackNavigator(
       },
       Hints: {
         screen: Hints,
+      },
+      Search: {
+        screen: Search,
       },
      
   },

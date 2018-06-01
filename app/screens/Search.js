@@ -35,6 +35,7 @@ export default class Search extends Component {
         returnKeyType="search"
         onSubmitEditing={() => navigation.state.params.onSearchText()}
     />),
+   
     headerRight:(
         <Icon name="search" size={36} onPress={()=>navigation.state.params.onSearchText()}/>
       )
@@ -56,65 +57,58 @@ export default class Search extends Component {
 
   
   async onSearchText(){
-    this.setState({isLoading:true, searchedResult:[], tabsData:[]})
-    let searchResultByBookName = await DbQueries.querySearchBookWithName("ULB", "ENG",this.state.text);
+    this.setState({searchedResult:[], tabsData:[]})
+      await this.setState(
+        {isLoading:true, },
+      )
+        let searchResultByBookName = await DbQueries.querySearchBookWithName("ULB", "ENG",this.state.text);
+        if(searchResultByBookName && searchResultByBookName.length >0 ){
+          for(var i = 0; i < searchResultByBookName.length ;i++ ){
+            let reference = { bookId:searchResultByBookName[i].bookId,
+              bookName:getBookNameFromMapping(searchResultByBookName[i].bookId),
+              bookNumber: getBookNumberFromMapping(searchResultByBookName[i].bookId),
+              chapterNumber:1,
+              verseNumber:"1",
+              versionCode:'ULB',
+              languageCode:'ENG',
+              type: 'v',
+              text: 'ASDXFCGVBHNM',
+              highlighted: 'false' }
+              this.setState(
+                {searchedResult:[...this.state.searchedResult, reference]
+              }
+            )
     
-    if(searchResultByBookName && searchResultByBookName.length >0 ){
-      for(var i = 0; i < searchResultByBookName.length ;i++ ){
-        let reference = { bookId:searchResultByBookName[i].bookId,
-          bookName:getBookNameFromMapping(searchResultByBookName[i].bookId),
-          bookNumber: getBookNumberFromMapping(searchResultByBookName[i].bookId),
-          chapterNumber:1,
-          verseNumber:"1",
-          versionCode:'ULB',
-          languageCode:'ENG',
-          type: 'v',
-          text: 'ASDXFCGVBHNM',
-          highlighted: 'false' }
-          this.setState(
-            // prevState =>({
-            {searchedResult:[...this.state.searchedResult, reference]
+              this.addReferenceToTab(reference)
+            
           }
-        )
-      // )
-
-          this.addReferenceToTab(reference)
-        
-      }
-     }
-
-     {
-    let searchResultByVerseText = await DbQueries.querySearchVerse("ULB","ENG",this.state.text)
-    
-    if (searchResultByVerseText &&  searchResultByVerseText.length >0) {
+         }
+         let searchResultByVerseText = await DbQueries.querySearchVerse("ULB","ENG",this.state.text)
+         if (searchResultByVerseText &&  searchResultByVerseText.length >0) {
+           for(var i = 0; i < searchResultByVerseText.length ;i++ ){
+             let reference = {bookId:searchResultByVerseText[i].bookId,
+               bookName:getBookNameFromMapping(searchResultByVerseText[i].bookId),
+               bookNumber:getBookNumberFromMapping(searchResultByVerseText[i].bookId),
+               chapterNumber:searchResultByVerseText[i].chapterNumber,
+               verseNumber:searchResultByVerseText[i].verseNumber,
+               versionCode:searchResultByVerseText[i].versionCode,
+               languageCode:searchResultByVerseText[i].languageCode,
+               type: searchResultByVerseText[i].type,
+               text: searchResultByVerseText[i].text,
+               highlighted: searchResultByVerseText[i].highlighted}
      
-       
-      for(var i = 0; i < searchResultByVerseText.length ;i++ ){
-        let reference = {bookId:searchResultByVerseText[i].bookId,
-          bookName:getBookNameFromMapping(searchResultByVerseText[i].bookId),
-          bookNumber:getBookNumberFromMapping(searchResultByVerseText[i].bookId),
-          chapterNumber:searchResultByVerseText[i].chapterNumber,
-          verseNumber:searchResultByVerseText[i].verseNumber,
-          versionCode:searchResultByVerseText[i].versionCode,
-          languageCode:searchResultByVerseText[i].languageCode,
-          type: searchResultByVerseText[i].type,
-          text: searchResultByVerseText[i].text,
-          highlighted: searchResultByVerseText[i].highlighted}
-
-          this.setState(
-            // prevState =>({
-            {searchedResult:[...this.state.searchedResult, reference]
-          })
-        // )
-
-          this.addReferenceToTab(reference)
-      }
-
-     }
-    }
+               this.setState(
+                 // prevState =>({
+                 {searchedResult:[...this.state.searchedResult, reference]
+               })
+             // )
+     
+               this.addReferenceToTab(reference)
+           }
+          }
    
      // todo fix loading true when all references added
-     this.setState({isLoading:false})
+    await this.setState({isLoading:false})
 
   }
   clearData(){
@@ -213,50 +207,44 @@ export default class Search extends Component {
       </View>
     )
   }
-
-  ListHeaderComponent = () =>{
-    return(
-      <SearchTab
-      toggleFunction ={this.toggleButton}
-      activeTab={this.state.activeTab}
-      />
-    )
-  }
-
-
+searchedData = ({item,index}) => {
+  console.log("data loader "+this.state.isLoading)
+  return (
+  <View style={{margin:8,backgroundColor:"white"}}>
+   
+    <Text
+      style={{
+        padding:4,
+        borderBottomColor: 'silver',
+        borderBottomWidth: 0.5,
+        margin:4
+      }}
+    > 
+    {item.bookName} {item.chapterNumber} : {item.verseNumber} 
+    </Text>
+    <Text style={{margin:8}} >{item.text}</Text>
+  </View>
+  )
+}
   render() {
     console.log("isloadoing"+this.state.isLoading+ "DATA LENGTH" +this.state.searchedResult.length)
     console.log("tabs data "+JSON.stringify(this.state.tabsData))
     return (
-      <View>
-        <ActivityIndicator 
-          animating={this.state.isloading ? true : false} 
+      <View style={{backgroundColor:"white"}}>
+        <SearchTab
+         toggleFunction={this.toggleButton}
+         activeTab={this.state.activeTab}
+        />
+        <ActivityIndicator
+          animating={this.state.isLoading == true ? true : false} 
           size="large" 
-          color="#0000ff" />
+          color="#0000ff" /> 
         <FlatList
           ref={ref => this.elementIndex = ref}
           data={this.state.tabsData}
-          renderItem={({item,index}) => 
-            <View style={{margin:8}}>
-
-              <Text
-                style={{
-                  padding:4,
-                  borderBottomColor: 'silver',
-                  borderBottomWidth: 0.5,
-                  margin:4
-                }}
-              > 
-              {item.bookName} {item.chapterNumber} : {item.verseNumber} 
-              </Text>
-              <Text style={{margin:8}} >{item.text}</Text>
-            </View>
-          }
+          renderItem={this.searchedData}
           ListEmptyComponent={this.ListEmptyComponent}
-          ListHeaderComponent={this.ListHeaderComponent}
-          stickyHeaderIndices={[0]}
           />
-        {/* } */}
       </View>
       
     )

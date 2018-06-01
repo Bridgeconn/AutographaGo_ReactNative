@@ -35,6 +35,7 @@ export default class Notes extends Component {
   updateNotesData = () => {
     this.props.navigation.navigate('EditNote',{index:-1 , item:'' })
   };
+
   onDelete(index){
     console.log("index in delete function "+this.state.index)
     let updateAfterDelete = [...this.state.notesData]; // make a separate copy of the array
@@ -42,6 +43,7 @@ export default class Notes extends Component {
     this.setState({notesData:updateAfterDelete});
     DbQueries.deleteNote(index)
   }
+
   async componentDidMount(){
     this.props.navigation.setParams({ updateNotesData: this.updateNotesData})
     let res = await DbQueries.queryNotes();
@@ -52,6 +54,7 @@ export default class Notes extends Component {
     console.log("coming in component mount"+JSON.stringify(this.state.notesData))
     console.log("coming in component mount result "+JSON.stringify(res))
   }
+
  renderItem = ({item,index})=>{
     var date = new Date(item.createdTime);
     dateFormate =  date.getHours() < 24  ? moment(item.modifiedTime).fromNow() : moment(item.modifiedTime).format('DD-MMM');  

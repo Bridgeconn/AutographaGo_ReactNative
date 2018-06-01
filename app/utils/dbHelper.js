@@ -166,7 +166,7 @@ class DbHelper {
     	if (realm) {
 			let result = realm.objectForPrimaryKey("LanguageModel", langCode);
 			let resultsA = result.versionModels;
-			resultsA = resultsA.filtered('versionCode ==[c] "' + verCode + '"');
+			resultsA = resultsA.filtered('versionCode == [c] "' + verCode + '"');
 			if (resultsA.length > 0) {
 				let resultsB = resultsA[0].bookModels;
 				let bookIdModels = [];
