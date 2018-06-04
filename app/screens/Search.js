@@ -57,10 +57,7 @@ export default class Search extends Component {
 
   
   async onSearchText(){
-    this.setState({searchedResult:[], tabsData:[]})
-      await this.setState(
-        {isLoading:true, },
-      )
+       this.setState({isLoading:true,searchedResult:[], tabsData:[] })
         let searchResultByBookName = await DbQueries.querySearchBookWithName("ULB", "ENG",this.state.text);
         if(searchResultByBookName && searchResultByBookName.length >0 ){
           for(var i = 0; i < searchResultByBookName.length ;i++ ){
@@ -108,7 +105,7 @@ export default class Search extends Component {
           }
    
      // todo fix loading true when all references added
-    await this.setState({isLoading:false})
+     this.setState({isLoading:false})
 
   }
   clearData(){
@@ -207,23 +204,28 @@ export default class Search extends Component {
       </View>
     )
   }
-searchedData = ({item,index}) => {
-  console.log("data loader "+this.state.isLoading)
-  return (
-  <View style={{margin:8,backgroundColor:"white"}}>
-   
-    <Text
-      style={{
-        padding:4,
-        borderBottomColor: 'silver',
-        borderBottomWidth: 0.5,
-        margin:4
-      }}
-    > 
-    {item.bookName} {item.chapterNumber} : {item.verseNumber} 
-    </Text>
-    <Text style={{margin:8}} >{item.text}</Text>
-  </View>
+  ListFooterComponent = ()=>{
+    <ActivityIndicator
+          animating={this.state.isLoading == true ? true : false} 
+          size="large" 
+          color="#0000ff"/> 
+  }
+  searchedData = ({item,index}) => {
+    return (
+      <View style={{margin:8,backgroundColor:"white"}}>
+        <Text
+          style={{
+            padding:4,
+            borderBottomColor: 'silver',
+            borderBottomWidth: 0.5,
+            margin:4,
+            fontSize:18
+          }}
+        > 
+          {item.bookName} {item.chapterNumber} : {item.verseNumber} 
+        </Text>
+        <Text style={{margin:8,fontSize:16}}>{item.text}</Text>
+      </View>
   )
 }
   render() {
@@ -235,6 +237,7 @@ searchedData = ({item,index}) => {
          toggleFunction={this.toggleButton}
          activeTab={this.state.activeTab}
         />
+        <Text style={{alignSelf:"center"}}>{this.state.tabsData.length} searched result found</Text>
         <ActivityIndicator
           animating={this.state.isLoading == true ? true : false} 
           size="large" 
@@ -244,6 +247,7 @@ searchedData = ({item,index}) => {
           data={this.state.tabsData}
           renderItem={this.searchedData}
           ListEmptyComponent={this.ListEmptyComponent}
+          ListFooterComponent={this.ListFooterComponent}
           />
       </View>
       
