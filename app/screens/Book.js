@@ -220,8 +220,7 @@ export default class Book extends Component {
       languageCode:this.state.languageCode,
       versionCode:this.state.versionCode,
       bookId:this.state.bookId,
-      chapterNumber:1,
-      verseNumber:5
+      chapterNumber:this.state.chapterNumber,
     }
     AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.LastReadReference, lastRead);
   }
