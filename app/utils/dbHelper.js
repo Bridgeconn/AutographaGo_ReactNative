@@ -293,6 +293,30 @@ class DbHelper {
 		});
 	}
 
+	async addHistory(langCode, verCode, bId, cNum, timeStamp) {
+		let realm = await this.getRealm();
+		if (realm) {
+			realm.write(() => {
+				realm.create('HistoryModel', {
+					languageCode: langCode,
+					versionCode: verCode,
+					bookId: bId,
+					chapterNumber: cNum,
+					time: timeStamp
+				})
+				console.log("write.. history complete..")
+		  });
+		}
+	}
+
+	async queryHistory() {
+
+	}
+
+	async clearHistory() {
+		
+	}
+
 	// async addStyle(index,){
 	// 	console.log("value in db helper "+value)
 	// 	let realm = await this.getRealm();

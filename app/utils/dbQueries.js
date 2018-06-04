@@ -108,6 +108,10 @@ class DbQueries {
     deleteNote(time){
         DbHelper.deleteNote(time);
     }
+
+    addHistory(langCode, verCode, bookId, chapterNumber, time) {
+        DbHelper.addHistory(langCode, verCode, bookId, chapterNumber, time)
+    }
 }
 
 export default new DbQueries();

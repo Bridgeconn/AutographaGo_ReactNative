@@ -27,6 +27,16 @@ export default class ChapterSelection extends Component {
       bookData: Array.from(new Array(this.props.navigation.state.params.numOfChapters), (x,i) => i+1),
     }
   }
+
+  onNumPress(item) {
+    
+    this.props.navigation.replace('RV', {bookId: this.state.bookId, 
+      bookName: this.state.bookName, chapterNumber: item })
+
+    var time =  new Date()
+    DbQueries.addHistory(this.props.screenProps.languageCode, this.props.screenProps.versionCode, 
+      this.state.bookId, item, time);
+  }
   
   render() {
     return (
@@ -38,8 +48,7 @@ export default class ChapterSelection extends Component {
         <TouchableOpacity style={{flex:0.25,borderColor:'black',borderRightWidth:1, borderBottomWidth:1,
           height:width/4, justifyContent:"center"}}
           onPress={
-            ()=>this.props.navigation.replace('RV', {bookId: this.state.bookId, 
-              bookName: this.state.bookName, chapterNumber: item })
+            ()=> this.onNumPress(item)
             }
           >
             {/* <View style={{flex:0.25,borderColor:'black',borderRightWidth:1, borderBottomWidth:1,
