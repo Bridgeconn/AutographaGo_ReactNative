@@ -129,7 +129,6 @@ export default class Home extends Component {
                 versionCode:this.state.lastRead.versionCode,
                 bookId:this.state.lastRead.bookId,
                 chapterNumber:this.state.lastRead.chapterNumber,
-                verseNumber:this.state.lastRead.verseNumber,
                 bookName:getBookNameFromMapping(this.state.lastRead.bookId)
               })}}
           doAnimate = {false}
