@@ -18,7 +18,6 @@ module.exports = {
 
         VerseInLine:false,
         // VerseInParagraph:0
-
         LastReadReference: {
             languageCode:'ENG',
             versionCode:'UDB',

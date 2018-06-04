@@ -25,6 +25,9 @@ import Realm from 'realm'
 
 const StackNav = StackNavigator(
   {  
+    Notes: {
+      screen: Notes,
+    },
     
       Splash: {
         screen: Splash,
@@ -49,9 +52,6 @@ const StackNav = StackNavigator(
       },
       History: {
         screen: History,
-      },
-      Notes: {
-        screen: Notes,
       },
       
       Settings: {

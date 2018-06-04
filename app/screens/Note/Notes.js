@@ -34,7 +34,7 @@ export default class Notes extends Component {
   
   updateNotesData = () => {
     this.props.navigation.navigate('EditNote',{index:-1 , item:'' })
-  };
+  }
 
   onDelete(index){
     console.log("index in delete function "+this.state.index)

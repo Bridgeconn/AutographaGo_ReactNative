@@ -98,10 +98,10 @@ class DbQueries {
     }
     async queryNotes() {
        var result =  await DbHelper.query('NoteModel')
-    //    results = results.filtered(body);
-    //   await  console.log("db result "+JSON.stringify(result[0].createdTime.toLocaleString()))
        return DbHelper.query('NoteModel')
-      
+    }
+    notesCharStyle(charIndex){
+         DbHelper.notesCharStyle(charIndex)
     }
     updateNote(value, createdTime,modifiedTime){
         DbHelper.updateNote(value, createdTime, modifiedTime);
