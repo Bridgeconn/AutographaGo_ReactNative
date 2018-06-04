@@ -198,17 +198,24 @@ export default class Search extends Component {
   ListEmptyComponent = () =>{
     return (
       <View style={{alignSelf:'center'}}>
-      {!this.state.isloading && this.state.tabsData == null ? 
+      {this.state.isLoading == false && this.state.tabsData == null ? 
       <Text>No Result Found</Text>:null
       } 
       </View>
     )
   }
   ListFooterComponent = ()=>{
-    <ActivityIndicator
-          animating={this.state.isLoading == true ? true : false} 
-          size="large" 
-          color="#0000ff"/> 
+    return(
+    <View>
+      { this.state.isLoading ?
+        <Text>Loading...</Text>
+        :null
+      }
+    </View>
+      // animating={this.state.isLoading == true ? true : false} 
+      // size="large" 
+      // color="#0000ff"/> 
+    )
   }
   searchedData = ({item,index}) => {
     return (
