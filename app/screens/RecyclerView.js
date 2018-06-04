@@ -82,6 +82,7 @@ export default class RV extends Component {
       dataProvider: null,
       currentVisibleChapter: this.props.navigation.state.params.chapterNumber,
       selectedReferenceSet: [],
+      verseInLine: this.props.screenProps.verseInLine,
     }
   }
 
@@ -217,24 +218,49 @@ export default class RV extends Component {
   }
 
   _rowRenderer(type, data) {
-    return (
-      <Text style={{marginLeft:16, marginRight:16}}>
-          <Text letterSpacing={24}
-              style={{lineHeight:26, textAlign:'justify'}}>
-              {data.verseComponentsModels.map((verse, index) => 
-                  <VerseViewBook
-                      ref={child => (this[`child_${verse.chapterNumber}_${index}`] = child)}
-                      verseData = {verse}
-                      index = {index}
-                      selectedReferences = {this.state.selectedReferenceSet}
-                      getSelection = {(verseIndex, chapterNumber) => {
-                        this.getSelectedReferences(verseIndex, chapterNumber)
-                      }}
-                  />
-              )}
-          </Text>
-      </Text> 
-    )
+
+    if (this.state.verseInLine) {
+      return (
+        <FlatList
+          data={data.verseComponentsModels}
+          contentContainerStyle={{}}
+          style={{marginLeft:16, marginRight:16}}
+          renderItem={({item, index}) => 
+              <Text letterSpacing={24}
+                  style={{lineHeight:26, textAlign:'justify'}}>
+                      <VerseViewBook
+                        ref={child => (this[`child_${item.chapterNumber}_${index}`] = child)}
+                        verseData = {item}
+                        index = {index}
+                        selectedReferences = {this.state.selectedReferenceSet}
+                        getSelection = {(verseIndex, chapterNumber) => {
+                          this.getSelectedReferences(verseIndex, chapterNumber)
+                        }}
+                    />
+              </Text>
+          }
+        />
+      )
+    } else {
+      return (
+        <Text style={{marginLeft:16, marginRight:16}}>
+            <Text letterSpacing={24}
+                style={{lineHeight:26, textAlign:'justify'}}>
+                {data.verseComponentsModels.map((verse, index) => 
+                    <VerseViewBook
+                        ref={child => (this[`child_${verse.chapterNumber}_${index}`] = child)}
+                        verseData = {verse}
+                        index = {index}
+                        selectedReferences = {this.state.selectedReferenceSet}
+                        getSelection = {(verseIndex, chapterNumber) => {
+                          this.getSelectedReferences(verseIndex, chapterNumber)
+                        }}
+                    />
+                )}
+            </Text>
+        </Text> 
+      )
+    }
   }
 
   componentWillUnmount(){
