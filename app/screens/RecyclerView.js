@@ -19,6 +19,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import AsyncStorageUtil from '../utils/AsyncStorageUtil';
 import AsyncStorageConstants from '../utils/AsyncStorageConstants';
 const Constants = require('../utils/constants')
+import Gestures from 'react-native-easy-gestures';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -279,6 +280,23 @@ export default class RV extends Component {
         <View style={styles.container}>
         {this.state.dataProvider ? 
           
+          <Gestures
+            draggable={false}
+            rotatable={false}
+            scalable={{
+              min: 0.1,
+              max: 7,
+            }}
+            onStart={(event, styles) => {
+              console.log("start "+styles);
+            }}
+            onChange={(event, styles) => {
+              console.log("change " +styles);
+            }}
+            onRelease={(event, styles) => {
+              console.log("release "+styles);
+            }}
+          >
             <RecyclerListView
                 style={{flex:1, width:width, height:height}}
                 layoutProvider={this._layoutProvider} 
@@ -292,6 +310,8 @@ export default class RV extends Component {
                 ref={(ref) => { this.flatListRef = ref; }}
                 extendedState={this.state.selectedReferenceSet}
             />
+            </Gestures>
+            
             :
             <ActivityIndicator 
             animating={this.state.isLoading ? true : false} 
