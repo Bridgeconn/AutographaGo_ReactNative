@@ -112,6 +112,9 @@ class DbQueries {
     addHistory(langCode, verCode, bookId, chapterNumber, time) {
         DbHelper.addHistory(langCode, verCode, bookId, chapterNumber, time)
     }
+    queryHistory(){
+        return DbHelper.queryHistory();
+    }
 }
 
 export default new DbQueries();

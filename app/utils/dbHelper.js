@@ -14,6 +14,7 @@ import {
 	Platform,
 } from 'react-native';
 import { lang } from 'moment';
+import HistoryModel from '../models/HistoryModel';
 var RNFS = require('react-native-fs');
 
 class DbHelper {
@@ -26,7 +27,7 @@ class DbHelper {
 					Platform.OS === 'ios'
 					? RNFS.MainBundlePath + '/autographa.realm'
 					: RNFS.DocumentDirectoryPath + '/autographa.realm',
-				schema: [LanguageModel, VersionModel, BookModel, ChapterModel, VerseComponentsModel,NoteModel, StylingModel, ReferenceModel] });
+				schema: [LanguageModel, VersionModel, BookModel, ChapterModel, VerseComponentsModel,NoteModel, StylingModel, ReferenceModel,HistoryModel] });
     	} catch (err) {
 			console.log("errroe in realm " + err)
     		return null;
@@ -310,7 +311,12 @@ class DbHelper {
 	}
 
 	async queryHistory() {
-
+		let realm = await this.getRealm();
+    	if (realm) {
+			let results = realm.objects('HistoryModel');
+			return results.sorted('time', true);
+		}
+		return null
 	}
 
 	async clearHistory() {

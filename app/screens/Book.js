@@ -41,7 +41,6 @@ export default class Book extends Component {
     super(props);
 
     console.log("BOOK props--" + JSON.stringify(props))
-
     this.getSelectedReferences = this.getSelectedReferences.bind(this)
     this.queryBook = this.queryBook.bind(this)
     this.onBookmarkPress = this.onBookmarkPress.bind(this)
@@ -72,12 +71,15 @@ export default class Book extends Component {
     // waitForInteraction	No	boolean
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    var time =  new Date()
     this.props.navigation.setParams({onIconPress: this.onBookmarkPress})    
     this.props.navigation.setParams({isBookmark: this.state.isBookmark})
     this.setState({isLoading: true}, () => {
       this.queryBook()
     })
+    await DbQueries.addHistory(this.props.screenProps.languageCode,
+      this.props.screenProps.versionCode,this.state.bookId,this.state.chapterNumber,time)
   }
 
   async queryBook() {
