@@ -4,7 +4,6 @@ import React, { Component } from 'react'
 import {StackNavigator, TabNavigator} from 'react-navigation'
 import Home from '../screens/Home/Home'
 import About from '../screens/About'
-import Book from '../screens/Book'
 import Bookmarks from '../screens/Bookmarks'
 import Highlights from '../screens/Highlights'
 import History from '../screens/History'
@@ -23,7 +22,7 @@ import {extraSmallFont,smallFont,mediumFont,largeFont,extraLargeFont} from './di
 import { styleFile } from './styles.js'
 import DbQueries from '../utils/dbQueries'
 import Realm from 'realm'
-import RV from '../screens/RecyclerView'
+import BookRecyclerView from '../screens/book/BookRecyclerView'
 
 const StackNav = StackNavigator(
   {  
@@ -35,9 +34,6 @@ const StackNav = StackNavigator(
       },
       About: {
         screen: About,
-      },
-      Book: {
-        screen: Book,
       },
       Bookmarks: {
         screen: Bookmarks,
@@ -72,8 +68,8 @@ const StackNav = StackNavigator(
       Hints: {
         screen: Hints,
       },
-      RV: {
-        screen: RV,
+      BookRecyclerView: {
+        screen: BookRecyclerView,
       },
   },
   {
@@ -111,6 +107,7 @@ export default class App extends Component {
     this.updateSize = this.updateSize.bind(this)
     this.updateColor = this.updateColor.bind(this)
     this.updateVerseInLine = this.updateVerseInLine.bind(this)
+    this.changeSizeByOne = this.changeSizeByOne.bind(this)
   }
 
   updateBooks = (booksList) => {
@@ -127,6 +124,59 @@ export default class App extends Component {
 	
   updateSize = (sizeMode, sizeFile) => {
     this.setState({sizeMode, sizeFile})
+  }
+
+  changeSizeByOne = (value) => {
+    switch (this.state.sizeMode) {
+      case AsyncStorageConstants.Values.SizeModeXSmall : {
+        if (value == -1) {
+          return
+        } else {
+          AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.SizeMode, AsyncStorageConstants.Values.SizeModeSmall);    
+          this.setState({sizeFile:smallFont, sizeMode: AsyncStorageConstants.Values.SizeModeSmall})
+        }
+        break;
+      } 
+      case AsyncStorageConstants.Values.SizeModeSmall : {
+        if (value == -1) {
+          AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.SizeMode, AsyncStorageConstants.Values.SizeModeXSmall);    
+          this.setState({sizeFile:extraSmallFont, sizeMode: AsyncStorageConstants.Values.SizeModeXSmall})          
+        } else {
+          AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.SizeMode, AsyncStorageConstants.Values.SizeModeNormal);    
+          this.setState({sizeFile:mediumFont, sizeMode: AsyncStorageConstants.Values.SizeModeNormal})                    
+        }
+        break;
+      }
+      case AsyncStorageConstants.Values.SizeModeNormal : {
+        if (value == -1) {
+          AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.SizeMode, AsyncStorageConstants.Values.SizeModeSmall);    
+          this.setState({sizeFile:smallFont, sizeMode: AsyncStorageConstants.Values.SizeModeSmall})          
+        } else {
+          AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.SizeMode, AsyncStorageConstants.Values.SizeModeLarge);    
+          this.setState({sizeFile:largeFont, sizeMode: AsyncStorageConstants.Values.SizeModeLarge})                    
+        }
+        break;
+      }
+      case AsyncStorageConstants.Values.SizeModeLarge : {
+        if (value == -1) {
+          AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.SizeMode, AsyncStorageConstants.Values.SizeModeNormal);    
+          this.setState({sizeFile:mediumFont, sizeMode: AsyncStorageConstants.Values.SizeModeNormal})          
+        } else {
+          AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.SizeMode, AsyncStorageConstants.Values.SizeModeXLarge);    
+          this.setState({sizeFile:extraLargeFont, sizeMode: AsyncStorageConstants.Values.SizeModeXLarge})                    
+        }
+        break;
+      }
+      case AsyncStorageConstants.Values.SizeModeXLarge : {
+        if (value == -1) {
+          AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.SizeMode, AsyncStorageConstants.Values.SizeModeLarge);    
+          this.setState({sizeFile:largeFont, sizeMode: AsyncStorageConstants.Values.SizeModeLarge})          
+        } else {
+          return                   
+        }
+        break;
+      }
+    }
   }
 
   render(){
@@ -146,7 +196,8 @@ export default class App extends Component {
           updateColor: this.updateColor,
           updateSize: this.updateSize,
           updateVerseInLine:this.updateVerseInLine,
-          updateBooks: this.updateBooks
+          updateBooks: this.updateBooks,
+          changeSizeByOne: this.changeSizeByOne
         }}
       />
     );

@@ -4,29 +4,15 @@ import {
   Text,
   View,
 } from 'react-native';
-const Constants = require('../utils/constants')
-import { TextWithLetterSpacing } from './TextWithLetterSpacing'
+const Constants = require('../../utils/constants')
 
-export default class VerseViewBook extends Component {
-
-  // TODO - here change state to props everywhere
-
-  constructor(props) {
-    super(props);
-    // console.log("props: " + JSON.stringify(props))
-    this.state = {
-        verseData: this.props.verseData,
-    }
-  }
+export default class VerseView extends Component {
 
   onPress() {
-    console.log("on press in compinene")
-
-        this.props.getSelection(
-          // this.props.verseData.selected == null ? true : !this.props.verseData.selected, 
-          this.props.index, 
-          this.props.verseData.chapterNumber
-        );
+    this.props.getSelection(
+        this.props.index, 
+        this.props.verseData.chapterNumber
+    );
   }
 
   getResultText(text) {
@@ -84,18 +70,26 @@ export default class VerseViewBook extends Component {
 
   render() {
     let obj = this.props.verseData.chapterNumber + '_' + this.props.index;
+    let isSelect = this.has(this.props.selectedReferences, obj);
+    let isHighlight = this.props.verseData.highlighted;
+
     switch(this.props.verseData.type) {
       case Constants.MarkerTypes.VERSE: {
         if (this.props.verseData.verseNumber == "1" || 
             this.props.verseData.verseNumber.startsWith("1-")) {
               return (
                 <Text onPress={() => {this.onPress()}}>
-                  <Text style={{fontSize:26}}> 
+                  <Text style={this.props.styles.verseChapterNumber}> 
                     {"\n"}{this.props.verseData.chapterNumber}{' '}
                   </Text>
-                  <Text style={{fontSize:16, 
-                    textDecorationLine: this.has(this.props.selectedReferences, obj) ? 'underline' : 'none',
-                    backgroundColor: this.props.verseData.highlighted ? 'yellow' : 'transparent' }} >
+                  <Text style={isSelect && isHighlight 
+                    ? this.props.styles.verseTextSelectedHighlighted 
+                    : !isSelect && !isHighlight 
+                    ? this.props.styles.verseTextNotSelectedNotHighlighted
+                    : !isSelect && isHighlight
+                    ? this.props.styles.verseTextNotSelectedHighlighted
+                    : this.props.styles.verseTextSelectedNotHighlighted}
+                    >
                     {this.getResultText(this.props.verseData.text)}
                   </Text>
                  </Text>
@@ -103,12 +97,17 @@ export default class VerseViewBook extends Component {
         }
         return (
           <Text onPress={() => {this.onPress()}}>
-            <Text style={{fontSize:10}} >
+            <Text style={this.props.styles.verseNumber} >
               {this.props.verseData.verseNumber}{" "}
             </Text>
-            <Text style={{fontSize:16, 
-              textDecorationLine: this.has(this.props.selectedReferences, obj) ? 'underline' : 'none',
-              backgroundColor: this.props.verseData.highlighted ? 'yellow' : 'transparent' }} >
+            <Text style={isSelect && isHighlight 
+                    ? this.props.styles.verseTextSelectedHighlighted 
+                    : !isSelect && !isHighlight 
+                    ? this.props.styles.verseTextNotSelectedNotHighlighted
+                    : !isSelect && isHighlight
+                    ? this.props.styles.verseTextNotSelectedHighlighted
+                    : this.props.styles.verseTextSelectedNotHighlighted}
+                    >
               {this.getResultText(this.props.verseData.text)}
             </Text>         
           </Text>
@@ -118,13 +117,13 @@ export default class VerseViewBook extends Component {
         if (this.props.verseData.verseNumber == "1" || 
             this.props.verseData.verseNumber.startsWith("1-")) {
               return (
-                <Text style={{fontSize:16}} >
+                <Text style={this.props.styles.paragraphText} >
                   {this.getResultText(this.props.verseData.text)}
                 </Text>      
               );
         }
         return (
-          <Text style={{fontSize:16}} >
+          <Text style={this.props.styles.paragraphText} >
             {"\n"} {this.getResultText(this.props.verseData.text)}
           </Text>
         );
@@ -133,28 +132,28 @@ export default class VerseViewBook extends Component {
       }
       case Constants.MarkerTypes.SECTION_HEADING_ONE: {
         return (
-          <Text style={{fontSize:24}} >
+          <Text style={this.props.styles.headingOne} >
             {this.props.verseData.text}
           </Text>
         );        
       }
       case Constants.MarkerTypes.SECTION_HEADING_TWO: {
         return (
-          <Text style={{fontSize:22}} >
+          <Text style={this.props.styles.headingTwo} >
             {this.props.verseData.text}
           </Text>
         );
       }
       case Constants.MarkerTypes.SECTION_HEADING_THREE: {
         return (
-          <Text style={{fontSize:20}} >
+          <Text style={this.props.styles.headingThree} >
             {this.props.verseData.text}
           </Text>
         );
       }
       case Constants.MarkerTypes.SECTION_HEADING_FOUR: {
         return (
-          <Text style={{fontSize:18}} >
+          <Text style={this.props.styles.headingFour} >
             {this.props.verseData.text}
           </Text>
         );      
@@ -164,5 +163,4 @@ export default class VerseViewBook extends Component {
       }
     }
   }
-
 }

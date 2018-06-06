@@ -12,14 +12,16 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { RecyclerListView, DataProvider, LayoutProvider } from "recyclerlistview";
-import DbQueries from '../utils/dbQueries'
 import Realm from 'realm'
-import VerseViewBook from '../components/VerseViewBook'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import AsyncStorageUtil from '../utils/AsyncStorageUtil';
-import AsyncStorageConstants from '../utils/AsyncStorageConstants';
-const Constants = require('../utils/constants')
-import Gestures from 'react-native-easy-gestures';
+import {createResponder} from 'react-native-gesture-responder';
+
+import DbQueries from '../../utils/dbQueries'
+import VerseView from './VerseView'
+import AsyncStorageUtil from '../../utils/AsyncStorageUtil';
+import AsyncStorageConstants from '../../utils/AsyncStorageConstants';
+const Constants = require('../../utils/constants')
+import { styles } from './styles.js';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -27,8 +29,8 @@ const height = Dimensions.get('window').height;
 const ViewTypes = {
     FULL: 0
 };
- 
-export default class RV extends Component {
+
+export default class BookRecyclerView extends Component {
 
   static navigationOptions = ({navigation}) => ({
     headerTitle: navigation.state.params.bookName,
@@ -84,10 +86,89 @@ export default class RV extends Component {
       currentVisibleChapter: this.props.navigation.state.params.chapterNumber,
       selectedReferenceSet: [],
       verseInLine: this.props.screenProps.verseInLine,
+
+      colorFile:this.props.screenProps.colorFile,
+      sizeFile:this.props.screenProps.sizeFile,
+
+      gestureState: {},
+      thumbSize: 100,
+      left: width / 2,
+      top: height / 2,
     }
+
+    this.pinchDiff = 0
+    this.pinchTime = new Date().getTime()
+    this.styles = styles(this.state.colorFile, this.state.sizeFile);    
+
+  }
+
+  componentWillReceiveProps(props){
+    console.log("will recievr props"+JSON.stringify(props))
+    this.setState({
+      colorFile:props.screenProps.colorFile,
+      sizeFile:props.screenProps.sizeFile,
+    })
+    this.styles = styles(props.screenProps.colorFile, props.screenProps.sizeFile);   
   }
 
   componentDidMount() {
+
+    this.gestureResponder = createResponder({
+      onStartShouldSetResponder: (evt, gestureState) => true,
+      onStartShouldSetResponderCapture: (evt, gestureState) => true,
+      onMoveShouldSetResponder: (evt, gestureState) => true,
+      onMoveShouldSetResponderCapture: (evt, gestureState) => true,
+      onResponderGrant: (evt, gestureState) => {},
+      onResponderMove: (evt, gestureState) => {
+        let thumbSize = this.state.thumbSize;
+        if (gestureState.pinch && gestureState.previousPinch) {
+          thumbSize *= (gestureState.pinch / gestureState.previousPinch)
+          let currentDate = new Date().getTime()
+          let diff = currentDate - this.pinchTime
+          console.log("time : " + diff)
+          if (diff > this.pinchDiff) {
+              console.log("gesture pinch diff = " + (gestureState.pinch - gestureState.previousPinch))
+             if (gestureState.pinch - gestureState.previousPinch > 15) {
+                // large
+                console.log("large")
+                this.props.screenProps.changeSizeByOne(1)              
+            } else if (gestureState.previousPinch - gestureState.pinch > 15) {
+                console.log("small")
+                // small
+                this.props.screenProps.changeSizeByOne(-1)              
+            }
+          }
+          this.pinchDiff = diff
+          this.pinchTime = currentDate
+        }
+        let {left, top} = this.state;
+        left += (gestureState.moveX - gestureState.previousMoveX);
+        top += (gestureState.moveY - gestureState.previousMoveY);
+        this.setState({
+          gestureState: {
+            ...gestureState
+          },
+          left, top, thumbSize
+        })  
+      },
+      onResponderTerminationRequest: (evt, gestureState) => true,
+      onResponderRelease: (evt, gestureState) => {
+        this.setState({
+          gestureState: {
+            ...gestureState
+          }
+        })
+      },
+      onResponderTerminate: (evt, gestureState) => {},
+      
+      onResponderSingleTapConfirmed: (evt, gestureState) => {
+        console.log('onResponderSingleTapConfirmed...' + JSON.stringify(gestureState));
+      },
+      
+      moveThreshold: 2,
+      debug: false
+    });
+
     this.props.navigation.setParams({onIconPress: this.onBookmarkPress})    
     this.props.navigation.setParams({isBookmark: this.state.isBookmark})
     this.setState({isLoading: true}, () => {
@@ -224,15 +305,15 @@ export default class RV extends Component {
       return (
         <FlatList
           data={data.verseComponentsModels}
-          contentContainerStyle={{}}
-          style={{marginLeft:16, marginRight:16}}
+          style={this.styles.chapterList}
           renderItem={({item, index}) => 
               <Text letterSpacing={24}
-                  style={{lineHeight:26, textAlign:'justify'}}>
-                      <VerseViewBook
+                  style={this.styles.verseWrapperText}>
+                      <VerseView
                         ref={child => (this[`child_${item.chapterNumber}_${index}`] = child)}
                         verseData = {item}
                         index = {index}
+                        styles = {this.styles}
                         selectedReferences = {this.state.selectedReferenceSet}
                         getSelection = {(verseIndex, chapterNumber) => {
                           this.getSelectedReferences(verseIndex, chapterNumber)
@@ -244,14 +325,15 @@ export default class RV extends Component {
       )
     } else {
       return (
-        <Text style={{marginLeft:16, marginRight:16}}>
+        <Text style={this.styles.chapterList}>
             <Text letterSpacing={24}
-                style={{lineHeight:26, textAlign:'justify'}}>
+                style={this.styles.verseWrapperText}>
                 {data.verseComponentsModels.map((verse, index) => 
-                    <VerseViewBook
+                    <VerseView
                         ref={child => (this[`child_${verse.chapterNumber}_${index}`] = child)}
                         verseData = {verse}
                         index = {index}
+                        styles = {this.styles}
                         selectedReferences = {this.state.selectedReferenceSet}
                         getSelection = {(verseIndex, chapterNumber) => {
                           this.getSelectedReferences(verseIndex, chapterNumber)
@@ -276,29 +358,14 @@ export default class RV extends Component {
   }
 
   render() {
+    const thumbSize = this.state.thumbSize;
       return (
-        <View style={styles.container}>
+        <View style={this.styles.container} >
         {this.state.dataProvider ? 
           
-          <Gestures
-            draggable={false}
-            rotatable={false}
-            scalable={{
-              min: 0.1,
-              max: 7,
-            }}
-            onStart={(event, styles) => {
-              console.log("start "+styles);
-            }}
-            onChange={(event, styles) => {
-              console.log("change " +styles);
-            }}
-            onRelease={(event, styles) => {
-              console.log("release "+styles);
-            }}
-          >
             <RecyclerListView
-                style={{flex:1, width:width, height:height}}
+                {...this.gestureResponder}
+                style={this.styles.recyclerListView}
                 layoutProvider={this._layoutProvider} 
                 dataProvider={this.state.dataProvider} 
                 rowRenderer={this._rowRenderer}
@@ -310,8 +377,7 @@ export default class RV extends Component {
                 ref={(ref) => { this.flatListRef = ref; }}
                 extendedState={this.state.selectedReferenceSet}
             />
-            </Gestures>
-            
+
             :
             <ActivityIndicator 
             animating={this.state.isLoading ? true : false} 
@@ -321,34 +387,33 @@ export default class RV extends Component {
           }
           {this.state.showBottomBar 
           ? 
-          <View style={{backgroundColor:'blue', height:64, width:'100%', 
-            flexDirection:'row', justifyContent:'space-evenly', alignItems:'center', marginTop:4 }}>
+          <View style={this.styles.bottomBar}>
   
-            <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
+            <View style={this.styles.bottomOption}>
             <TouchableOpacity onPress={this.doHighlight}>
-              <Text style={{color:'white'}}>
+              <Text style={this.styles.bottomOptionText}>
                 {this.state.bottomHighlightText == true ? 'HIGHLIGHT' : 'REMOVE HIGHLIGHT' }
               </Text>
-              <Icon name={'border-color'} color="white" size={24} style={{marginHorizontal:8}} />
+              <Icon name={'border-color'} color="white" size={24} style={this.styles.bottomOptionIcon} />
               </TouchableOpacity>
             </View>
             
-            <View style={{width:1, height:48, backgroundColor:'white'}} />
+            <View style={this.styles.bottomOptionSeparator} />
             
-            <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>          
-              <Text style={{color:'white'}}>
+            <View style={this.styles.bottomOption}>          
+              <Text style={this.styles.bottomOptionText}>
                 NOTES
               </Text>
-              <Icon name={'note'} color="white" size={24} style={{marginHorizontal:8}} />
+              <Icon name={'note'} color="white" size={24} style={this.styles.bottomOptionIcon} />
             </View>
             
-            <View style={{width:1, height:48, backgroundColor:'white'}} />          
+            <View style={this.styles.bottomOptionSeparator} />          
   
-            <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>          
-              <Text style={{color:'white'}}>
+            <View style={this.styles.bottomOption}>          
+              <Text style={this.styles.bottomOptionText}>
                 SHARE
               </Text>
-              <Icon name={'share'} color="white" size={24} style={{marginHorizontal:8}} />
+              <Icon name={'share'} color="white" size={24} style={this.styles.bottomOptionIcon} />
             </View>
   
           </View>
@@ -358,14 +423,3 @@ export default class RV extends Component {
   }
 
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width:width,
-    height:height,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-});
