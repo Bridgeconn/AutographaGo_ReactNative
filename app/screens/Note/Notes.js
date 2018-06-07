@@ -63,7 +63,7 @@ export default class Notes extends Component {
     }
     this.setState({ notesData: res})
   }
-  
+
   componentDidMount(){
     this.props.navigation.setParams({ newNote: this.createNewNote})
     this.queryDb()

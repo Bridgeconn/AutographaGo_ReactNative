@@ -348,13 +348,12 @@ export default class BookRecyclerView extends Component {
 
   componentWillUnmount(){
     let lastRead = {
-      langCode:'ENG',
-      versionCode:'UDB',
-      bookId:'GEN',
-      chapterNum:'5',
-      verseNum:'7'
-    }
-    // AsyncStorage.setItem(AsyncStorageConstants.Keys.LastReadReference, lastRead);
+        languageCode:this.state.languageCode,
+        versionCode:this.state.versionCode,
+        bookId:this.state.bookId,
+        chapterNumber:this.state.chapterNumber,
+      }
+      AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.LastReadReference, lastRead);
   }
 
   render() {

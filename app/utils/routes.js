@@ -26,6 +26,7 @@ import BookRecyclerView from '../screens/book/BookRecyclerView'
 
 const StackNav = StackNavigator(
   {  
+    
       Splash: {
         screen: Splash,
       },
@@ -50,9 +51,7 @@ const StackNav = StackNavigator(
       Notes: {
         screen: Notes,
       },
-      Search: {
-          screen: Search,
-      },
+      
       Settings: {
         screen: Settings,
       },
@@ -70,6 +69,9 @@ const StackNav = StackNavigator(
       },
       BookRecyclerView: {
         screen: BookRecyclerView,
+      },
+      Search: {
+        screen: Search,
       },
   },
   {
@@ -100,7 +102,8 @@ export default class App extends Component {
         sizeMode: AsyncStorageConstants.Values.SizeModeNormal,
         colorFile:dayColors,
         sizeFile:mediumFont,
-        verseInLine:false
+        verseInLine:false,
+        lastRead:{}
     }
 
 		this.updateBooks = this.updateBooks.bind(this)
@@ -192,6 +195,7 @@ export default class App extends Component {
           verseInLine:this.state.verseInLine,
           languageCode: this.state.languageCode, 
           versionCode: this.state.versionCode,
+          lastRead:this.state.lastRead,
 
           updateColor: this.updateColor,
           updateSize: this.updateSize,
@@ -242,9 +246,13 @@ export default class App extends Component {
       AsyncStorageConstants.Values.VerseInLine).then((verseInLine) => {
           this.setState({verseInLine})
     })
+
+    await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.LastReadReference, AsyncStorageConstants.Values.LastReadReference
+      ).then((lastRead) => {
+          this.setState({lastRead})
+    })
         
     let models = await DbQueries.queryBookIdModels(this.state.versionCode, this.state.languageCode);
-    console.log("routes len =" + models)
     this.setState({isDbLoading: false})
     if (models && models.length > 0) {
       this.setState({booksList: models})
