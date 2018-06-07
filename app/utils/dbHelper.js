@@ -281,7 +281,12 @@ class DbHelper {
 			realm.delete(allNotes); // Deletes all
 		});
 	}
-
+	async notesCharStyle(charIndex,styleOption){
+		let realm = await this.getRealm();
+		if(realm){
+			console.log("value in db help "+charIndex+ " style option "+styleOption)
+		}
+	}
 	// async addStyle(index,){
 	// 	console.log("value in db helper "+value)
 	// 	let realm = await this.getRealm();

@@ -16,6 +16,7 @@ import FlowLayout from '../../components/FlowLayout'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { HeaderBackButton, NavigationActions } from 'react-navigation';
 import DbQueries from '../../utils/dbQueries'
+import dbQueries from '../../utils/dbQueries';
 
 export default class EditNote extends Component {
   static navigationOptions = ({navigation}) =>({
@@ -42,11 +43,23 @@ export default class EditNote extends Component {
         selection: [0,0],
         styleArray:[],
         selected:null,
+
+        bold: {type: 'bool', default: false},
+        italics: {type: 'bool', default: false},
+        underline: {type: 'bool', default: false},
+
     }
 
     this.getReference = this.getReference.bind(this)
     this.openReference = this.openReference.bind(this)
     this.deleteReference = this.deleteReference.bind(this)
+
+    let styleArray  = []
+    let obj = {bold:false, italics: false, underline: false}
+    for (var i=0; i<this.state.noteBody.length; i++) {
+      styleArray.push(obj)
+    }
+    this.setState({styleArray})
   }
 
   saveNote = () =>{
@@ -116,44 +129,91 @@ export default class EditNote extends Component {
     this.setState({
       selection: [selection.start, selection.end]
     });
+      selection: [selection.start, selection.end]
+    // console.log("selection changed works or not "+this.state.selection.update(selection.start, selection.end))
     console.log("on delection change"+this.state.selection)
-  };
+  }
    
   componentDidMount() {
     this.props.navigation.setParams({ handleAdd: this.saveNote})
     this.props.navigation.setParams({ handleBack: this.onBack})
   }
  
-  styleChar(value){
-    // let selected = this.state.noteBody.substring(this.state.selection);
-    console.log("style array "+JSON.stringify(this.state.styleArray))
-        console.log('styleArray 0')
-        let styleArray = [ ...this.state.styleArray ];
-        var isPresent = false ; 
-        for (var i = 0 ; i < styleArray.length ;i++){
-         if(styleArray[i] == value){
-           isPresent = true;
-            styleArray.splice(i,1)
-              break;
-         }
-        }
-        if (!isPresent){
-          styleArray.push(value)
-        }
-        this.setState({styleArray})
-  }
+  async styleChar(value){
+    const B = (props) => <Text style={{fontSize: 'bold'}}>{props.children}</Text>
+    const I = (props) => <Text style={{fontStyle: 'italic'}}>{props.children}</Text>
+    console.log("bold string "+this.state.noteBody.bold());  
+    console.log("italics"+this.state.noteBody.italics())
+    // this.setState({styleArray:value})
 
-  checkStyleValuePresent(value){
-    let styleArray = [ ...this.state.styleArray ];
-        for (var i = 0 ; i < styleArray.length ;i++){
-         if(styleArray[i] == value){
-           console.log("return vale true"+value)
-           return true
-         }
+    let styleArray  = [...this.state.styleArray]
+    for (var i=this.state.selection[0]; i<this.state.selection[1]; i++) {
+      switch(value) {
+        case 0: {
+          styleArray[i].bold = !styleArray[i].bold;
+          break
         }
-           console.log("return vale false"+value)
+        case 1: {
+          styleArray[i].italics = !styleArray[i].italics;          
+          break
+        }
+        case 2: {
+          styleArray[i].underline = !styleArray[i].underline;          
+          break
+        }
+      }
+    }
+    this.setState({styleArray})
+
+    let selected= this.state.noteBody.substring(this.state.selection[0],this.state.selection[1]);
+    console.log("selected value in stylechar "+selected)
+    console.log("state value of selected "+this.state.selection)
+    if(this.state.selection != null){
+    let selectedText = this.state.noteBody.substring(this.state.selection[0],this.state.selection[1])
+
+      if(value == 0){
+      //  return <B>selectedText.bold()</B>
+      }
+      if(value ==1){
+      //  return <I>selectedText.italics()</I>
+      }
+    }
+    await dbQueries.notesCharStyle(value, selected)
+        // let styleArray = [ ...this.state.styleArray ];
+        // var isPresent = false ; 
+        // for (var i = 0 ; i < styleArray.length ;i++){
+        //  if(styleArray[i] == value){
+        //    isPresent = true;
+        //     styleArray.splice(i,1)
+        //       break;
+        //  }
+        // }
+        // if (!isPresent){
+        //   styleArray.push(value)
+        // }
+        // this.setState({styleArray})
+
+  }
+  // checkStyleValuePresent(value){
+    // let styleArray = [ ...this.state.styleArray ];
+    //     for (var i = 0 ; i < styleArray.length ;i++){
+    //      if(styleArray[i] == value){
+    //        console.log("return vale true"+value)
+    //        return true
+    //      }
+    //     }
+    //        console.log("return vale false"+value)
         
-        return false
+    //     return false
+       
+  // }
+  textStyling(){
+    console.log("hi comming")
+  }
+  onChangeText(text){
+    this.setState({noteBody:text})
+
+
   }
 
   checkIfReferencePresent(id, name, cNum, vNum) {
@@ -195,6 +255,9 @@ export default class EditNote extends Component {
 
   render() {
     //dataValue={this.state.monitorValue}/>}
+    var bodyText = this.state.noteBody;
+    var bodyArray = bodyText.split('');
+    const B = (props) => <Text style={{fontStyle: 'italic'}}>{props.children}</Text>
     return (
      <ScrollView style={{flex:1}}>
       <View style={{justifyContent:'space-between', flexDirection:'row', alignItems:'center', margin:8}}>
@@ -222,11 +285,21 @@ export default class EditNote extends Component {
         }}
         // ref={input => this.myInputText = input}
         underlineColorAndroid='transparent'
+        ref={input => this.myInputText = input}
         onSelectionChange={this.onSelectionChange} 
-        onChangeText = {(text) => this.setState({noteBody:text})}
-        value={this.state.noteBody}
-      />
-
+        onChangeText = {this.onChangeText.bind(this,text)}
+        // value={this.state.noteBody}
+      >
+      {bodyArray.map((item, index) =>
+        <Text style={{
+          textDecorationLine: this.state.styleArray[index].underline ? 'underline' : 'none',
+          fontStyle: this.state.styleArray[index].italics ? 'italic' : 'normal',
+          fontWeight: this.state.styleArray[index].bold ? 'bold' : 'normal'
+        }}>item</Text>
+      )
+      }
+      <Text>{this.state.noteBody}</Text>
+      </TextInput>
       <TouchableOpacity onPress={()=>this.styleChar(0)}>
       <Text>Bold</Text>
       </TouchableOpacity>

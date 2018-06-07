@@ -26,6 +26,9 @@ import BookRecyclerView from '../screens/book/BookRecyclerView'
 
 const StackNav = StackNavigator(
   {  
+    Notes: {
+      screen: Notes,
+    },
     
       Splash: {
         screen: Splash,
@@ -47,9 +50,6 @@ const StackNav = StackNavigator(
       },
       History: {
         screen: History,
-      },
-      Notes: {
-        screen: Notes,
       },
       
       Settings: {

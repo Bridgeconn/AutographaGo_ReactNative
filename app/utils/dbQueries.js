@@ -105,6 +105,9 @@ class DbQueries {
     addOrUpdateNote(index, body, createdTime, modifiedTime, refList){
         return DbHelper.addOrUpdateNote(index, body, createdTime, modifiedTime, refList);
     }
+    notesCharStyle(charIndex){
+         DbHelper.notesCharStyle(charIndex)
+    }
     
     deleteNote(time){
         DbHelper.deleteNote(time);
