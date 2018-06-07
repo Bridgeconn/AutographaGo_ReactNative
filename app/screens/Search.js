@@ -3,23 +3,27 @@ import {
   StyleSheet,
   Text,
   View,
-  Button,
+  // Button,
   TouchableOpacity,
   TextInput,
-  FlatList
+  FlatList,
+  ActivityIndicator,
+  VirtualizedList
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import DbQueries from '../utils/dbQueries.js'
-import { Item } from 'native-base';
+import {Button,Segment} from 'native-base'
 
 export default class Search extends Component {
 
   constructor(){
     super();
     this.state = {
-      searchedResult:[]
+      searchedResult:[],
+      activeTab:0,
+      isLoading:false
     }
-    // this.onSearchText = this.onSearchText.bind(this)
+    this.onSearchText = this.onSearchText.bind(this)
   }
 
   static navigationOptions = ({navigation}) =>({
@@ -27,23 +31,37 @@ export default class Search extends Component {
         placeholder="Search"
         style={{width:50, textAlignVertical: "top"}}
         onChangeText={(text) => navigation.state.params.onText(text)}
-    />),
-    // headerRight:(
-    //     <Icon name="search" size={36} onPress={()=>navigation.state.params.onSearchText()}/>
-    //   )
+        returnKeyType="search"
+        onSubmitEditing={() => navigation.state.params.onSearchText()}
+    />)
+  //   headerRight:(
+  //       <Icon name="search" size={36} onPress={()=>navigation.state.params.onSearchText()}/>
+  //     )
   })
   async onSearchText(){
+    this.setState({isLoading:true})
     console.log("waiting for search funtion ")
-    // let searchResultByBookName = await DbQueries.querySearchBookWithName(this.state.text,"ULB", "ENG");
-    let searchResultByVerseText = await DbQueries.querySearchVerse(this.state.text,"ULB", "ENG")
-     if (searchResultByVerseText && searchResultByVerseText.length > 0 ) {
-       console.log("search result "+JSON.stringify(searchResultByVerseText[0].text))
-      this.setState({searchedResult: searchResultByVerseText}) 
+    let searchResultByBookName = await DbQueries.querySearchBookWithName("ULB", "ENG",this.state.text);
+    let searchResultByVerseText = await DbQueries.querySearchVerse("ULB","ENG",this.state.text)
+  
+    if(searchResultByBookName && searchResultByBookName.length>0){
+      for(var i = 0; i < searchResultByBookName.length ;i++ ){
+     console.log("bookName "+searchResultByBookName[0].bookName)
+      this.setState({searchedResult:[{bookName:searchResultByBookName[i].bookName}]})
+      }
+     }
+    if (searchResultByVerseText && searchResultByVerseText.length > 0 ) {
+      for(var i = 0 ; i < searchResultByVerseText.length ;i++ ){
+        this.setState({searchedResult: this.state.searchedResult.concat([{text:searchResultByVerseText[i].text,bookId:searchResultByVerseText[i].bookId,verseNumber:searchResultByVerseText[i].verseNumber,chapterNumber:searchResultByVerseText[i].chapterNumber}])})
+      }
+      // console.log("serachd result verse text is coming value of  "+JSON.stringify(searchResultByVerseText[0].text))
+        // console.log("serachd result verse text "+JSON.stringify(searchResultByVerseText[0].text))
+       
      }   
+     this.setState({isLoading:false})
   }
   onText = (text) =>{
     this.setState({text})
-
     console.log("text"+this.state.text)
   }
   
@@ -51,24 +69,108 @@ export default class Search extends Component {
     // console.log("props from navigation options "+this.props.navigation.state.params.text)
     this.props.navigation.setParams({onText: this.onText,onSearchText: this.onSearchText,text:this.state.text})
   }
+toggleButton(button){
+  console.log("button active"+button)
+    this.setState({activeTab:button})
+    // this.elementIndex.scrollToIndex({index:39,viewPosition:0,animated: true,viewOffset:0})
+    // if(button ==  2){
+    //   console.log("pressed")
+    //   this.elementIndex.scrollToIndex({index:39,viewPosition:0,animated: true,viewOffset:0})
+    // }
+    // if(button == 1){
+    //   this.elementIndex.scrollToIndex({index:0,viewPosition:0,animated: true,viewOffset:0})
+    // }
+}
+
+getItemLayout = (data, index) => (
+  { length: 48, offset: 48 * index, index }
+)
+
+handleScroll = (event)=>{
+   console.log(event.nativeEvent.contentOffset.y+ "  index value")  
+}
+
 
   render() {
+    console.log("isloadoing"+this.state.isLoading)
     return (
-      <View>
-      <Icon name="search" size={36} onPress={()=>this.onSearchText()}/>
+      <View style={styles.container}>
+      {this.state.isLoading ? 
+        <ActivityIndicator 
+          animating={this.state.isLoading ? true : false} 
+          size="large" 
+          color="#0000ff" />
+          :
       <FlatList
+          ref={ref => this.elementIndex = ref}
           data={this.state.searchedResult}
-          renderItem={({item}) => 
+          renderItem={({item,index}) => 
           <View>
-            <View>
-            <Text style={{color:"red"}}> {item.bookId} {item.verseNumber} : {item.chapterNumber} </Text>
-            </View>
+          <Text>{item.bookName}</Text>
+          <Text style={{color:"red"}}> {item.bookId} : {item.verseNumber} : {item.chapterNumber} </Text>
           <Text>{item.text}</Text>
-          
-         
           </View>
-          }/>
+          }
+          ListHeaderComponent={this.state.searchedResult.length !== 0  ?
+            <View style={{backgroundColor: '#fff', 
+            alignItems: 'center', 
+            justifyContent: 'center'}}>
+            <Segment style = 
+            {{
+              backgroundColor:"transparent", 
+              borderColor:"#3F51B5",
+              borderWidth:1,
+              margin:8,
+              justifyContent:'space-between'
+            }}>
+            <Button
+            onPress={this.toggleButton.bind(this,0)} 
+            first active={this.state.activeTab == 0} 
+            style={{backgroundColor:this.state.activeTab == 0 ? "#3F51B5":"#fff",height:43}}
+            size={28}
+            >
+              <Text style={{color:this.state.activeTab == 0 ? "#fff" : "#000"}}>
+                All
+              </Text>
+            </Button>
+            <Button
+            onPress={this.toggleButton.bind(this,1)}  
+            second active={!this.state.activeTab == 1} 
+            style={ {backgroundColor:this.state.activeTab  == 1 ?  "#3F51B5":"#fff",height:43}}
+            >
+             <Text style={{color:this.state.activeTab == 1 ? "#fff" : "#000"}}>
+                New Testament
+              </Text>
+            </Button>
+            <Button 
+            onPress={this.toggleButton.bind(this,2)} 
+            last active={this.state.activeTab == 2} 
+            style={{backgroundColor:this.state.activeTab == 2 ? "#3F51B5":"#fff",height:43}}
+            >
+              <Text style={{color:this.state.activeTab == 2? "#fff" : "#000"}}>
+                Old Testament
+              </Text>
+            </Button>
+            </Segment> 
+            </View>:null  }
+           stickyHeaderIndices={[0]}
+          />
+        }
       </View>
+      
     )
 }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+});
+
+
+
+
