@@ -351,7 +351,7 @@ export default class BookRecyclerView extends Component {
         languageCode:this.state.languageCode,
         versionCode:this.state.versionCode,
         bookId:this.state.bookId,
-        chapterNumber:this.state.chapterNumber,
+        chapterNumber:this.state.currentVisibleChapter,
       }
       AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.LastReadReference, lastRead);
   }

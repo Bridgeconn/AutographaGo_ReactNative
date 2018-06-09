@@ -7,7 +7,6 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { sidebarStyle } from './styles.js';
 
-
 export default class FixedSidebar extends Component {
   constructor(props){
     super(props)
@@ -43,7 +42,7 @@ export default class FixedSidebar extends Component {
       transform: [{ scale: this.animatedValue}]
     }
     const iconName = [
-      {icon:'local-library',pressIcon:'Book',},
+      {icon:'local-library',pressIcon:'BookRecyclerView',},
       {icon:'history',pressIcon:'History'},
       {icon:'search',pressIcon:'Search'},
       {icon:'note',pressIcon:'Notes'},
@@ -51,7 +50,7 @@ export default class FixedSidebar extends Component {
       {icon:'border-color',pressIcon:'Highlights'},
       {icon:'settings',pressIcon:'Settings'}
     ]
-    const iconPress = ['Book',' History','Search','Note','Bookmarks','Highlights','Settings']
+    const iconPress = ['BookRecyclerView',' History','Search','Note','Bookmarks','Highlights','Settings']
     return (
       <View style={sidebarStyle.container}>
         {

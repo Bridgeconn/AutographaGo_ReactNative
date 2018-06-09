@@ -20,10 +20,9 @@ module.exports = {
         // VerseInParagraph:0
         LastReadReference: {
             languageCode:'ENG',
-            versionCode:'UDB',
+            versionCode:'ULB',
             bookId:'GEN',
             chapterNumber:1,
-            verseNumber:'1'
           }
        
     }
