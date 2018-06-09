@@ -53,6 +53,7 @@ export default class EditNote extends Component {
     this.getReference = this.getReference.bind(this)
     this.openReference = this.openReference.bind(this)
     this.deleteReference = this.deleteReference.bind(this)
+    this.onChangeText = this.onChangeText.bind(this)
 
     let styleArray  = []
     let obj = {bold:false, italics: false, underline: false}
@@ -210,10 +211,9 @@ export default class EditNote extends Component {
   textStyling(){
     console.log("hi comming")
   }
-  onChangeText(text){
+  onChangeText = (text)=>{
+    console.log("on change text" + text)
     this.setState({noteBody:text})
-
-
   }
 
   checkIfReferencePresent(id, name, cNum, vNum) {
@@ -264,7 +264,7 @@ export default class EditNote extends Component {
         {this.state.referenceList.length == 0 
           ? 
           <Text style={{flex:8}}>Tap button to add references</Text> 
-          :  
+          : 
           <FlowLayout style={{flex:8}} ref="flow" dataValue={this.state.referenceList} 
             openReference={(index) => {this.openReference(index)}} 
             deleteReference={(index) => {this.deleteReference(index)}}
@@ -277,28 +277,24 @@ export default class EditNote extends Component {
       <TextInput 
         multiline={true}
         placeholder="New Note" 
-        style={{
-          fontWeight:this.checkStyleValuePresent(0) ? 'bold' : 'normal',
-          fontStyle: this.checkStyleValuePresent(1) ?'italic' :'normal',
-          textDecorationLine:this.checkStyleValuePresent(2)  ? 'underline':'none',
-          fontSize:24
-        }}
         // ref={input => this.myInputText = input}
         underlineColorAndroid='transparent'
         ref={input => this.myInputText = input}
         onSelectionChange={this.onSelectionChange} 
-        onChangeText = {this.onChangeText.bind(this,text)}
-        // value={this.state.noteBody}
+        onChangeText = {this.onChangeText}
+        value={this.state.noteBody}
       >
-      {bodyArray.map((item, index) =>
+      {
+        /*bodyArray.map((item, index) =>
         <Text style={{
           textDecorationLine: this.state.styleArray[index].underline ? 'underline' : 'none',
           fontStyle: this.state.styleArray[index].italics ? 'italic' : 'normal',
           fontWeight: this.state.styleArray[index].bold ? 'bold' : 'normal'
         }}>item</Text>
       )
-      }
+      
       <Text>{this.state.noteBody}</Text>
+    */}
       </TextInput>
       <TouchableOpacity onPress={()=>this.styleChar(0)}>
       <Text>Bold</Text>
