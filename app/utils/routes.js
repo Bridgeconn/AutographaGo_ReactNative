@@ -1,5 +1,4 @@
 // all of our routes
-
 import React, { Component } from 'react'
 import {StackNavigator, TabNavigator} from 'react-navigation'
 import Home from '../screens/Home/Home'
