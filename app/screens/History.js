@@ -14,155 +14,81 @@ export default class History extends Component{
   constructor(props){
     super(props)
     this.state = {
-      historyData:[]
+      historyData:[],
+      historyList: [
+        { time: "Today", list: []},
+        { time: "Yesterday", list:[]},
+        { time: "2_days_Ago", list: []},
+        { time:"1_week_ago", list:[]}
+    ],
+      timeDiff:[]
     }
   }
-
 
   async componentDidMount(){
     let res  = await dbQueries.queryHistory()
     console.log("resutl in history "+JSON.stringify(res))
     this.setState({historyData:res})
-  
+    this.dateDiff()
   }
-  // renderItem = ({item,index})=>{
-  // return(
-   
-  //  )
-  // }
 
-  HistoryTime(){
-    var date = new Date();
-    console.log("history date "+historyData.time)
-    // if(historyData.time){
-
-    // }
-  }
-  
-  render() {
-    var date = new Date()
-    var end = moment(this.state.historyData.time).format('D');
-    var cur = moment(new Date()).format('D');
-    var diff =  Math.floor(end-cur) 
-    console.log("time db" +end)
-    console.log("time current" +cur)
-    console.log("time current" +diff)
-    
-    
-    // let dateFormate =  date.getDays() < 1  ? moment(this.state.historyData.time).fromNow() 
-    // :( date.getDays() < 2 ) ? "tommorow" 
-    // :( date.getDays() < 3 )  ? "2 days ago"
-    // :( date.getDays() < 7 ) ? "a week ago "
-    // :( date.getDays() < 14 ) ? "2 weeks ago"  
-    // : "1 month ago "
-    // //  moment(this.state.historyData.time).format('DD-MMM');  
-    // let dateFormate =  date.getDays() < 24  ? moment(this.state.historyData.time).fromNow() : moment(this.state.historyData.time).format('DD-MMM');  
-    
-    return (
-      <View style={{flex:1,backgroundColor:"white"}}> 
-      {
-        diff === 0  ? 
-        <HistoryAccordion title="today" > 
-        <FlatList
-          data={this.state.historyData}
-          renderItem={({item}) => 
-            <Text 
-            style={{
-                borderBottomColor:"grey",
-                borderBottomWidth:0.5
-              }}
-            >
-              {getBookNameFromMapping(item.bookId)} {item.chapterNumber}
-              
-            </Text>
-          }
-          />
-        </HistoryAccordion>
-        :( diff === 1)? 
-        <HistoryAccordion title="yesterday" > 
-        <FlatList
-          data={this.state.historyData}
-          renderItem={({item}) => 
-            <Text 
-            style={{
-                borderBottomColor:"grey",
-                borderBottomWidth:0.5
-              }}
-            >
-              {getBookNameFromMapping(item.bookId)} {item.chapterNumber}
-              
-            </Text>
-          }
-          />
-        </HistoryAccordion>
-        :( diff === 2 ) ? 
-        <HistoryAccordion title="2 days ago" > 
-        <FlatList
-          data={this.state.historyData}
-          renderItem={({item}) => 
-            <Text 
-            style={{
-                borderBottomColor:"grey",
-                borderBottomWidth:0.5
-              }}
-            >
-              {getBookNameFromMapping(item.bookId)} {item.chapterNumber}
-              
-            </Text>
-          }
-          />
-        </HistoryAccordion>
-        :( diff > 3  && diff <= 7) ? 
-        <HistoryAccordion title="a week ago" > 
-        <FlatList
-          data={this.state.historyData}
-          renderItem={({item}) => 
-            <Text 
-            style={{
-                borderBottomColor:"grey",
-                borderBottomWidth:0.5
-              }}
-            >
-              {getBookNameFromMapping(item.bookId)} {item.chapterNumber}
-              
-            </Text>
-          }
-          />
-        </HistoryAccordion>
-        : (diff < 14 &&   diff > 7) ? 
-        <HistoryAccordion title="2 week ago" > 
-        <FlatList
-          data={this.state.historyData}
-          renderItem={({item}) => 
-            <Text 
-            style={{
-                borderBottomColor:"grey",
-                borderBottomWidth:0.5
-              }}
-            >
-              {getBookNameFromMapping(item.bookId)} {item.chapterNumber}
-              
-            </Text>
-          }
-          />
-        </HistoryAccordion> 
+  renderItem = ({item}) => {
+    console.log("render data "+JSON.stringify(this.state.historyList[0]))
+    console.log("render data "+JSON.stringify(this.state.historyList[1]))
+    console.log("render data "+JSON.stringify(this.state.historyList[2]))
         
-        : <HistoryAccordion title="a month ago" > 
-        <FlatList
-          data={this.state.historyData}
-          renderItem={({item}) => 
-            <Text 
-            style={{
-                borderBottomColor:"grey",
-                borderBottomWidth:0.5
-              }}
-            >
-              {getBookNameFromMapping(item.bookId)} {item.chapterNumber}
-              
-            </Text>
-          }
-          />
-        </HistoryAccordion>
+    return(
+     <Text>{getBookNameFromMapping(item.bookId)}</Text>
+    )
+  }
+  dateDiff() {
+    var date = new Date()
+    var cur = moment(date).format('D')
+    var data = []
+    
+      for(i=0; i < this.state.historyData.length; i++){
+        var end = moment(this.state.historyData[i].time).format('D')
+        var timeDiff =  Math.floor(cur-end)
+        if(timeDiff == 0){
+          var today = this.state.historyList[0].list.push(this.state.historyData[i])
+          console.log( JSON.stringify(today)+" today data")
+          console.log( JSON.stringify(this.state.historyList[0].list)+" today ")
+        }
+        console.log("data "+JSON.stringify(this.state.historyList[0]))
+        if(timeDiff == 1){
+          var yesterday = this.state.historyList[1].list.push(this.state.historyData[i])
+          console.log( JSON.stringify(yesterday)+" yesterday ")
+          console.log( JSON.stringify(this.state.historyList[1].list)+" yesterday ")
+        }
+        if(timeDiff == 2){
+          var daysAgo = this.state.historyList[2].list.push(this.state.historyData[i])
+          console.log( JSON.stringify(daysAgo)+" longTime data")
+          console.log( JSON.stringify(this.state.historyList[2].list)+" longTime ")
+        }
+        if(timeDiff > 2 && timeDiff < 8){
+          var daysAgo = this.state.historyList[3].list.push(this.state.historyData[i])
+          console.log( JSON.stringify(daysAgo)+" week ago")
+          console.log( JSON.stringify(this.state.historyList[2].list)+" week ago ")
+        }
+      }
+  }
+  render() {
+     console.log("state difference  of time "+this.state.timeDiff)
+     console.log("state difference  of time "+JSON.stringify(this.state.historyList[0]))
+    
+     return (
+      <View style={{flex:1,backgroundColor:"white"}}> 
+
+      {
+        this.state.historyList.map((item,index)=>
+        // <Text>{item.today}</Text>
+          <HistoryAccordion title={item.time}>
+            <FlatList
+              data={item.list}
+              renderItem={this.renderItem}
+            />
+          </HistoryAccordion> 
+        )
       }
       </View>
     )

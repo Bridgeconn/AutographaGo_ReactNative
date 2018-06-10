@@ -314,7 +314,7 @@ class DbHelper {
 		let realm = await this.getRealm();
     	if (realm) {
 			let results = realm.objects('HistoryModel');
-			return results.sorted('time', true);
+			return results.sorted('time');
 		}
 		return null
 	}
