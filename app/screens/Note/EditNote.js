@@ -204,11 +204,27 @@ export default class EditNote extends Component {
       />
       <RichTextToolbar
         getEditor={() => this.richtext}
-        renderAction={}
-        iconMap={}
+        // renderAction={this._renderAction}
+        // iconMap={}
       />
 
      </ScrollView> 
     )
+  }
+
+  _renderAction() {
+    const icon = this._getButtonIcon(action);
+    return (
+      <TouchableOpacity
+          key={action}
+          style={[
+            {height: 50, width: 50, justifyContent: 'center'},
+            selected ? this._getButtonSelectedStyle() : this._getButtonUnselectedStyle()
+          ]}
+          onPress={() => this._onPress(action)}
+      >
+        {icon ? <Image source={icon} style={{tintColor: selected ? this.props.selectedIconTint : this.props.iconTint}}/> : null}
+      </TouchableOpacity>
+    );
   }
 }
