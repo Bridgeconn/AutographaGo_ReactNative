@@ -45,7 +45,7 @@ export default class History extends Component{
  
   onClearHistory(){
     console.log("hi clear history")
-    // dbQueries.clearHistory()
+    dbQueries.clearHistory()
   }
   dateDiff() {
     var date = new Date()
@@ -70,6 +70,11 @@ export default class History extends Component{
         }
       }
   }
+  _setSection(section){
+    console.log("active section "+section)
+    this.setState({activeSection:select})
+  }
+
   _renderHeader(data) {
     return (
       <View>
@@ -85,14 +90,12 @@ export default class History extends Component{
       </View> 
     )
   }
- 
-  
   _renderContent(data) {
     return (
       <List dataArray={data.list}
-            renderRow={(item) =>
+            renderRow={(item)=>
               <ListItem>
-                <Text>{getBookNameFromMapping(item.bookId)}</Text>
+                <Text>{getBookNameFromMapping(item.bookId)} : {item.chapterNumber} </Text>
               </ListItem>
             }>
           </List>
@@ -103,10 +106,12 @@ export default class History extends Component{
   render(){
      return (
       <Accordion
+      activeSection={this.state.activeSection}
       sections={this.state.historyList}
       renderHeader={this._renderHeader}
       renderContent={this._renderContent}
       underlayColor="tranparent"
+      onChange={this._setSection.bind(this)}
     />
     )
   }
