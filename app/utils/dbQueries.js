@@ -115,6 +115,9 @@ class DbQueries {
     queryHistory(){
         return DbHelper.queryHistory();
     }
+    clearHistory(){
+        dbHelper.clearHistory()
+    }
 }
 
 export default new DbQueries();

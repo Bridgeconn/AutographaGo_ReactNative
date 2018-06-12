@@ -72,14 +72,12 @@ export default class Book extends Component {
   }
 
   async componentDidMount() {
-    var time =  new Date()
     this.props.navigation.setParams({onIconPress: this.onBookmarkPress})    
     this.props.navigation.setParams({isBookmark: this.state.isBookmark})
     this.setState({isLoading: true}, () => {
       this.queryBook()
     })
-    await DbQueries.addHistory(this.props.screenProps.languageCode,
-      this.props.screenProps.versionCode,this.state.bookId,this.state.chapterNumber,time)
+    
   }
 
   async queryBook() {

@@ -313,14 +313,18 @@ class DbHelper {
 	async queryHistory() {
 		let realm = await this.getRealm();
     	if (realm) {
-			let results = realm.objects('HistoryModel');
+			let results = realm.objects('HistoryModel')
 			return results.sorted('time');
 		}
 		return null
 	}
 
 	async clearHistory() {
-		
+		let realm = await this.getRealm();
+		realm.write(() => {
+			let historyData = realm.objects('HistoryModel')
+			realm.delete(historyData); // Deletes all
+		});
 	}
 
 	// async addStyle(index,){
