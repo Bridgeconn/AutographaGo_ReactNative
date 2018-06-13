@@ -16,6 +16,7 @@ import FlowLayout from '../../components/FlowLayout'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { HeaderBackButton, NavigationActions } from 'react-navigation';
 import DbQueries from '../../utils/dbQueries'
+import { NoteStyle } from './styles.js';
 
 export default class EditNote extends Component {
   static navigationOptions = ({navigation}) =>({
@@ -30,6 +31,9 @@ export default class EditNote extends Component {
   constructor(props){
     super(props);
     this.state = {
+        colorFile:this.props.screenProps.colorFile,
+        sizeFile:this.props.screenProps.sizeFile,
+
         noteIndex: this.props.navigation.state.params.index,
         noteObject: this.props.navigation.state.params.noteObject,
         noteBody: this.props.navigation.state.params.index == -1 
@@ -44,6 +48,8 @@ export default class EditNote extends Component {
         selected:null,
     }
 
+    this.styleFile = NoteStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
+    
     this.getReference = this.getReference.bind(this)
     this.openReference = this.openReference.bind(this)
     this.deleteReference = this.deleteReference.bind(this)

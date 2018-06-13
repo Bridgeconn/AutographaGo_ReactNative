@@ -13,14 +13,21 @@ import { Card, CardItem, Content, Right, Left } from 'native-base';
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 import DbQueries from '../../utils/dbQueries.js'
+import { NoteStyle } from './styles.js';
+
 var moment = require('moment');
 
 export default class Notes extends Component {
   constructor(props){
     super(props);
     this.state = {
+      colorFile:this.props.screenProps.colorFile,
+      sizeFile:this.props.screenProps.sizeFile,
+
       notesData:[],
     }
+    this.styleFile = NoteStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
+    
     this.queryDb = this.queryDb.bind(this)
     this.onDelete = this.onDelete.bind(this)
     this.onRefresh = this.onRefresh.bind(this)
@@ -84,10 +91,10 @@ export default class Notes extends Component {
     <TouchableOpacity style={{flex:1}}
         onPress={() =>this.openEdit(index,item)}>
       <Card style={{margin:8,flex:1 }}>
-        <CardItem >
+        <CardItem>
         <View style={{flex:1}}> 
           <Text numberOfLines={2}>{bodyText}</Text>
-          <View style={{justifyContent:'space-between', alignItems:'center',marginTop:16, flexDirection:'row'}}>
+          <View style={this.styleFile.noteCardItem}>
             <Text >{dateFormate}</Text>
             <Icon name="delete-forever" size={24} onPress={()=>this.onDelete(index, item.createdTime)}/>
           </View>
