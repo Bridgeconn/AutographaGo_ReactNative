@@ -31,7 +31,9 @@ export default class History extends Component{
         { time: "2 month ago", list:[]}
     ],
     heightDynamic : 0,
+    arrowPositionDown : true 
     }
+    this._setSection = this._setSection.bind(this)
   }
 
   async componentDidMount(){
@@ -72,25 +74,29 @@ export default class History extends Component{
   }
   _setSection(section){
     console.log("active section "+section)
-    this.setState({activeSection:select})
+    this.setState({
+      activeSection:section,
+      arrowPositionDown:!this.state.arrowPositionDown
+    })
+    // console.log("value of arow "+!this.state.arrowPositionDown)
+
   }
 
-  _renderHeader(data) {
+  _renderHeader(data, index, isActive) {
     return (
       <View>
       {
         data.list.length == 0 ? null : 
         <View  style={{flexDirection:"row",justifyContent:"space-between",margin:8}}>
          <Text style={{fontSize:18}}>{data.time}</Text>
-         <Icon name="keyboard-arrow-down" size={24} />
+         <Icon name={isActive ? "keyboard-arrow-down" : "keyboard-arrow-up" } size={24} />
         </View>
       }
-       
-        
       </View> 
     )
   }
   _renderContent(data) {
+    console.log("is active ")
     return (
       <List dataArray={data.list}
             renderRow={(item)=>
@@ -111,7 +117,7 @@ export default class History extends Component{
       renderHeader={this._renderHeader}
       renderContent={this._renderContent}
       underlayColor="tranparent"
-      onChange={this._setSection.bind(this)}
+      initiallyActiveSection={0}
     />
     )
   }
