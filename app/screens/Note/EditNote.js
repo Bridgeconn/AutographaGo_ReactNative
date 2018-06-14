@@ -16,7 +16,7 @@ import FlowLayout from '../../components/FlowLayout'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { HeaderBackButton, NavigationActions } from 'react-navigation';
 import DbQueries from '../../utils/dbQueries'
-import { NoteStyle } from './styles.js';
+import { noteStyle } from './styles.js';
 
 export default class EditNote extends Component {
   static navigationOptions = ({navigation}) =>({
@@ -31,8 +31,6 @@ export default class EditNote extends Component {
   constructor(props){
     super(props);
     this.state = {
-        colorFile:this.props.screenProps.colorFile,
-        sizeFile:this.props.screenProps.sizeFile,
 
         noteIndex: this.props.navigation.state.params.index,
         noteObject: this.props.navigation.state.params.noteObject,
@@ -48,7 +46,7 @@ export default class EditNote extends Component {
         selected:null,
     }
 
-    this.styleFile = NoteStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
+    this.styles = noteStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
     
     this.getReference = this.getReference.bind(this)
     this.openReference = this.openReference.bind(this)
@@ -203,29 +201,31 @@ export default class EditNote extends Component {
     //dataValue={this.state.monitorValue}/>}
     return (
      <ScrollView style={{flex:1}}>
-      <View style={{justifyContent:'space-between', flexDirection:'row', alignItems:'center', margin:8}}>
+      <View style={this.styles.noteReferenceViewCustom}>
         {this.state.referenceList.length == 0 
           ? 
-          <Text style={{flex:8}}>Tap button to add references</Text> 
+          <Text style={this.styles.NoteAddButton}>Tap button to add references</Text> 
           :  
-          <FlowLayout style={{flex:8}} ref="flow" dataValue={this.state.referenceList} 
+          <FlowLayout style={this.styles.FlowLayoutCustom} ref="flow" dataValue={this.state.referenceList} 
             openReference={(index) => {this.openReference(index)}} 
             deleteReference={(index) => {this.deleteReference(index)}}
           />
         }
-        <Icon name="add-circle" style={{flex:1}} size={28} color="gray" onPress={()=> {this.onAddVersePress()}} />
+        <Icon name="add-circle" style={this.styles.addIconCustom} size={28} color="gray" onPress={()=> {this.onAddVersePress()}} />
       </View>
       
-      <View style={{height:2, backgroundColor:'gray', marginHorizontal:8}}/>
+      <View style={this.styles.noteTextView}/>
       <TextInput 
         multiline={true}
         placeholder="New Note" 
-        style={{
+        style={[
+          this.styles.noteTextSize,
+          {
           fontWeight:this.checkStyleValuePresent(0) ? 'bold' : 'normal',
           fontStyle: this.checkStyleValuePresent(1) ?'italic' :'normal',
           textDecorationLine:this.checkStyleValuePresent(2)  ? 'underline':'none',
-          fontSize:24
-        }}
+          }
+        ]}
         // ref={input => this.myInputText = input}
         underlineColorAndroid='transparent'
         onSelectionChange={this.onSelectionChange} 

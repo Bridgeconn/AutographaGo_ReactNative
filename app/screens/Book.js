@@ -65,6 +65,9 @@ export default class Book extends Component {
     this.viewabilityConfig = {
       viewAreaCoveragePercentThreshold: 50,
     }
+    
+    this.styles = numberSelection(props.screenProps.colorFile, props.screenProps.sizeFile);   
+    
     // minimumViewTime	No	number
     // viewAreaCoveragePercentThreshold	No	number    required or
     // itemVisiblePercentThreshold	No	number        required

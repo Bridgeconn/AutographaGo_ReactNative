@@ -13,20 +13,21 @@ import { Card, CardItem, Content, Right, Left } from 'native-base';
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 import DbQueries from '../../utils/dbQueries.js'
-import { NoteStyle } from './styles.js';
+import { noteStyle } from './styles.js';
 
 var moment = require('moment');
 
 export default class Notes extends Component {
   constructor(props){
     super(props);
+    console.log("font size "+JSON.stringify(this.props.screenProps.sizeFile)+" size size "+JSON.stringify(this.props.screenProps.colorFile))
     this.state = {
       colorFile:this.props.screenProps.colorFile,
       sizeFile:this.props.screenProps.sizeFile,
 
       notesData:[],
     }
-    this.styleFile = NoteStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
+    this.styles = noteStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
     
     this.queryDb = this.queryDb.bind(this)
     this.onDelete = this.onDelete.bind(this)
@@ -88,14 +89,14 @@ export default class Notes extends Component {
     console.log("format date "+dateFormate)
     var bodyText = item.body == '' ? 'No additional text' : item.body
     return(
-    <TouchableOpacity style={{flex:1}}
+    <TouchableOpacity style={this.styles.noteContent}
         onPress={() =>this.openEdit(index,item)}>
-      <Card style={{margin:8,flex:1 }}>
+      <Card style={this.styles.noteCardCustom}>
         <CardItem>
-        <View style={{flex:1}}> 
-          <Text numberOfLines={2}>{bodyText}</Text>
-          <View style={this.styleFile.noteCardItem}>
-            <Text >{dateFormate}</Text>
+        <View style={this.styles.notesContentView}> 
+          <Text style={this.styles.noteFontCustom} numberOfLines={2}>{bodyText}</Text>
+          <View style={this.styles.noteCardItem}>
+            <Text style={this.styles.noteFontCustom}>{dateFormate}</Text>
             <Icon name="delete-forever" size={24} onPress={()=>this.onDelete(index, item.createdTime)}/>
           </View>
         </View>
@@ -108,9 +109,9 @@ export default class Notes extends Component {
 
   render() {
     return (
-      <View style={{flex:1,margin:8}}>
+      <View style={this.styles.notesView}>
       <FlatList
-        style={{flex:1}}
+        style={this.styles.noteFlatlistCustom}
         data={this.state.notesData}
         renderItem={this.renderItem}
       />

@@ -2,12 +2,16 @@ import {StyleSheet,Dimensions} from 'react-native'
 import { Icon } from 'native-base';
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
-export const numberSelectionPageStyle =(colorFile, sizeFile) =>{
+
+export const numberSelection =(colorFile, sizeFile) =>{
     return StyleSheet.create({
 
    container:{
-    flex:1,
-    flexDirection:'row'
+        flex:1,
+        flexDirection:'row'
+   },
+   flexValue:{
+        flex:1
    },
    textStyle: {
         fontSize:sizeFile.fontSize
@@ -44,7 +48,52 @@ export const numberSelectionPageStyle =(colorFile, sizeFile) =>{
    IconCustom:{
     // iconColor:colorMode.iconColor
    },
-   cardItemStyle:{paddingTop:16,paddingBottom:16}
+   chapterSelectionTouchable:{
+        flex:0.25,
+        borderColor:'black',
+        borderRightWidth:1, 
+        borderBottomWidth:1,
+        height:width/4, 
+        justifyContent:"center"
+    },
+    chapterNum:{
+        fontSize:sizeFile.fontSize,
+        textAlign:"center",
+        alignItems:"center", 
+        color:'black'
+    },
+   cardItemStyle:{
+       paddingTop:16,
+       paddingBottom:16
+    },
+    //SELECT BOOK STYLE
+    selectBookTouchable:{
+        flex:1, 
+        borderColor:'black', 
+        borderRightWidth:1,
+        borderBottomWidth:1, 
+        borderLeftWidth:1, 
+        justifyContent:"center", 
+    },
+    bookName:{
+        textAlign:"center",alignItems:"center", color:'black', margin:8
+    },
+    //SelectChapter
 
+    selectGridNum:{
+        flex:0.25,
+        borderColor:'black',
+        borderRightWidth:1, 
+        borderBottomWidth:1,
+        height:width/4,
+        justifyContent:"center"
+    },
+    selectText:{
+        textAlign:"center",
+        alignItems:"center", 
+        color:'black',
+        fontSize:sizeFile.fontSize
+    }
+    
 })
 }

@@ -8,8 +8,9 @@ import {
   FlatList,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import DbQueries from '../utils/dbQueries'
-import id_name_map from '../assets/mappings.json'
+import DbQueries from '../../utils/dbQueries'
+import id_name_map from '../../assets/mappings.json'
+import { bookStyle } from './styles.js'
 
 export default class BookMarks extends Component {
   static navigationOptions = {
@@ -26,6 +27,9 @@ export default class BookMarks extends Component {
       bookmarkList: [],
       modelData: [],
     }
+    
+    this.styles = bookStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
+    
   }
 
   async componentDidMount() {
@@ -79,13 +83,13 @@ export default class BookMarks extends Component {
   
   render() {
     return (
-        <View style={{flex:1}}>
+        <View style={this.styles.container}>
           <FlatList
             data={this.state.bookmarkList}
             // getItemLayout={this.getItemLayout}
             renderItem={({item, index}) => 
-              <View style={{flexDirection:'row', justifyContent: 'space-between',margin:16}}>
-                <Text style={{fontSize:18}}>{item.bookName} {item.chapterNumber}</Text>
+              <View style={this.styles.bookmarksView}>
+                <Text style={this.styles.bookmarksText}>{item.bookName} {item.chapterNumber}</Text>
                 <Icon name='delete-forever' size={28} onPress={() => {
                   this.removeBookmark(item.bookId, item.chapterNumber, index)
                   }

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import {AppRegistry,StyleSheet,Text,ScrollView,FlatList} from 'react-native';
-import dbQueries from '../utils/dbQueries';
+import dbQueries from '../../utils/dbQueries';
 import { View } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import {getBookNameFromMapping} from '../utils/UtilFunctions';
+import {getBookNameFromMapping} from '../../utils/UtilFunctions';
 import Accordion from 'react-native-collapsible/Accordion';
 import {List,ListItem} from 'native-base'
+import { historyStyle } from './styles.js'
+
 var moment = require('moment');
 
 export default class History extends Component{
@@ -33,7 +35,7 @@ export default class History extends Component{
     heightDynamic : 0,
     arrowPositionDown : true 
     }
-    this._setSection = this._setSection.bind(this)
+    this.styles = historyStyle(props.screenProps.colorFile, props.screenProps.sizeFile);       
   }
 
   async componentDidMount(){
@@ -87,8 +89,8 @@ export default class History extends Component{
       <View>
       {
         data.list.length == 0 ? null : 
-        <View  style={{flexDirection:"row",justifyContent:"space-between",margin:8}}>
-         <Text style={{fontSize:18}}>{data.time}</Text>
+        <View  style={this.styles.historyHeader}>
+         <Text style={this.styles.headerText}>{data.time}</Text>
          <Icon name={isActive ? "keyboard-arrow-down" : "keyboard-arrow-up" } size={24} />
         </View>
       }
@@ -122,13 +124,4 @@ export default class History extends Component{
     )
   }
 }
-
-var styles = StyleSheet.create({
-  container: {
-    flex            : 1,
-    backgroundColor : '#f4f7f9',
-    paddingTop      : 30
-  },
-  
-});
 

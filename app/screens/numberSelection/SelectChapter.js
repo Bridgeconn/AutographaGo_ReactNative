@@ -12,6 +12,7 @@ const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 import {nightColors, dayColors} from '../../utils/colors.js'
 import {extraSmallFont,smallFont,mediumFont,largeFont,extraLargeFont} from '../../utils/dimens.js'
+import { numberSelection } from './styles.js';
 
 export default class SelectChapter extends Component {
 
@@ -26,6 +27,8 @@ export default class SelectChapter extends Component {
       bookData: Array.from(new Array(this.props.screenProps.numOfChapters), (x,i) => i+1),
       selectedIndex: 0,
     }
+    this.styles = numberSelection(props.screenProps.colorFile, props.screenProps.sizeFile);   
+    
   }
 
   onChapterSelected(item, index) {
@@ -38,17 +41,16 @@ export default class SelectChapter extends Component {
   
   render() {
     return (
-      <View style={{flex:1}}>
+      <View style={this.styles.flexValue}>
         <FlatList
         numColumns={4}
         data={this.state.bookData}
         renderItem={({item, index}) => 
-        <TouchableOpacity style={{flex:0.25,borderColor:'black',borderRightWidth:1, borderBottomWidth:1,
-          height:width/4, justifyContent:"center", 
-          backgroundColor: this.state.selectedIndex == index ? 'blue' : 'transparent'}}
+        <TouchableOpacity style={[this.styles.selectGridNum,
+          {backgroundColor: this.state.selectedIndex == index ? 'blue' : 'transparent'}]}
           onPress={()=>this.onChapterSelected(item, index)}
           >
-                <Text style={{textAlign:"center",alignItems:"center", color:'black'}}>{item}</Text>
+                <Text style={this.styles.selectText}>{item}</Text>
             </TouchableOpacity>
         }
       />

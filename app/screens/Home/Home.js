@@ -37,7 +37,7 @@ export default class Home extends Component {
       booksList: this.props.screenProps.booksList,
     }
 
-    this.styleFile = homePageStyle(this.state.colorFile, this.state.sizeFile);
+    this.styles = homePageStyle(this.state.colorFile, this.state.sizeFile);
     
     this.viewabilityConfig = {
         itemVisiblePercentThreshold: 50,
@@ -62,7 +62,7 @@ export default class Home extends Component {
       colorFile:props.screenProps.colorFile,
       sizeFile:props.screenProps.sizeFile,
     })
-    this.styleFile = homePageStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
+    this.styles = homePageStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
   }
 
   getItemLayout = (data, index) => (
@@ -91,17 +91,17 @@ export default class Home extends Component {
                 bookName: item.bookName, bookIndex: index, numOfChapters: item.numOfChapters})
           }>
           <View 
-            style={this.styleFile.bookList}>
+            style={this.styles.bookList}>
             <Text
               style={
-                this.styleFile.textStyle
+                this.styles.textStyle
               }>
               {item.bookName}
             </Text>
             <Icon 
               name='chevron-right' 
               color="gray" 
-              style={this.styleFile.iconCustom}
+              style={this.styles.iconCustom}
               size={24} />
           </View>
         </TouchableOpacity>
@@ -118,18 +118,18 @@ export default class Home extends Component {
 
   render() {
     return (
-      <View style={this.styleFile.container}>
+      <View style={this.styles.container}>
         <FixedSidebar 
           onPress={(icon)=>{this.props.navigation.navigate(icon)}}
           doAnimate = {false}
         />
-        <View style={this.styleFile.bookNameContainer}>
-            <Segment style={this.styleFile.segmentCustom}>
+        <View style={this.styles.bookNameContainer}>
+            <Segment style={this.styles.segmentCustom}>
               <Button 
                 first active={this.state.activeTab} 
                 style={[
                   {backgroundColor:this.state.activeTab ?  "#3F51B5":"#fff"},
-                  this.styleFile.segmentButton
+                  this.styles.segmentButton
                 ]} 
                 onPress={() => 
                   this.toggleButton.bind(this,true)
@@ -145,7 +145,7 @@ export default class Home extends Component {
                 last active={!this.state.activeTab} 
                 style={[
                   {backgroundColor:this.state.activeTab ?  "#fff" : "#3F51B5"},  
-                  this.styleFile.segmentButton
+                  this.styles.segmentButton
                 ]} 
                 onPress={
                   this.toggleButton.bind(this,false)}>
@@ -164,7 +164,7 @@ export default class Home extends Component {
               getItemLayout={this.getItemLayout}
               // onScroll={this.handleScroll}
               renderItem={this.renderItem}
-              extraData={this.styleFile}
+              extraData={this.styles}
               
               // onViewableItemsChanged={this.handleViewableItemsChanged}
               // viewabilityConfig={this.viewabilityConfig}
