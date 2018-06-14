@@ -17,6 +17,7 @@
     "react-native-gesture-responder": "^0.1.1",
     "react-native-vector-icons": "^4.6.0",
     "react-native-webview-bridge": "^0.33.0",
+    "react-native-zip-archive": "^2.2.6",
     "react-native-zss-rich-text-editor": "^1.1.0",
     "react-navigation": "^1.5.12",
     "realm": "^2.5.0",

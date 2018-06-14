@@ -22,7 +22,8 @@ import { styleFile } from './styles.js'
 import DbQueries from '../utils/dbQueries'
 import Realm from 'realm'
 import BookRecyclerView from '../screens/book/BookRecyclerView'
-import DownloadBible from '../screens/Downloads/DownloadBible'
+import DownloadLanguage from '../screens/Downloads/DownloadLanguage'
+import DownloadVersion from '../screens/Downloads/DownloadVersion'
 
 const StackNav = StackNavigator(
   {  
@@ -71,9 +72,12 @@ const StackNav = StackNavigator(
       Search: {
         screen: Search,
       },
-      DownloadBible: {
-        screen: DownloadBible
-      }
+      DownloadLanguage: {
+        screen: DownloadLanguage
+      },
+      DownloadVersion: {
+        screen: DownloadVersion
+      },
   },
   {
     navigationOptions: {

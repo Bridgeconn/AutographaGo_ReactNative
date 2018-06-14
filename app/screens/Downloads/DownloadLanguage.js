@@ -9,10 +9,10 @@ import {
 import DownloadUtil from '../../utils/DownloadUtil'
 import {Card} from 'native-base'
 
-export default class DownloadBible extends Component {
+export default class DownloadLanguage extends Component {
 
     static navigationOptions = ({navigation}) => ({
-        headerTitle: 'Downloads',
+        headerTitle: 'Languages',
     });
 
     constructor(props){
@@ -42,9 +42,9 @@ export default class DownloadBible extends Component {
     renderItem = ({item,index})=>{
         return(
             <Card style={{padding:8}}>
-            <TouchableOpacity  >
-                    <Text >{item}</Text>
-            </TouchableOpacity>
+                <TouchableOpacity onPress={()=> this.props.navigation.navigate('DownloadVersion', {languageName: item})} >
+                    <Text>{item}</Text>
+                </TouchableOpacity>
             </Card>
         )
     }
@@ -52,10 +52,17 @@ export default class DownloadBible extends Component {
     render() {
         return (
             <View style={{flex:1,margin:8}}>
+                {this.state.isLoading ? 
+                <ActivityIndicator
+                    animating={this.state.isLoading} 
+                    size="large" 
+                    color="#0000ff" /> 
+                    :
                 <FlatList
                     data={this.state.downloadData}
                     renderItem={this.renderItem}
                 />
+                }
             </View>
         );
     }

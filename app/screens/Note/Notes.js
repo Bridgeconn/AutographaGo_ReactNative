@@ -6,7 +6,8 @@ import {
   Button,
   TouchableOpacity,
   Dimensions,
-  FlatList
+  FlatList,
+  WebView
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { Card, CardItem, Content, Right, Left } from 'native-base';
@@ -51,7 +52,7 @@ export default class Notes extends Component {
   }
 
   async onRefresh(noteIndex, noteBody, crTime, moTime, refList) {
-    console.log("on refresh")
+    console.log("on refresh, text " + noteBody)
     await DbQueries.addOrUpdateNote(noteIndex, noteBody, crTime, moTime, refList);
     this.queryDb()
   }
@@ -75,6 +76,7 @@ export default class Notes extends Component {
   }
   
   renderItem = ({item,index})=>{
+    // TODO fix max lines in WEBVIEW
     var date = new Date(item.modifiedTime);
     console.log("render : "+ item.modifiedTime + " == " + date)
     dateFormate =  date.getHours() < 24  ? moment(item.modifiedTime).fromNow() : moment(item.modifiedTime).format('DD-MMM');  

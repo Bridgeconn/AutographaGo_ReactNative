@@ -20,7 +20,24 @@ var DownloadUtil = {
         } catch(error) {
             return error;
         }
-    }
+    },
+
+    async getVersions(language) {
+        try {
+            return await fetch(API_BASE_URL + language+'/'+ META_DATA_FILE_NAME, {  
+              method: 'GET',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              }
+            })
+            .then(ApiUtils.checkStatus)
+            .then((response) => response.json())
+            .catch(e => e)
+        } catch(error) {
+            return error;
+        }
+    },
 }
 
 export default DownloadUtil;

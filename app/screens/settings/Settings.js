@@ -215,7 +215,7 @@ export default class Setting extends Component {
             </Card>
            
             <Card>
-              <TouchableOpacity onPress={()=>this.props.navigation.navigate('DownloadBible')}>              
+              <TouchableOpacity onPress={()=>this.props.navigation.navigate('DownloadLanguage')}>              
                 <CardItem style={this.styleFile.cardItemStyle}>
                   <Icon name='cloud-download' size={24} style={this.styleFile.cardItemIconCustom} />
                   <Text style={this.styleFile.textStyle}>Download More Bibles</Text>

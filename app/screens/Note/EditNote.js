@@ -16,7 +16,7 @@ import {
 import FlowLayout from '../../components/FlowLayout'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { HeaderBackButton, NavigationActions } from 'react-navigation';
-import {RichTextEditor, RichTextToolbar} from 'react-native-zss-rich-text-editor';
+import {RichTextEditor, RichTextToolbar, actions} from 'react-native-zss-rich-text-editor';
 
 export default class EditNote extends Component {
   static navigationOptions = ({navigation}) =>({
@@ -46,19 +46,19 @@ export default class EditNote extends Component {
     this.deleteReference = this.deleteReference.bind(this)
     this.onChangeText = this.onChangeText.bind(this)
 
-    this.getHTML = this.getHTML.bind(this);
+    this.getHtml = this.getHtml.bind(this);
     this.setFocusHandlers = this.setFocusHandlers.bind(this);
   }
 
   onEditorInitialized() {
     this.setFocusHandlers();
-    this.getHTML();
+    // this.getHtml();
   }
 
-  async getHTML() {
-    const titleHtml = await this.richtext.getTitleHtml();
-    const contentHtml = await this.richtext.getContentHtml();
-    //alert(titleHtml + ' ' + contentHtml)
+  async getHtml() {
+    const body = await this.richtext.getContentHtml();
+    console.log("boDY : " + body)
+    return body.toString()
   }
 
   setFocusHandlers() {
@@ -74,13 +74,13 @@ export default class EditNote extends Component {
     var time =  new Date()
     console.log("time "+time)
      
-    if (this.state.noteBody == '' && this.state.referenceList.length == 0) {
+    if (this.getHtml() == '' && this.state.referenceList.length == 0) {
       if(this.state.noteIndex != -1){
         // delete note
         this.props.navigation.state.params.onDelete(this.state.noteIndex, this.state.noteObject.createdTime)
       }
     } else {
-      this.props.navigation.state.params.onRefresh(this.state.noteIndex, this.state.noteBody, 
+      this.props.navigation.state.params.onRefresh(this.state.noteIndex, this.getHtml(), 
         this.state.noteIndex == -1 ? time : this.state.noteObject.createdTime, time, this.state.referenceList);
     }
     this.props.navigation.dispatch(NavigationActions.back())
@@ -100,12 +100,12 @@ export default class EditNote extends Component {
 
   onBack = () =>{
       if (this.state.noteIndex == -1) {
-        if (this.state.noteBody != '' || this.state.referenceList.length > 0) {
+        if (this.getHtml() != '' || this.state.referenceList.length > 0) {
           this.showAlert();
           return;
         }
       } else {
-        if(this.state.noteBody !== this.props.navigation.state.params.noteObject.body
+        if(this.getHtml() !== this.props.navigation.state.params.noteObject.body
             || !this.checkRefArrayEqual()){
           this.showAlert();
           return
@@ -198,33 +198,63 @@ export default class EditNote extends Component {
       <RichTextEditor
         style={{flex:1, height:200}}
         ref={(r)=>this.richtext = r}
+        hiddenTitle={true}
         contentPlaceholder="New Note"
         initialContentHTML={this.state.noteBody}
         editorInitializedCallback={() => this.onEditorInitialized()}
       />
       <RichTextToolbar
+        ref={(r)=>this.toolbar = r}
         getEditor={() => this.richtext}
-        // renderAction={this._renderAction}
-        // iconMap={}
+        // renderAction={this._renderToolbarItem}
+        // actions={[
+        //   actions.setBold,
+        //   actions.setItalic,
+        //   actions.setUnderline,
+        //   actions.insertBulletsList,
+        //   actions.insertOrderedList
+        // ]}
       />
 
      </ScrollView> 
     )
   }
 
-  _renderAction() {
-    const icon = this._getButtonIcon(action);
-    return (
-      <TouchableOpacity
-          key={action}
-          style={[
-            {height: 50, width: 50, justifyContent: 'center'},
-            selected ? this._getButtonSelectedStyle() : this._getButtonUnselectedStyle()
-          ]}
-          onPress={() => this._onPress(action)}
-      >
-        {icon ? <Image source={icon} style={{tintColor: selected ? this.props.selectedIconTint : this.props.iconTint}}/> : null}
-      </TouchableOpacity>
+  _renderToolbarItem (action,selected){
+    let iconName = 'format-bold'
+    // let actionName = this.richtext.setBold()
+    switch(action) {
+      case actions.setBold: {
+        iconName = "format-bold"
+        // actionName = this.richtext.setBold()
+        break
+      }
+      case actions.setItalic: {
+        iconName = "format-italic"
+        // actionName = this.richtext.setItalic()
+        break
+      }
+      case actions.setUnderline: {
+        iconName = "format-underlined"
+        // actionName = this.richtext.setUnderline()
+        break
+      }
+      case actions.insertBulletsList: {
+        iconName = "format-list-bulleted"
+        // actionName = this.richtext.insertBulletsList()
+        break
+      }
+      case actions.insertOrderedList: {
+        iconName = "format-list-numbered"
+        // actionName = this.richtext.insertOrderedList()
+        break
+      }
+    }
+
+    return(
+      <Icon name={iconName} size={28} color={selected ? "white" : 'black'} 
+        onPress={()=>this.richtext.setBold()} 
+      />
     );
   }
 }
