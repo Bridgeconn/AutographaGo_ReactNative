@@ -9,6 +9,8 @@ import {
 import DownloadUtil from '../../utils/DownloadUtil'
 import {Card} from 'native-base'
 var RNFS = require('react-native-fs');
+import { zip, unzip, unzipAssets, subscribe } from 'react-native-zip-archive'
+import USFMParser from '../../utils/USFMParser'
 
 export default class DownloadVersion extends Component {
 
@@ -26,6 +28,7 @@ export default class DownloadVersion extends Component {
             isDownloading: false,
         }
         this.downloadZip = this.downloadZip.bind(this)
+        this.readDirectory = this.readDirectory.bind(this)
     }
 
     componentDidMount() {
@@ -56,10 +59,46 @@ export default class DownloadVersion extends Component {
                         console.log("result jobid = " + result.jobId);
                         console.log("result statuscode = " + result.statusCode);
                         console.log("result byteswritten = " + result.bytesWritten);
+
+                        const sourcePath = RNFS.DocumentDirectoryPath +'/AutoBibles/Archive.zip';
+                        const targetPath = RNFS.DocumentDirectoryPath + '/AutoBibles/';
+                        unzip(sourcePath, targetPath)
+                            .then((path) => {
+                                console.log('unzip completed at ' + path)
+                                this.readDirectory();
+                            })
+                            .catch((error) => {
+                                console.log(error)
+                            })
                 });
             });
             
         })
+    }
+
+    readDirectory() {
+        RNFS.readDir(RNFS.DocumentDirectoryPath + '/AutoBibles/')
+            .then((result) => {
+                console.log('GOT RESULT', result);
+
+                // stat the first file
+                return Promise.all([RNFS.stat(result[0].path), result[0].path]);
+            })
+            .then((statResult) => {
+                if (statResult[0].isFile()) {
+                // if we have a file, read it
+                return RNFS.readFile(statResult[1], 'utf8');
+                }
+
+                return 'no file';
+            })
+            .then((contents) => {
+                // log the file contents
+                console.log(contents);
+            })
+            .catch((err) => {
+                console.log(err.message, err.code);
+            });
     }
     
     renderItem = ({item,index})=>{

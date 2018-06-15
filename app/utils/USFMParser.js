@@ -16,8 +16,8 @@ export default class USFMParser {
         this.chapterList = [];
         this.verseList = [];
         this.mappingData = id_name_map;
-        this.languageCode = "ENG";
-        this.languageName = "English";
+        this.languageCode = "";
+        this.languageName = "";
         this.versionCode = "";
         this.versionName = "";
         this.source = "BridgeConn";
@@ -25,14 +25,23 @@ export default class USFMParser {
         this.license = "CCSA";
     }
 
-    parseFile(path, vCode, vName) {
+    parseFile(path, lCode, lName, vCode, vName, fromAssets) {
+        this.languageCode = lCode;
+        this.languageName = lName;
         this.versionCode = vCode;
         this.versionName = vName;
 
-        RNFS.readFileAssets(path)
-            .then((result)=>{
-                this.parseFileContents(result);
-            });
+        if (fromAssets) {
+            RNFS.readFileAssets(path)
+                .then((result)=>{
+                    this.parseFileContents(result);
+                });
+        } else {
+            RNFS.readFile(path)
+                .then((result)=>{
+                    this.parseFileContents(result);
+                });
+        }
     }
 
     parseFileContents(result) {

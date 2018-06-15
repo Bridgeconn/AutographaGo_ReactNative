@@ -11,6 +11,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.github.alinz.reactnativewebviewbridge.WebViewBridgePackage;
+import com.rnziparchive.RNZipArchivePackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +31,8 @@ public class MainApplication extends Application implements ReactApplication {
             new RNFSPackage(),
             new RealmReactPackage(),
             new VectorIconsPackage(),
-            new WebViewBridgePackage()
+            new WebViewBridgePackage(),
+            new RNZipArchivePackage()
       );
     }
 
