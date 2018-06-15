@@ -12,13 +12,15 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { RecyclerListView, DataProvider, LayoutProvider } from "recyclerlistview";
-import DbQueries from '../utils/dbQueries'
+import DbQueries from '../../utils/dbQueries'
 import Realm from 'realm'
-import VerseViewBook from '../components/VerseViewBook'
+import VerseViewBook from '../../components/VerseViewBook'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import AsyncStorageUtil from '../utils/AsyncStorageUtil';
-import AsyncStorageConstants from '../utils/AsyncStorageConstants';
-const Constants = require('../utils/constants')
+import AsyncStorageUtil from '../../utils/AsyncStorageUtil';
+import AsyncStorageConstants from '../../utils/AsyncStorageConstants';
+import { recycleViewStyle } from './styles.js'
+
+const Constants = require('../../utils/constants')
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -66,6 +68,9 @@ export default class RV extends Component {
     this.onListScroll = this.onListScroll.bind(this)
     this.onVisibleIndexesChanged = this.onVisibleIndexesChanged.bind(this)
     this._footerRenderer = this._footerRenderer.bind(this)
+
+    this.styles = recycleViewStyle(props.screenProps.colorFile, props.screenProps.sizeFile);       
+    
     console.log("props RV chapter=  "  + this.props.navigation.state.params.chapterNumber)
     this.state = {
       languageCode: this.props.screenProps.languageCode,
@@ -224,10 +229,10 @@ export default class RV extends Component {
         <FlatList
           data={data.verseComponentsModels}
           contentContainerStyle={{}}
-          style={{marginLeft:16, marginRight:16}}
+          style={this.styles.listStyle}
           renderItem={({item, index}) => 
               <Text letterSpacing={24}
-                  style={{lineHeight:26, textAlign:'justify'}}>
+                  style={this.styles.listData}>
                       <VerseViewBook
                         ref={child => (this[`child_${item.chapterNumber}_${index}`] = child)}
                         verseData = {item}
@@ -243,9 +248,9 @@ export default class RV extends Component {
       )
     } else {
       return (
-        <Text style={{marginLeft:16, marginRight:16}}>
+        <Text style={this.styles.listText}>
             <Text letterSpacing={24}
-                style={{lineHeight:26, textAlign:'justify'}}>
+                style={this.styles.textIntoText}>
                 {data.verseComponentsModels.map((verse, index) => 
                     <VerseViewBook
                         ref={child => (this[`child_${verse.chapterNumber}_${index}`] = child)}
@@ -301,34 +306,33 @@ export default class RV extends Component {
           }
           {this.state.showBottomBar 
           ? 
-          <View style={{backgroundColor:'blue', height:64, width:'100%', 
-            flexDirection:'row', justifyContent:'space-evenly', alignItems:'center', marginTop:4 }}>
+          <View style={this.styles.bottomBar}>
   
-            <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
+            <View style={this.styles.row}>
             <TouchableOpacity onPress={this.doHighlight}>
               <Text style={{color:'white'}}>
                 {this.state.bottomHighlightText == true ? 'HIGHLIGHT' : 'REMOVE HIGHLIGHT' }
               </Text>
-              <Icon name={'border-color'} color="white" size={24} style={{marginHorizontal:8}} />
+              <Icon name={'border-color'} color="white" size={24} style={this.styles.iconMargin} />
               </TouchableOpacity>
             </View>
             
-            <View style={{width:1, height:48, backgroundColor:'white'}} />
+            <View style={this.styles.rowItem} />
             
-            <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>          
+            <View  style={this.styles.row}>          
               <Text style={{color:'white'}}>
                 NOTES
               </Text>
-              <Icon name={'note'} color="white" size={24} style={{marginHorizontal:8}} />
+              <Icon name={'note'} color="white" size={24} style={this.styles.iconMargin} />
             </View>
             
-            <View style={{width:1, height:48, backgroundColor:'white'}} />          
+            <View style={this.styles.rowItem}  />          
   
-            <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>          
+            <View  style={this.styles.row}>          
               <Text style={{color:'white'}}>
                 SHARE
               </Text>
-              <Icon name={'share'} color="white" size={24} style={{marginHorizontal:8}} />
+              <Icon name={'share'} color="white" size={24} style={this.styles.iconMargin} />
             </View>
   
           </View>

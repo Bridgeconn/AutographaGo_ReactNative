@@ -4,6 +4,7 @@ import {
   Image,
 } from 'react-native';
 // import DbQueries from '../utils/dbQueries'
+import { splashStyle } from './styles.js'
 import { NavigationActions } from 'react-navigation'
 
 export default class Splash extends Component {
@@ -32,7 +33,8 @@ export default class Splash extends Component {
   _navigateTo = (routeName: string) => {
     const resetAction = NavigationActions.reset({
       index: 0,
-      actions: [NavigationActions.navigate({ routeName })]
+      actions: [NavigationActions.navigate({ routeName,params:{languageCode:this.props.screenProps.languageCode,versionCode:this.props.screenProps.versionCode} })]
+
     })
     setTimeout(() => {  
       this.props.navigation.dispatch(resetAction)
@@ -41,8 +43,8 @@ export default class Splash extends Component {
 
   render() {
     return (
-      <View style={{  flex:1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}>
-        <Image source={require('../assets/ic_autographa_go_splash.png')} />
+      <View style={splashStyle.splashScreen}>
+        <Image source={require('../../assets/ic_autographa_go_splash.png')} />
       </View>
     );
   }

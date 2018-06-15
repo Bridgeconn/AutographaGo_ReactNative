@@ -10,9 +10,9 @@ import Highlights from '../screens/Highlights/Highlights'
 import History from '../screens/History/History'
 import Notes from '../screens/Note/Notes'
 import EditNote from '../screens/Note/EditNote'
-import Search from '../screens/Search'
+import Search from '../screens/Search/Search'
 import Settings from '../screens/settings/Settings'
-import Splash from '../screens/Splash'
+import Splash from '../screens/Splash/Splash'
 import ReferenceSelection from '../screens/numberSelection/ReferenceSelection'
 import ChapterSelection from '../screens/numberSelection/ChapterSelection'
 import Hints from '../screens/Hints/Hints'
@@ -23,7 +23,7 @@ import {extraSmallFont,smallFont,mediumFont,largeFont,extraLargeFont} from './di
 import { styleFile } from './styles.js'
 import DbQueries from '../utils/dbQueries'
 import Realm from 'realm'
-import RV from '../screens/RecyclerView'
+import RV from '../screens/RecyclerView/RecyclerView'
 
 const StackNav = StackNavigator(
   {  

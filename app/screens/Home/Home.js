@@ -20,13 +20,20 @@ import {nightColors, dayColors} from '../../utils/colors.js'
 import FixedSidebar from '../../components/FixedSidebar/FixedSidebar'
 
 export default class Home extends Component {
-  static navigationOptions = {
+
+  static navigationOptions = ({navigation}) =>({
     headerTitle: 'Autographa Go',
-  };
+    headerRight:(
+      <View>
+        <Text style={{color:"#fff"}}>{navigation.state.params.languageCode} {navigation.state.params.versionCode}</Text>
+      </View>
+      )
+
+  })
 
   constructor(props){
     super(props)
-
+    console.log("navigation rops" +JSON.stringify(this.props.navigation))
     this.handleViewableItemsChanged = this.handleViewableItemsChanged.bind(this)
 
     this.state = {
@@ -43,8 +50,9 @@ export default class Home extends Component {
         itemVisiblePercentThreshold: 50,
         waitForInteraction: true
     }
-  }
 
+  }
+ 
   toggleButton(value){
     this.setState({activeTab:value})
     if(value == false){
@@ -82,7 +90,9 @@ export default class Home extends Component {
     console.log("handleViewableItemsChanged.. "+viewableItems)
     // console.log("handleViewableItemsChanged changes.. "+changed)
   }
-
+componentDidMount(){
+  this.props.navigation.setParams({styles:this.styles})
+}
   renderItem = ({item, index})=> {
     return (
       <TouchableOpacity 
@@ -115,8 +125,9 @@ export default class Home extends Component {
   handlePressOut(){
     
   }
+  
 
-  render() {
+  render(){
     return (
       <View style={this.styles.container}>
         <FixedSidebar 

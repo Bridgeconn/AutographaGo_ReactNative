@@ -9,7 +9,7 @@ import {
   FlatList
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import DbQueries from '../utils/dbQueries.js'
+import DbQueries from '../../utils/dbQueries.js'
 import { Item } from 'native-base';
 
 export default class Search extends Component {
@@ -61,7 +61,7 @@ export default class Search extends Component {
           renderItem={({item}) => 
           <View>
             <View>
-            <Text style={{color:"red"}}> {item.bookId} {item.verseNumber} : {item.chapterNumber} </Text>
+              <Text style={{color:"red"}}> {item.bookId} {item.verseNumber} : {item.chapterNumber} </Text>
             </View>
           <Text>{item.text}</Text>
           

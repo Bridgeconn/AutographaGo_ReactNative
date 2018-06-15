@@ -50,7 +50,8 @@ export const homePageStyle =(colorFile, sizeFile) =>{
     iconCustom:{
         color:colorFile.iconColor
     },
-   cardItemStyle:{paddingTop:16,paddingBottom:16}
+   cardItemStyle:{paddingTop:16,paddingBottom:16},
+   
 
 })
 }
