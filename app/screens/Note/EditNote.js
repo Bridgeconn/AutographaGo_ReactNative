@@ -11,12 +11,15 @@ import {
   Modal,
   TouchableHighlight,
   ScrollView,
-  Image
+  Image,
+  Dimensions,
 } from 'react-native';
 import FlowLayout from '../../components/FlowLayout'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { HeaderBackButton, NavigationActions } from 'react-navigation';
-import {RichTextEditor, RichTextToolbar, actions} from 'react-native-zss-rich-text-editor';
+import {RichTextEditor, actions} from 'react-native-zss-rich-text-editor';
+import RichTextToolbar from '../../utils/RichTextToolbar'
+const height = Dimensions.get('window').height;
 
 export default class EditNote extends Component {
   static navigationOptions = ({navigation}) =>({
@@ -62,9 +65,6 @@ export default class EditNote extends Component {
   }
 
   setFocusHandlers() {
-    this.richtext.setTitleFocusHandler(() => {
-      //alert('title focus');
-    });
     this.richtext.setContentFocusHandler(() => {
       //alert('content focus');
     });
@@ -193,68 +193,71 @@ export default class EditNote extends Component {
         <Icon name="add-circle" style={{flex:1}} size={28} color="gray" onPress={()=> {this.onAddVersePress()}} />
       </View>
       
-      <View style={{height:2, backgroundColor:'gray', marginHorizontal:8}}/>
-      
-      <RichTextEditor
-        style={{flex:1, height:200}}
-        ref={(r)=>this.richtext = r}
-        hiddenTitle={true}
-        contentPlaceholder="New Note"
-        initialContentHTML={this.state.noteBody}
-        editorInitializedCallback={() => this.onEditorInitialized()}
-      />
-      <RichTextToolbar
-        ref={(r)=>this.toolbar = r}
-        getEditor={() => this.richtext}
-        // renderAction={this._renderToolbarItem}
-        // actions={[
-        //   actions.setBold,
-        //   actions.setItalic,
-        //   actions.setUnderline,
-        //   actions.insertBulletsList,
-        //   actions.insertOrderedList
-        // ]}
-      />
+      <View style={{flexDirection: 'column-reverse'}}>
+
+        <RichTextEditor
+          style={{flex:1, height:height}}
+          ref={(r)=>this.richtext = r}
+          hiddenTitle={true}
+          contentPlaceholder="New Note"
+          initialContentHTML={this.state.noteBody}
+          editorInitializedCallback={() => this.onEditorInitialized()}
+        />
+
+        <RichTextToolbar
+          ref={(r)=>this.toolbar = r}
+          getEditor={() => this.richtext}
+          renderAction={this._renderToolbarItem}
+          actions={[
+            actions.setBold,
+            actions.setItalic,
+            actions.setUnderline,
+            actions.setStrikethrough,
+            actions.insertBulletsList,
+            actions.insertOrderedList
+          ]}
+        />
+      </View>
 
      </ScrollView> 
     )
   }
 
-  _renderToolbarItem (action,selected){
+  _renderToolbarItem (action,selected, method){
     let iconName = 'format-bold'
-    // let actionName = this.richtext.setBold()
     switch(action) {
       case actions.setBold: {
         iconName = "format-bold"
-        // actionName = this.richtext.setBold()
         break
       }
       case actions.setItalic: {
         iconName = "format-italic"
-        // actionName = this.richtext.setItalic()
         break
       }
       case actions.setUnderline: {
         iconName = "format-underlined"
-        // actionName = this.richtext.setUnderline()
+        break
+      }
+      case actions.setStrikethrough: {
+        iconName = "format-strikethrough"
         break
       }
       case actions.insertBulletsList: {
         iconName = "format-list-bulleted"
-        // actionName = this.richtext.insertBulletsList()
         break
       }
       case actions.insertOrderedList: {
         iconName = "format-list-numbered"
-        // actionName = this.richtext.insertOrderedList()
         break
       }
     }
 
     return(
-      <Icon name={iconName} size={28} color={selected ? "white" : 'black'} 
-        onPress={()=>this.richtext.setBold()} 
+      <Icon name={iconName} size={28} color={selected ? 'black' : 'white'} style={{margin:8, padding:8, backgroundColor: selected ? 'white': 'transparent'}}
+        onPress={method} 
       />
     );
   }
+
+  
 }
