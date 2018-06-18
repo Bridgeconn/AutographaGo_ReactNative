@@ -32,8 +32,6 @@ export default class History extends Component{
         { time: "1 month ago", list:[]},
         { time: "2 month ago", list:[]}
     ],
-    heightDynamic : 0,
-    arrowPositionDown : true 
     }
     this.styles = historyStyle(props.screenProps.colorFile, props.screenProps.sizeFile);       
   }
@@ -74,16 +72,6 @@ export default class History extends Component{
         }
       }
   }
-  _setSection(section){
-    console.log("active section "+section)
-    this.setState({
-      activeSection:section,
-      arrowPositionDown:!this.state.arrowPositionDown
-    })
-    // console.log("value of arow "+!this.state.arrowPositionDown)
-
-  }
-
   _renderHeader(data, index, isActive) {
     return (
       <View>

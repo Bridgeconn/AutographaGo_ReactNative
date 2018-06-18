@@ -3,7 +3,11 @@ module.exports = {
         ColorMode : 'color_mode',
         SizeMode: 'size_mode',
         VerseViewMode:'verse_view_mode',
-        LastReadReference:'last_read_reference'
+        LastReadReference:'last_read_reference',
+        LanguageCode:'language_code',
+        VersionCode:'version_code',
+        LanguageName:'language_name',
+        VersionName:'version_name'
 
     },
     Values: {
@@ -17,7 +21,11 @@ module.exports = {
         SizeModeXLarge: 4,
 
         VerseInLine:false,
-        // VerseInParagraph:0
+
+        DefLanguageCode:'ENG',
+        DefLanguageName:'English',
+        DefVersionCode:'ULB',
+        DefVersionName:'Unlocked Literal Bible'
        
     }
 }

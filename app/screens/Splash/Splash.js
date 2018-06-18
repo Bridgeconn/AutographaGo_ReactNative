@@ -33,7 +33,7 @@ export default class Splash extends Component {
   _navigateTo = (routeName: string) => {
     const resetAction = NavigationActions.reset({
       index: 0,
-      actions: [NavigationActions.navigate({ routeName,params:{languageCode:this.props.screenProps.languageCode,versionCode:this.props.screenProps.versionCode} })]
+      actions: [NavigationActions.navigate({routeName,params:{languageCode:this.props.screenProps.languageCode,versionCode:this.props.screenProps.versionCode} })]
 
     })
     setTimeout(() => {  

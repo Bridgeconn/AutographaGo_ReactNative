@@ -24,9 +24,9 @@ export default class Home extends Component {
   static navigationOptions = ({navigation}) =>({
     headerTitle: 'Autographa Go',
     headerRight:(
-      <View>
-        <Text style={{color:"#fff"}}>{navigation.state.params.languageCode} {navigation.state.params.versionCode}</Text>
-      </View>
+        <TouchableOpacity onPress={() => navigation.navigate('Language')} >
+          <Text style={{color:"#fff"}}>{navigation.state.params.languageCode} {navigation.state.params.versionCode}</Text>
+        </TouchableOpacity>
       )
 
   })
@@ -92,6 +92,7 @@ export default class Home extends Component {
   }
 componentDidMount(){
   this.props.navigation.setParams({styles:this.styles})
+  console.log("data from router language props "+this.props.screenProps.data)
 }
   renderItem = ({item, index})=> {
     return (
