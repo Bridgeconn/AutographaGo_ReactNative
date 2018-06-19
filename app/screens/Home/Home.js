@@ -28,7 +28,6 @@ export default class Home extends Component {
           <Text style={{color:"#fff"}}>{navigation.state.params.languageCode} {navigation.state.params.versionCode}</Text>
         </TouchableOpacity>
       )
-
   })
 
   constructor(props){
