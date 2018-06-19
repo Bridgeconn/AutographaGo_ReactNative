@@ -47,7 +47,7 @@ export default class BookRecyclerView extends Component {
 
   constructor(props) {
     super(props);
-    console.log("BOOK props--" + JSON.stringify(props))
+    // console.log("BOOK props--" + JSON.stringify(props))
 
     let { width, height } = Dimensions.get("window");
 
@@ -69,7 +69,7 @@ export default class BookRecyclerView extends Component {
     this.onListScroll = this.onListScroll.bind(this)
     this.onVisibleIndexesChanged = this.onVisibleIndexesChanged.bind(this)
     this._footerRenderer = this._footerRenderer.bind(this)
-    console.log("props RV chapter=  "  + this.props.navigation.state.params.chapterNumber)
+    // console.log("props RV chapter=  "  + this.props.navigation.state.params.chapterNumber)
     this.state = {
       languageCode: this.props.screenProps.languageCode,
       versionCode: this.props.screenProps.versionCode,
@@ -103,7 +103,7 @@ export default class BookRecyclerView extends Component {
   }
 
   componentWillReceiveProps(props){
-    console.log("will recievr props"+JSON.stringify(props))
+    // console.log("will recievr props"+JSON.stringify(props))
     this.setState({
       colorFile:props.screenProps.colorFile,
       sizeFile:props.screenProps.sizeFile,
@@ -125,14 +125,14 @@ export default class BookRecyclerView extends Component {
           thumbSize *= (gestureState.pinch / gestureState.previousPinch)
           let currentDate = new Date().getTime()
           let diff = currentDate - this.pinchTime
-          console.log("time : " + diff)
+          console.log("time diff : " + diff + " prev diff : " + this.pinchDiff)
           if (diff > this.pinchDiff) {
               console.log("gesture pinch diff = " + (gestureState.pinch - gestureState.previousPinch))
-             if (gestureState.pinch - gestureState.previousPinch > 15) {
+             if (gestureState.pinch - gestureState.previousPinch > 5) {
                 // large
                 console.log("large")
                 this.props.screenProps.changeSizeByOne(1)              
-            } else if (gestureState.previousPinch - gestureState.pinch > 15) {
+            } else if (gestureState.previousPinch - gestureState.pinch > 5) {
                 console.log("small")
                 // small
                 this.props.screenProps.changeSizeByOne(-1)              
@@ -185,7 +185,7 @@ export default class BookRecyclerView extends Component {
         this.props.screenProps.languageCode, this.state.bookId);
     this.setState({isLoading:false})
     if (model == null) {
-      console.log("mode lnull")
+      // console.log("mode lnull")
     } else {
       if (model.length > 0) {
         this.setState({modelData: model[0].chapterModels, bookmarksList: model[0].bookmarksList}, () => {
@@ -203,7 +203,7 @@ export default class BookRecyclerView extends Component {
     // var bookmarksList = [...this.state.bookmarksList]
     // console.log("size bookmark " + bookmarksList.length)
     var index = this.state.bookmarksList.indexOf(this.state.currentVisibleChapter);
-    console.log("index bookmark " + index + " :: visible chapter =" + this.state.currentVisibleChapter)    
+    // console.log("index bookmark " + index + " :: visible chapter =" + this.state.currentVisibleChapter)    
     // if (index > -1) {
     //     bookmarksList.splice(index, 1)
     //   } else {
@@ -236,7 +236,7 @@ export default class BookRecyclerView extends Component {
     }
 
     this.setState({selectedReferenceSet}, () => {
-      console.log("selected size : " + this.state.selectedReferenceSet.length + " :: " + JSON.stringify(this.state.selectedReferenceSet))
+      // console.log("selected size : " + this.state.selectedReferenceSet.length + " :: " + JSON.stringify(this.state.selectedReferenceSet))
 
       let selectedCount = this.state.selectedReferenceSet.length, highlightCount = 0;
       
@@ -280,19 +280,19 @@ export default class BookRecyclerView extends Component {
   }
 
   onListScroll = (rawEvent, offsetX, offsetY) => {
-    console.log("on list scroll :: " + rawEvent + " :: " + offsetX + " :: " + offsetY);
+    // console.log("on list scroll :: " + rawEvent + " :: " + offsetX + " :: " + offsetY);
   }
 
   onVisibleIndexesChanged = (all, now, notNow) => {
     if (all.length > 0) {
       let cnum = all[0] + 1;
-      console.log("on visible iunde change = " + cnum)
+      // console.log("on visible iunde change = " + cnum)
       this.setState({currentVisibleChapter: cnum})
       this.setState({isBookmark: this.state.bookmarksList.indexOf(cnum) > -1}, () => {
         this.props.navigation.setParams({isBookmark: this.state.isBookmark})      
       })
     }
-    console.log("on visible index changed :: " + all + " :: " + now + " :: " + notNow)
+    // console.log("on visible index changed :: " + all + " :: " + now + " :: " + notNow)
   }
 
   _footerRenderer() {
