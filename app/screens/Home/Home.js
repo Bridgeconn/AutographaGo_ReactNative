@@ -25,7 +25,7 @@ export default class Home extends Component {
     headerTitle: 'Autographa Go',
     headerRight:(
         <TouchableOpacity onPress={() => navigation.navigate('Language')} >
-          <Text style={{color:"#fff"}}>{navigation.state.params.languageCode} {navigation.state.params.versionCode}</Text>
+          <Text style={{color:"#fff",margin:8}}>{navigation.state.params.languageCode} {navigation.state.params.versionCode}</Text>
         </TouchableOpacity>
       )
   })

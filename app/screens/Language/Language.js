@@ -4,7 +4,8 @@ import {
   FlatList,
   ActivityIndicator,
   View,
-  StyleSheet
+  TouchableOpacity,
+  TouchableHighlight
 } from 'react-native';
 import DbQueries from '../../utils/dbQueries';
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -27,7 +28,8 @@ export default class Language extends Component{
       isLoading: false,
       languageData:[],
     }
-    this.styles = historyStyle(props.screenProps.colorFile, props.screenProps.sizeFile);       
+    this.styles = historyStyle(props.screenProps.colorFile, props.screenProps.sizeFile);     
+    this.updateLanguage = this.updateLanguage.bind(this)  
   }
 
   componentDidMount(){
@@ -61,28 +63,36 @@ export default class Language extends Component{
             justifyContent:"space-between",
             margin:8
           }}>
-         <Text style={this.styles.headerText}>{data.languageCode}</Text>
+         <Text>{data.languageCode}</Text>
          <Icon name={isActive ? "keyboard-arrow-down" : "keyboard-arrow-up" } size={24} />
         </View>
       }
       </View> 
     )
   }
-  _renderContent(data) {
+ 
+  _renderContent(data){
     console.log("is active ")
     console.log("version model"+JSON.stringify(data))
     return (
-      <List dataArray={data.versionModels}
-            renderRow={(item)=>
-              <ListItem>
-                <Text>{item.versionName}</Text>
-              </ListItem>
-            }>
-          </List>
+      
+        <List dataArray={data.versionModels}
+              renderRow={(item)=>
+                <TouchableHighlight onPress={()=>this.updateLanguage()}>
+                  <ListItem>
+                    <Text>{item.versionName}</Text>
+                  </ListItem>
+                </TouchableHighlight>
+              }>
+        </List>
+     
       
     )
   }
-
+  updateLanguage = () =>{
+    console.log("Update Language")
+    this.props.navigation.dispatch(navigationActions.back())
+  }
   render(){
      return (
        <View>

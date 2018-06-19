@@ -28,16 +28,16 @@ import RV from '../screens/RecyclerView/RecyclerView'
 
 const StackNav = StackNavigator(
   {  
-    About: {
-      screen: About,
-    },
+  
       Splash: {
         screen: Splash,
       },
       Home: {
         screen: Home,
       },
-      
+      About: {
+        screen: About,
+      },
       Book: {
         screen: Book,
       },
