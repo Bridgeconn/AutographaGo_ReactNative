@@ -4,13 +4,14 @@ import {
   FlatList,
   ActivityIndicator,
   View,
+  StyleSheet
 } from 'react-native';
 import DbQueries from '../../utils/dbQueries';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import {getBookNameFromMapping} from '../../utils/UtilFunctions';
 import Accordion from 'react-native-collapsible/Accordion';
 import {List,ListItem} from 'native-base'
-import { languageStyle } from './styles.js'
+import { historyStyle } from './styles.js'
 
 
 var moment = require('moment');
@@ -26,14 +27,13 @@ export default class Language extends Component{
       isLoading: false,
       languageData:[],
     }
-    this.styles = languageStyle(props.screenProps.colorFile, props.screenProps.sizeFile);    
+    this.styles = historyStyle(props.screenProps.colorFile, props.screenProps.sizeFile);       
   }
 
   componentDidMount(){
     this.setState({isLoading: true}, async () => {
       var res = await DbQueries.queryLanguages()
       console.log("result in history page"+(res.length))
-    // })
 
         let languageData = [];
         for (var i=0; i<res.length;i++) {
@@ -56,7 +56,11 @@ export default class Language extends Component{
       <View>
       {
         data.versionModels.length == 0 ? null : 
-        <View  style={this.styles.languageHeader}>
+        <View style={{
+            flexDirection:"row",
+            justifyContent:"space-between",
+            margin:8
+          }}>
          <Text style={this.styles.headerText}>{data.languageCode}</Text>
          <Icon name={isActive ? "keyboard-arrow-down" : "keyboard-arrow-up" } size={24} />
         </View>

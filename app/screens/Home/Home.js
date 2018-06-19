@@ -57,10 +57,10 @@ export default class Home extends Component {
     this.setState({activeTab:value})
     if(value == false){
       console.log("pressed")
-      this.elementIndex.scrollToIndex({index:39,viewPosition:0,animated: true,viewOffset:0})
+      this.flatlistRef.scrollToIndex({index:39,viewPosition:0,animated: false,viewOffset:0})
     }
     else{
-      this.elementIndex.scrollToIndex({index:0,viewPosition:0,animated: true,viewOffset:0})
+      this.flatlistRef.scrollToIndex({index:0,viewPosition:0,animated: false,viewOffset:0})
     }
   }
  
@@ -93,6 +93,11 @@ export default class Home extends Component {
 componentDidMount(){
   this.props.navigation.setParams({styles:this.styles})
   console.log("data from router language props "+this.props.screenProps.data)
+
+
+  console.log("BOOOK LENGTH"+this.state.booksList.length)
+  console.log("BOOOKs "+JSON.stringify(this.state.booksList))
+  
 }
   renderItem = ({item, index})=> {
     return (
@@ -137,14 +142,14 @@ componentDidMount(){
         />
         <View style={this.styles.bookNameContainer}>
             <Segment style={this.styles.segmentCustom}>
+            {/* {this.state.booksList.length <40 } */}
               <Button 
-                first active={this.state.activeTab} 
+                active={this.state.activeTab} 
                 style={[
                   {backgroundColor:this.state.activeTab ?  "#3F51B5":"#fff"},
                   this.styles.segmentButton
                 ]} 
-                onPress={() => 
-                  this.toggleButton.bind(this,true)
+                onPress={this.toggleButton.bind(this,true)
                 }
               >
                 <Text 
@@ -154,13 +159,12 @@ componentDidMount(){
                 </Text>
               </Button>
               <Button 
-                last active={!this.state.activeTab} 
+                active={!this.state.activeTab} 
                 style={[
                   {backgroundColor:this.state.activeTab ?  "#fff" : "#3F51B5"},  
                   this.styles.segmentButton
                 ]} 
-                onPress={
-                  this.toggleButton.bind(this,false)}>
+                onPress={this.toggleButton.bind(this,false)}>
                 <Text 
                   active={!this.state.activeTab} 
                   style={{
@@ -171,7 +175,7 @@ componentDidMount(){
               </Button>
             </Segment>
             <FlatList
-              ref={ref => this.elementIndex = ref}
+              ref={ref => this.flatlistRef = ref}
               data={this.state.booksList}
               getItemLayout={this.getItemLayout}
               // onScroll={this.handleScroll}

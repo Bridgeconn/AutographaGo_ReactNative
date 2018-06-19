@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import {StackNavigator, TabNavigator} from 'react-navigation'
 import Home from '../screens/Home/Home'
-import About from '../screens/About'
+import About from '../screens/About/About'
 import Book from '../screens/Book'
 import Bookmarks from '../screens/Bookmarks/Bookmarks'
 import Highlights from '../screens/Highlights/Highlights'
@@ -28,15 +28,16 @@ import RV from '../screens/RecyclerView/RecyclerView'
 
 const StackNav = StackNavigator(
   {  
+    About: {
+      screen: About,
+    },
       Splash: {
         screen: Splash,
       },
       Home: {
         screen: Home,
       },
-      About: {
-        screen: About,
-      },
+      
       Book: {
         screen: Book,
       },
