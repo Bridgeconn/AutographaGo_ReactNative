@@ -81,7 +81,11 @@ export default class Notes extends Component {
     console.log("render : "+ item.modifiedTime + " == " + date)
     dateFormate =  date.getHours() < 24  ? moment(item.modifiedTime).fromNow() : moment(item.modifiedTime).format('DD-MMM');  
     console.log("format date "+dateFormate)
-    var bodyText = item.body == '' ? 'No additional text' : item.body
+
+    var jparse = item.body == '' ? '' : JSON.parse(item.body)
+    var strParse = jparse.replace(/<(?:.|\n)*?>/gm, '');
+
+    var bodyText = strParse == '' ? 'No additional text' : strParse
     return(
     <TouchableOpacity style={{flex:1}}
         onPress={() =>this.openEdit(index,item)}>

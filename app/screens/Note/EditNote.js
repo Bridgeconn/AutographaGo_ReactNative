@@ -38,7 +38,7 @@ export default class EditNote extends Component {
         noteObject: this.props.navigation.state.params.noteObject,
         noteBody: this.props.navigation.state.params.index == -1 
           ? ''
-          : this.props.navigation.state.params.noteObject.body,
+          : this.props.navigation.state.params.noteObject.body == '' ? '' : JSON.parse(this.props.navigation.state.params.noteObject.body),
         referenceList: this.props.navigation.state.params.index == -1 
           ? [] 
           : this.props.navigation.state.params.noteObject.references,
@@ -60,8 +60,7 @@ export default class EditNote extends Component {
 
   async getHtml() {
     const body = await this.richtext.getContentHtml();
-    console.log("boDY : " + body)
-    return body.toString()
+    return JSON.stringify(body)
   }
 
   setFocusHandlers() {
@@ -70,17 +69,17 @@ export default class EditNote extends Component {
     });
   }
 
-  saveNote = () =>{
+  saveNote = async () =>{
     var time =  new Date()
     console.log("time "+time)
-     
-    if (this.getHtml() == '' && this.state.referenceList.length == 0) {
+    var contentBody = await this.getHtml()
+    if (contentBody == '' && this.state.referenceList.length == 0) {
       if(this.state.noteIndex != -1){
         // delete note
         this.props.navigation.state.params.onDelete(this.state.noteIndex, this.state.noteObject.createdTime)
       }
     } else {
-      this.props.navigation.state.params.onRefresh(this.state.noteIndex, this.getHtml(), 
+      this.props.navigation.state.params.onRefresh(this.state.noteIndex, contentBody, 
         this.state.noteIndex == -1 ? time : this.state.noteObject.createdTime, time, this.state.referenceList);
     }
     this.props.navigation.dispatch(NavigationActions.back())
@@ -98,14 +97,15 @@ export default class EditNote extends Component {
     )
   }
 
-  onBack = () =>{
+  onBack = async () =>{
+    var contentBody = await this.getHtml()
       if (this.state.noteIndex == -1) {
-        if (this.getHtml() != '' || this.state.referenceList.length > 0) {
+        if (contentBody != '' || this.state.referenceList.length > 0) {
           this.showAlert();
           return;
         }
       } else {
-        if(this.getHtml() !== this.props.navigation.state.params.noteObject.body
+        if(contentBody !== this.props.navigation.state.params.noteObject.body
             || !this.checkRefArrayEqual()){
           this.showAlert();
           return
