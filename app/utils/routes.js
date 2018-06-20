@@ -22,6 +22,7 @@ import { styleFile } from './styles.js'
 import DbQueries from '../utils/dbQueries'
 import Realm from 'realm'
 import BookRecyclerView from '../screens/book/BookRecyclerView'
+import NewBook from '../screens/book/NewBook'
 import DownloadLanguage from '../screens/Downloads/DownloadLanguage'
 import DownloadVersion from '../screens/Downloads/DownloadVersion'
 
@@ -68,6 +69,9 @@ const StackNav = StackNavigator(
       },
       BookRecyclerView: {
         screen: BookRecyclerView,
+      },
+      NewBook: {
+        screen: NewBook,
       },
       Search: {
         screen: Search,

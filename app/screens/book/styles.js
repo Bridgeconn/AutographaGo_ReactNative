@@ -32,6 +32,8 @@ export const styles =(colorFile, sizeFile) =>{
             height:height
         },
         bottomBar: {
+            position:'absolute',
+            bottom:0,
             backgroundColor:'blue', 
             height:64, 
             width:'100%', 

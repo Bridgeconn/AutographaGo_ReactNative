@@ -38,7 +38,7 @@ export default class ChapterSelection extends Component {
         <TouchableOpacity style={{flex:0.25,borderColor:'black',borderRightWidth:1, borderBottomWidth:1,
           height:width/4, justifyContent:"center"}}
           onPress={
-            ()=>this.props.navigation.replace('BookRecyclerView', {bookId: this.state.bookId, 
+            ()=>this.props.navigation.replace('NewBook', {bookId: this.state.bookId, 
               bookName: this.state.bookName, chapterNumber: item })
             }
           >
