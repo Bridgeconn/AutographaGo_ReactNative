@@ -51,7 +51,11 @@ export const noteStyle =(colorFile, sizeFile) =>{
     addIconCustom:{
     flex:1
     },
-    noteTextView:{height:2, backgroundColor:'gray', marginHorizontal:8},
+    noteTextView:
+    {height:2, 
+    backgroundColor:'gray', 
+    marginHorizontal:8
+    },
 
     
 })

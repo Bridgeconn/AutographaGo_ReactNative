@@ -24,7 +24,6 @@ export default class Notes extends Component {
     this.state = {
       colorFile:this.props.screenProps.colorFile,
       sizeFile:this.props.screenProps.sizeFile,
-
       notesData:[],
     }
     this.styles = noteStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   

@@ -11,13 +11,14 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
-import DbQueries from '../utils/dbQueries'
+import DbQueries from '../../utils/dbQueries'
 import Realm from 'realm'
-import VerseViewBook from '../components/VerseViewBook'
+import VerseViewBook from '../../components/VerseViewBook'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import AsyncStorageUtil from '../utils/AsyncStorageUtil';
-import AsyncStorageConstants from '../utils/AsyncStorageConstants';
-const Constants = require('../utils/constants')
+import AsyncStorageUtil from '../../utils/AsyncStorageUtil';
+import AsyncStorageConstants from '../../utils/AsyncStorageConstants';
+const Constants = require('../../utils/constants')
+import {numberSelection} from './styles'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -74,15 +75,7 @@ export default class Book extends Component {
     // waitForInteraction	No	boolean
   }
 
-  async componentDidMount() {
-    this.props.navigation.setParams({onIconPress: this.onBookmarkPress})    
-    this.props.navigation.setParams({isBookmark: this.state.isBookmark})
-    this.setState({isLoading: true}, () => {
-      this.queryBook()
-    })
-    
-  }
-
+  
   async queryBook() {
     let model = await DbQueries.queryBookWithId(this.props.screenProps.versionCode, 
         this.props.screenProps.languageCode, this.state.bookId);
@@ -192,6 +185,26 @@ export default class Book extends Component {
     this.setState({showBottomBar: false})
   }
 
+  async componentDidMount() {
+    AsyncStorage.getItem(AsyncStorageConstants.Keys.LastReadReference);
+    
+    this.props.navigation.setParams({onIconPress: this.onBookmarkPress})    
+    this.props.navigation.setParams({isBookmark: this.state.isBookmark})
+    this.setState({isLoading: true}, () => {
+      this.queryBook()
+    })
+    
+  }
+
+  componentWillUnmount(){
+    let lastRead = {
+      languageCode: this.props.screenProps.languageCode,
+      versionCode: this.props.screenProps.versionCode,
+      bookId:this.props.navigation.state.params.bookId,
+      chapterNumber:this.state.chapterNumber
+    }
+    AsyncStorage.setItem(AsyncStorageConstants.Keys.LastReadReference, lastRead);
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -273,16 +286,7 @@ export default class Book extends Component {
     );
   }
 
-  componentWillUnmount(){
-    let lastRead = {
-      langCode:'ENG',
-      versionCode:'UDB',
-      bookId:'GEN',
-      chapterNum:'5',
-      verseNum:'7'
-    }
-    // AsyncStorage.setItem(AsyncStorageConstants.Keys.LastReadReference, lastRead);
-  }
+  
 }
 
 const styles = StyleSheet.create({

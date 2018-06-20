@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {AppRegistry,StyleSheet,Text,ScrollView,FlatList} from 'react-native';
+import {AppRegistry,StyleSheet,Text,ScrollView,TouchableOpacity} from 'react-native';
 import dbQueries from '../../utils/dbQueries';
 import { View } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -72,7 +72,7 @@ export default class History extends Component{
         }
       }
   }
-  _renderHeader(data, index, isActive) {
+  _renderHeader = (data, index, isActive) =>{
     return (
       <View>
       {
@@ -85,17 +85,20 @@ export default class History extends Component{
       </View> 
     )
   }
-  _renderContent(data) {
+  _renderContent  = (data) => {
     console.log("is active ")
+    console.log("version model"+JSON.stringify(data))
     return (
-      <List dataArray={data.list}
-            renderRow={(item)=>
-              <ListItem>
-                <Text>{getBookNameFromMapping(item.bookId)} : {item.chapterNumber} </Text>
-              </ListItem>
-            }>
-          </List>
-      
+      <View >
+        {data.list.map((item, index) => 
+        <TouchableOpacity onPress={()=>this.props.navigation.navigate("Book",{bookId: item.bookId, 
+          bookName: getBookNameFromMapping(item.bookId), chapterNumber: item.chapterNumber })}>
+          <Text>{getBookNameFromMapping(item.bookId)} : {item.chapterNumber} </Text>
+        </TouchableOpacity>
+        )
+        }
+       
+        </View>
     )
   }
 

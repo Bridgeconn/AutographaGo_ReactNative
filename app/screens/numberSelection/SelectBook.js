@@ -39,7 +39,7 @@ export default class SelectBook extends Component {
   
   render() {
     return (
-      <View style={this.style.flexValue}>
+      <View style={this.styles.containerBook}>
         <FlatList
         numColumns={1}
         data={this.state.booksList}

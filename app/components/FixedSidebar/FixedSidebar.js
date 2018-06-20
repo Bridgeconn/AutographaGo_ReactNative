@@ -43,7 +43,7 @@ export default class FixedSidebar extends Component {
       transform: [{ scale: this.animatedValue}]
     }
     const iconName = [
-      {icon:'local-library',pressIcon:'EditNote',},
+      {icon:'local-library',pressIcon:'Book',},
       {icon:'history',pressIcon:'History'},
       {icon:'search',pressIcon:'Search'},
       {icon:'note',pressIcon:'Notes'},

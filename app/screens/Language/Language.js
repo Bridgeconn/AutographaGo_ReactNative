@@ -12,7 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import {getBookNameFromMapping} from '../../utils/UtilFunctions';
 import Accordion from 'react-native-collapsible/Accordion';
 import {List,ListItem} from 'native-base'
-import { historyStyle } from './styles.js'
+import { languageStyle } from './styles.js'
 
 
 var moment = require('moment');
@@ -28,8 +28,8 @@ export default class Language extends Component{
       isLoading: false,
       languageData:[],
     }
-    this.styles = historyStyle(props.screenProps.colorFile, props.screenProps.sizeFile);     
-    this.updateLanguage = this.updateLanguage.bind(this)  
+    this.styles = languageStyle(props.screenProps.colorFile, props.screenProps.sizeFile);     
+    // this.updateLanguage = this.updateLanguage.bind(this)  
   }
 
   componentDidMount(){
@@ -52,46 +52,42 @@ export default class Language extends Component{
       })
   }
 
-  _renderHeader(data, index, isActive) {
+  _renderHeader = (data, index, isActive) =>{
     console.log("language code "+data.languageCode)
     return (
       <View>
       {
         data.versionModels.length == 0 ? null : 
-        <View style={{
-            flexDirection:"row",
-            justifyContent:"space-between",
-            margin:8
-          }}>
-         <Text>{data.languageCode}</Text>
+        <View style={this.styles.LanguageHeader}>
+         <Text style={this.styles.headerText}>{data.languageCode}</Text>
          <Icon name={isActive ? "keyboard-arrow-down" : "keyboard-arrow-up" } size={24} />
         </View>
       }
       </View> 
     )
   }
- 
-  _renderContent(data){
+  
+  _renderContent  = (data) => {
     console.log("is active ")
     console.log("version model"+JSON.stringify(data))
     return (
-      
-        <List dataArray={data.versionModels}
-              renderRow={(item)=>
-                <TouchableHighlight onPress={()=>this.updateLanguage()}>
-                  <ListItem>
-                    <Text>{item.versionName}</Text>
-                  </ListItem>
-                </TouchableHighlight>
-              }>
-        </List>
-     
-      
+      <View>
+        {data.versionModels.map((item, index) => 
+             <TouchableOpacity onPress={()=>this._updateLanguage(data.languageCode, item.versionCode)}>
+             <Text>
+               {item.versionName}
+               </Text>
+             </TouchableOpacity>
+        )
+        }
+       
+        </View>
     )
   }
-  updateLanguage = () =>{
-    console.log("Update Language")
-    this.props.navigation.dispatch(navigationActions.back())
+ 
+  _updateLanguage = (lanCode, verCode) =>{
+    console.log("Update Language.....")
+    // this.props.navigation.dispatch(navigationActions.back())
   }
   render(){
      return (

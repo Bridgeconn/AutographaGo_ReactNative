@@ -10,7 +10,7 @@ export const numberSelection =(colorFile, sizeFile) =>{
         flex:1,
         flexDirection:'row'
    },
-   flexValue:{
+   containerBook:{
         flex:1
    },
    textStyle: {

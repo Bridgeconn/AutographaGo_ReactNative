@@ -38,7 +38,7 @@ export default class Splash extends Component {
     })
     setTimeout(() => {  
       this.props.navigation.dispatch(resetAction)
-    }, 800);
+    }, 800)
   }
 
   render() {
