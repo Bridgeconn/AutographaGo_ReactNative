@@ -42,6 +42,11 @@ export default class EditNote extends Component {
         referenceList: this.props.navigation.state.params.index == -1 
           ? [] 
           : this.props.navigation.state.params.noteObject.references,
+        // todo here fix reference list
+        referenceList: this.props.navigation.referenceList,
+        bookId: this.props.navigation.bookId,
+        versionCode: this.props.navigation.versionCode,
+        languageCode: this.props.navigation.languageCode,
     }
 
     this.getReference = this.getReference.bind(this)

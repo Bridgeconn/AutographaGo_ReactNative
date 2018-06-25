@@ -46,7 +46,6 @@ export default class NewBook extends Component {
     this.queryBook = this.queryBook.bind(this)
     this.onBookmarkPress = this.onBookmarkPress.bind(this)
 
-    this._footerRenderer = this._footerRenderer.bind(this);
     this.updateCurrentChapter = this.updateCurrentChapter.bind(this)
     // console.log("props RV chapter=  "  + this.props.navigation.state.params.chapterNumber)
     this.state = {
@@ -225,12 +224,31 @@ export default class NewBook extends Component {
     this.setState({modelData, selectedReferenceSet: [], showBottomBar: false})
   }
 
-  _footerRenderer = () => {
-    return(
-        <Text style={{height:64, marginBottom:4}} >
-            HELLO I AM FOOTER.. AM I VISIBLE????
-        </Text>
-    );
+  addToNotes = () => {
+    this.props.navigation.navigate(
+      'Notes',
+      {
+        languageCode: this.props.screenProps.languageCode, 
+        versionCode: this.props.screenProps.versionCode, 
+        bookId: this.state.bookId, 
+        referenceList: this.state.selectedReferenceSet
+      }
+    )
+    this.setState({selectedReferenceSet: [], showBottomBar: false})
+  }
+
+  addToShare = () => {
+    for (let item of this.state.selectedReferenceSet) {
+      let tempVal = item.split('_')
+      this.navigation.navigate(
+        this.props.screenProps.languageCode, 
+        this.props.screenProps.versionCode, 
+        this.state.bookId, 
+        tempVal[0] - 1, 
+        tempVal[1]
+      )
+    }
+    this.setState({selectedReferenceSet: [], showBottomBar: false})
   }
 
   componentWillUnmount(){
@@ -239,15 +257,16 @@ export default class NewBook extends Component {
         versionCode:this.state.versionCode,
         bookId:this.state.bookId,
         chapterNumber:this.state.currentVisibleChapter,
-      }
-      AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.LastReadReference, lastRead);
+    }
+    AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.LastReadReference, lastRead);
   }
 
   updateCurrentChapter(val) {
     let currChapter = this.state.currentVisibleChapter + val;
     this.setState({currentVisibleChapter: currChapter, 
         isBookmark: this.state.bookmarksList.indexOf(currChapter) > -1}, () => {
-            this.props.navigation.setParams({isBookmark: this.state.isBookmark})      
+            this.props.navigation.setParams({isBookmark: this.state.isBookmark})
+            this.scrollViewRef.scrollTo({x: 0, y: 0, animated: false})
     })
   }
 
@@ -261,6 +280,7 @@ export default class NewBook extends Component {
                 <ScrollView
                     {...this.gestureResponder}
                     style={this.styles.recyclerListView}
+                    ref={(ref) => { this.scrollViewRef = ref; }}                    
                 >
                  {    (this.state.verseInLine) ?
                             <FlatList
@@ -301,7 +321,7 @@ export default class NewBook extends Component {
                                                     }}
                                                 />
                                             </Text>
-                                            {index == this.state.modelData[this.state.currentVisibleChapter - 1].verseComponentsModels.length
+                                            {index == this.state.modelData[this.state.currentVisibleChapter - 1].verseComponentsModels.length - 1
                                             ? <View style={{height:64, marginBottom:4}} />
                                             : null
                                             }
@@ -356,20 +376,24 @@ export default class NewBook extends Component {
             
             <View style={this.styles.bottomOptionSeparator} />
             
-            <View style={this.styles.bottomOption}>          
-              <Text style={this.styles.bottomOptionText}>
-                NOTES
-              </Text>
-              <Icon name={'note'} color="white" size={24} style={this.styles.bottomOptionIcon} />
+            <View style={this.styles.bottomOption}>  
+              <TouchableOpacity onPress={this.addToNotes}>        
+                <Text style={this.styles.bottomOptionText}>
+                  NOTES
+                </Text>
+                <Icon name={'note'} color="white" size={24} style={this.styles.bottomOptionIcon} />
+              </TouchableOpacity>
             </View>
             
             <View style={this.styles.bottomOptionSeparator} />          
   
-            <View style={this.styles.bottomOption}>          
-              <Text style={this.styles.bottomOptionText}>
-                SHARE
-              </Text>
-              <Icon name={'share'} color="white" size={24} style={this.styles.bottomOptionIcon} />
+            <View style={this.styles.bottomOption}>   
+              <TouchableOpacity onPress={this.addToShare}>       
+                <Text style={this.styles.bottomOptionText}>
+                  SHARE
+                </Text>
+                <Icon name={'share'} color="white" size={24} style={this.styles.bottomOptionIcon} />
+              </TouchableOpacity>
             </View>
   
           </View>

@@ -19,8 +19,13 @@ var moment = require('moment');
 export default class Notes extends Component {
   constructor(props){
     super(props);
+    console.log("notes props : " + JSON.stringify(props.navigation))
     this.state = {
       notesData:[],
+      referenceList: this.props.navigation.referenceList,
+      bookId: this.props.navigation.bookId,
+      versionCode: this.props.navigation.versionCode,
+      languageCode: this.props.navigation.languageCode,
     }
     this.queryDb = this.queryDb.bind(this)
     this.onDelete = this.onDelete.bind(this)
@@ -72,7 +77,12 @@ export default class Notes extends Component {
 
   openEdit(index, noteObject) {
     this.props.navigation.navigate('EditNote',{index:index, noteObject: noteObject, 
-      onDelete: this.onDelete, onRefresh: this.onRefresh})
+      onDelete: this.onDelete, onRefresh: this.onRefresh, 
+      referenceList: this.state.referenceList,
+      bookId: this.state.bookId,
+      versionCode: this.state.versionCode,
+      languageCode: this.state.languageCode
+    })
   }
   
   renderItem = ({item,index})=>{
