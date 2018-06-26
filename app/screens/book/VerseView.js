@@ -11,7 +11,8 @@ export default class VerseView extends Component {
   onPress() {
     this.props.getSelection(
         this.props.index, 
-        this.props.verseData.chapterNumber
+        this.props.verseData.chapterNumber,
+        this.props.verseData.verseNumber
     );
   }
 
@@ -69,7 +70,7 @@ export default class VerseView extends Component {
   }
 
   render() {
-    let obj = this.props.verseData.chapterNumber + '_' + this.props.index;
+    let obj = this.props.verseData.chapterNumber + '_' + this.props.index + '_' + this.props.verseData.verseNumber;
     let isSelect = this.has(this.props.selectedReferences, obj);
     let isHighlight = this.props.verseData.highlighted;
 

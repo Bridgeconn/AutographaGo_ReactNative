@@ -22,10 +22,7 @@ export default class Notes extends Component {
     console.log("notes props : " + JSON.stringify(props.navigation))
     this.state = {
       notesData:[],
-      referenceList: this.props.navigation.referenceList,
-      bookId: this.props.navigation.bookId,
-      versionCode: this.props.navigation.versionCode,
-      languageCode: this.props.navigation.languageCode,
+      referenceList: this.props.navigation.state.params.referenceList,
     }
     this.queryDb = this.queryDb.bind(this)
     this.onDelete = this.onDelete.bind(this)

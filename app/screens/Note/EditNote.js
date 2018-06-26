@@ -43,10 +43,7 @@ export default class EditNote extends Component {
           ? [] 
           : this.props.navigation.state.params.noteObject.references,
         // todo here fix reference list
-        referenceList: this.props.navigation.referenceList,
-        bookId: this.props.navigation.bookId,
-        versionCode: this.props.navigation.versionCode,
-        languageCode: this.props.navigation.languageCode,
+        referenceList2: this.props.navigation.state.params.referenceList,
     }
 
     this.getReference = this.getReference.bind(this)
@@ -140,6 +137,8 @@ export default class EditNote extends Component {
   componentDidMount() {
     this.props.navigation.setParams({ handleAdd: this.saveNote})
     this.props.navigation.setParams({ handleBack: this.onBack})
+
+    this.addRef2()
   }
 
   onChangeText = (text)=>{
@@ -155,6 +154,23 @@ export default class EditNote extends Component {
       }
     }
     return false;
+  }
+
+  addRef2() {
+    if (this.state.referenceList2) {
+      if (this.state.noteIndex == -1) {
+        this.setState({referenceList: this.state.referenceList2})
+      } else {
+        let referenceList = [...this.state.referenceList]        
+        for (var i=0; i<this.state.referenceList2.length; i++) {
+          let item = this.state.referenceList2[i]
+          if (!this.checkIfReferencePresent(item.bookId, item.bookName, item.chapterNumber, item.verseNumber)) {
+            referenceList.push(item)
+          }
+        }
+        this.setState({referenceList})
+      }
+    }
   }
 
   getReference = (id, name, cNum, vNum) => {

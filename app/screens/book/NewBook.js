@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Dimensions,
   TouchableOpacity,
+  Share,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import {createResponder} from 'react-native-gesture-responder';
@@ -19,6 +20,7 @@ import AsyncStorageUtil from '../../utils/AsyncStorageUtil';
 import AsyncStorageConstants from '../../utils/AsyncStorageConstants';
 const Constants = require('../../utils/constants')
 import { styles } from './styles.js';
+import id_name_map from '../../assets/mappings.json'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -42,6 +44,8 @@ export default class NewBook extends Component {
     super(props);
     // console.log("BOOK props--" + JSON.stringify(props))
 
+    this.mappingData = id_name_map;
+    
     this.getSelectedReferences = this.getSelectedReferences.bind(this)
     this.queryBook = this.queryBook.bind(this)
     this.onBookmarkPress = this.onBookmarkPress.bind(this)
@@ -177,8 +181,8 @@ export default class NewBook extends Component {
     })
   }
 
-  getSelectedReferences(vIndex, chapterNum) {
-    let obj = chapterNum + '_' + vIndex
+  getSelectedReferences(vIndex, chapterNum, vNum) {
+    let obj = chapterNum + '_' + vIndex + '_' + vNum
     
     let selectedReferenceSet = [...this.state.selectedReferenceSet]
     
@@ -224,30 +228,52 @@ export default class NewBook extends Component {
     this.setState({modelData, selectedReferenceSet: [], showBottomBar: false})
   }
 
+  getBookNameFromMapping(bookId) {
+    var obj = this.mappingData.id_name_map;
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            if (key == bookId) {
+                var val = obj[key];
+                return val.book_name;
+            }
+        }
+    }
+    return null;
+  }
+
   addToNotes = () => {
-    this.props.navigation.navigate(
-      'Notes',
-      {
-        languageCode: this.props.screenProps.languageCode, 
-        versionCode: this.props.screenProps.versionCode, 
-        bookId: this.state.bookId, 
-        referenceList: this.state.selectedReferenceSet
-      }
-    )
+    let refList = []
+    let id = this.state.bookId
+    let name = this.getBookNameFromMapping(this.state.bookId)
+    for (let item of this.state.selectedReferenceSet) {
+      let tempVal = item.split('_')
+      let refModel = {bookId: id, bookName: name, chapterNumber: parseInt(tempVal[0]), verseNumber: tempVal[2], 
+        versionCode: this.props.screenProps.versionCode, languageCode: this.props.screenProps.languageCode};
+      refList.push(refModel)
+    }
+    this.props.navigation.navigate('Notes', {referenceList: refList})
     this.setState({selectedReferenceSet: [], showBottomBar: false})
   }
 
+  getVerseText(cNum, vIndex) {
+    return this.state.modelData[cNum - 1].verseComponentsModels[vIndex].text
+  }
+
   addToShare = () => {
+    // let refList = []
+    let bookName = this.getBookNameFromMapping(this.state.bookId)
+    let shareText = ''
     for (let item of this.state.selectedReferenceSet) {
       let tempVal = item.split('_')
-      this.navigation.navigate(
-        this.props.screenProps.languageCode, 
-        this.props.screenProps.versionCode, 
-        this.state.bookId, 
-        tempVal[0] - 1, 
-        tempVal[1]
-      )
+      let chapterNumber= parseInt(tempVal[0])
+      let vIndex= parseInt(tempVal[1])
+      let verseNumber= tempVal[2]
+      // refList.push(refModel)
+      shareText = shareText.concat(bookName + " " + chapterNumber + ":" + verseNumber + " ");
+      shareText = shareText.concat(this.getVerseText(chapterNumber, vIndex));
+      shareText = shareText.concat("\n");
     }
+    Share.share({message: shareText})
     this.setState({selectedReferenceSet: [], showBottomBar: false})
   }
 
@@ -295,8 +321,8 @@ export default class NewBook extends Component {
                                             index = {index}
                                             styles = {this.styles}
                                             selectedReferences = {this.state.selectedReferenceSet}
-                                            getSelection = {(verseIndex, chapterNumber) => {
-                                            this.getSelectedReferences(verseIndex, chapterNumber)
+                                            getSelection = {(verseIndex, chapterNumber, verseNumber) => {
+                                            this.getSelectedReferences(verseIndex, chapterNumber, verseNumber)
                                             }}
                                         />
                                 </Text>
@@ -316,8 +342,8 @@ export default class NewBook extends Component {
                                                     index = {index}
                                                     styles = {this.styles}
                                                     selectedReferences = {this.state.selectedReferenceSet}
-                                                    getSelection = {(verseIndex, chapterNumber) => {
-                                                    this.getSelectedReferences(verseIndex, chapterNumber)
+                                                    getSelection = {(verseIndex, chapterNumber, verseNumber) => {
+                                                    this.getSelectedReferences(verseIndex, chapterNumber,verseNumber)
                                                     }}
                                                 />
                                             </Text>
