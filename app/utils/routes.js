@@ -67,9 +67,6 @@ const StackNav = StackNavigator(
       Hints: {
         screen: Hints,
       },
-      BookRecyclerView: {
-        screen: BookRecyclerView,
-      },
       NewBook: {
         screen: NewBook,
       },
@@ -120,6 +117,7 @@ export default class App extends Component {
     this.updateColor = this.updateColor.bind(this)
     this.updateVerseInLine = this.updateVerseInLine.bind(this)
     this.changeSizeByOne = this.changeSizeByOne.bind(this)
+    this.updateLastRead = this.updateLastRead.bind(this)
   }
 
   updateBooks = (booksList) => {
@@ -128,6 +126,10 @@ export default class App extends Component {
 
   updateVerseInLine = (verseInLine) =>{
     this.setState({verseInLine})
+  }
+
+  updateLastRead = (lastRead) => {
+    this.setState({lastRead})
   }
 
   updateColor = (colorMode, colorFile) => {
@@ -210,7 +212,8 @@ export default class App extends Component {
           updateSize: this.updateSize,
           updateVerseInLine:this.updateVerseInLine,
           updateBooks: this.updateBooks,
-          changeSizeByOne: this.changeSizeByOne
+          changeSizeByOne: this.changeSizeByOne,
+          updateLastRead: this.updateLastRead
         }}
       />
     );

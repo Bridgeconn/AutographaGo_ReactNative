@@ -27,7 +27,7 @@ export default class Home extends Component {
 
   constructor(props){
     super(props)
-    console.log("last read in home page "+this.props.screenProps.lastRead.versionCode)
+    console.log("last read in home page "+JSON.stringify(this.props.screenProps.lastRead))
     console.log("last read in home page "+this.props.screenProps.lastRead.chapterNumber)
     this.handleViewableItemsChanged = this.handleViewableItemsChanged.bind(this)
 
@@ -64,6 +64,7 @@ export default class Home extends Component {
     this.setState({
       colorFile:props.screenProps.colorFile,
       sizeFile:props.screenProps.sizeFile,
+      lastRead: props.screenProps.lastRead
     })
     this.styleFile = homePageStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
   }

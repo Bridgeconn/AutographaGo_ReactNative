@@ -260,7 +260,6 @@ export default class NewBook extends Component {
   }
 
   addToShare = () => {
-    // let refList = []
     let bookName = this.getBookNameFromMapping(this.state.bookId)
     let shareText = ''
     for (let item of this.state.selectedReferenceSet) {
@@ -268,7 +267,6 @@ export default class NewBook extends Component {
       let chapterNumber= parseInt(tempVal[0])
       let vIndex= parseInt(tempVal[1])
       let verseNumber= tempVal[2]
-      // refList.push(refModel)
       shareText = shareText.concat(bookName + " " + chapterNumber + ":" + verseNumber + " ");
       shareText = shareText.concat(this.getVerseText(chapterNumber, vIndex));
       shareText = shareText.concat("\n");
@@ -285,6 +283,7 @@ export default class NewBook extends Component {
         chapterNumber:this.state.currentVisibleChapter,
     }
     AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.LastReadReference, lastRead);
+    this.props.screenProps.updateLastRead(lastRead);
   }
 
   updateCurrentChapter(val) {
