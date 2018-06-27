@@ -208,10 +208,12 @@ export default class Setting extends Component {
             </Card>
             
             <Card>
-              <CardItem style={this.styleFile.cardItemStyle}>
-                <Icon name='settings-backup-restore' size={24} style={this.styleFile.cardItemIconCustom} />
-                <Text style={this.styleFile.textStyle}>Backup and Restore</Text>
-              </CardItem>
+              <TouchableOpacity onPress={()=>console.log("BACKUP RESTOR")}>              
+                <CardItem style={this.styleFile.cardItemStyle}>
+                  <Icon name='settings-backup-restore' size={24} style={this.styleFile.cardItemIconCustom} />
+                  <Text style={this.styleFile.textStyle}>Backup and Restore</Text>
+                </CardItem>
+              </TouchableOpacity>
             </Card>
            
             <Card>
