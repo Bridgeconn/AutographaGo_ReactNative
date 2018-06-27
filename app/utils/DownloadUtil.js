@@ -38,6 +38,23 @@ var DownloadUtil = {
             return error;
         }
     },
+    
+    async getMetadata(language, version) {
+        try {
+            return await fetch(API_BASE_URL + language+'/'+ version + '/'+ META_DATA_FILE_NAME, {  
+              method: 'GET',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              }
+            })
+            .then(ApiUtils.checkStatus)
+            .then((response) => response.json())
+            .catch(e => e)
+        } catch(error) {
+            return error;
+        }
+    },
 }
 
 export default DownloadUtil;

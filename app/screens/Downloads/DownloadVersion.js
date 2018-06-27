@@ -21,23 +21,39 @@ export default class DownloadVersion extends Component {
     constructor(props){
         super(props);
         this.state = {
-            downloadData:[],
+            downloadVersionList:[],
             isLoading: false,
             refreshing: false,
             languageName: this.props.navigation.state.params.languageName,
             isDownloading: false,
+            downloadMetadata: {},
+            isLoadingText: '',
         }
         this.downloadZip = this.downloadZip.bind(this)
         this.readDirectory = this.readDirectory.bind(this)
     }
 
     componentDidMount() {
-        this.setState({isLoading:true}, () => {
+        this.setState({isLoading:true, isLoadingText: 'GET VERSIONS'}, () => {
             DownloadUtil.getVersions(this.state.languageName)
             .then(res => {
                 console.log("res = " + JSON.stringify(res))
                 console.log("len = " + res.list_of_versions_available.length)
-                this.setState({isLoading: false, refreshing: false, downloadData: res.list_of_versions_available})
+                this.setState({isLoading: false, refreshing: false, downloadVersionList: res.list_of_versions_available})
+            })
+            .catch(error => {
+                console.log("error in fetch " + error);
+                this.setState({isLoading: false, refreshing: false})
+            });
+        })
+    }
+
+    downloadMetadata(language, version) {
+        this.setState({isLoading:true, isLoadingText: 'GET METADATA'}, () => {
+            DownloadUtil.getMetadata(language, version)
+            .then(res => {
+                console.log("res = " + JSON.stringify(res))
+                this.setState({isLoading: false, refreshing: false, downloadMetadata: res.meta_data})
             })
             .catch(error => {
                 console.log("error in fetch " + error);
@@ -47,7 +63,9 @@ export default class DownloadVersion extends Component {
     }
 
     downloadZip(version) {
-        this.setState({isDownloading:true}, () => {
+        this.downloadMetadata(this.state.languageName, version)
+
+        this.setState({isDownloading:true, isLoadingText: 'GET ZIP'}, () => {
             RNFS.mkdir(RNFS.DocumentDirectoryPath+'/AutoBibles').then(result => {
                 RNFS.downloadFile({
                     fromUrl: 
@@ -62,6 +80,7 @@ export default class DownloadVersion extends Component {
 
                         const sourcePath = RNFS.DocumentDirectoryPath +'/AutoBibles/Archive.zip';
                         const targetPath = RNFS.DocumentDirectoryPath + '/AutoBibles/';
+                        this.setState({isLoadingText: 'UNZIP ARCHIVE'})
                         unzip(sourcePath, targetPath)
                             .then((path) => {
                                 console.log('unzip completed at ' + path)
@@ -76,26 +95,40 @@ export default class DownloadVersion extends Component {
         })
     }
 
+    async startParse(path,lcode,lname,vcode,vname,from) {
+        await new USFMParser().parseFile(path,lcode,lname,vcode,vname,from);
+    }
+
     readDirectory() {
         RNFS.readDir(RNFS.DocumentDirectoryPath + '/AutoBibles/')
             .then((result) => {
-                console.log('GOT RESULT', result);
+                // console.log('GOT RESULT', result);
 
-                // stat the first file
-                return Promise.all([RNFS.stat(result[0].path), result[0].path]);
-            })
-            .then((statResult) => {
-                if (statResult[0].isFile()) {
-                // if we have a file, read it
-                return RNFS.readFile(statResult[1], 'utf8');
+                for (var i=0; i<result.length; i++) {
+                    if (result[i].isFile() && result[i].path.endsWith('.usfm')) {
+                        this.setState({isLoadingText: 'USM PARSE ' + result[i].path})
+                        this.startParse(result[i].path, 
+                            this.state.downloadMetadata.languageCode,
+                            this.state.downloadMetadata.languageName,
+                            this.state.downloadMetadata.versionCode,
+                            this.state.downloadMetadata.versionName,
+                            false)
+                    }
                 }
-
-                return 'no file';
+                // stat the first file
+                // return Promise.all([RNFS.stat(result[0].path), result[0].path]);
             })
-            .then((contents) => {
-                // log the file contents
-                console.log(contents);
-            })
+            // .then((statResult) => {
+            //     if (statResult[0].isFile()) {
+            //         // if we have a file, read it
+            //         return RNFS.readFile(statResult[1], 'utf8');
+            //     }
+            //     return 'no file';
+            // })
+            // .then((contents) => {
+            //     // log the file contents
+            //     console.log(contents);
+            // })
             .catch((err) => {
                 console.log(err.message, err.code);
             });
@@ -121,7 +154,7 @@ export default class DownloadVersion extends Component {
                     color="#0000ff" /> 
                     :
                 <FlatList
-                    data={this.state.downloadData}
+                    data={this.state.downloadVersionList}
                     renderItem={this.renderItem}
                 />
             }
@@ -137,6 +170,9 @@ export default class DownloadVersion extends Component {
 
                 </View>
              : null}
+             <Text>
+                 {this.state.isLoadingText}
+             </Text>
             </View>
         );
     }
