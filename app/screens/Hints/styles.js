@@ -9,8 +9,6 @@ export const HintStyle = (colorFile, sizeFile) =>{
             flexDirection:'row',
             backgroundColor:colorFile.backgroundColor
         },
-       
-
         textView: {
             width: width*4/5,
             backgroundColor: colorFile.backgroundColor,

@@ -25,7 +25,7 @@ import id_name_map from '../../assets/mappings.json'
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-export default class NewBook extends Component {
+export default class Book extends Component {
 
   static navigationOptions = ({navigation}) => ({
     headerTitle: navigation.state.params.bookName,

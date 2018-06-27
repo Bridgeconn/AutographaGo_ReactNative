@@ -18,7 +18,7 @@ import {extraSmallFont,smallFont,mediumFont,largeFont,extraLargeFont} from '../.
 import { settingsPageStyle } from './styles.js'
 import {nightColors, dayColors} from '../../utils/colors.js'
 import AsyncStorageUtil from '../../utils/AsyncStorageUtil';
-// import SizeFileUtils from '../../utils/SizeFileUtils'
+import SizeFileUtils from '../../utils/SizeFileUtils'
 const AsyncStorageConstants = require('../../utils/AsyncStorageConstants')
 
 const setParamsAction = ({colorFile}) => NavigationActions.setParams({
@@ -44,7 +44,7 @@ export default class Setting extends Component {
       sizeFile:this.props.screenProps.sizeFile,
       colorMode: this.props.screenProps.colorMode,
       colorFile:this.props.screenProps.colorFile,
-      verseInLine:this.props.screenProps.verseInLine
+      verseInLine:JSON.parse(this.props.screenProps.verseInLine)
     };
     
     this.styleFile = settingsPageStyle(this.state.colorFile, this.state.sizeFile);

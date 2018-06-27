@@ -21,54 +21,67 @@ import {nightColors, dayColors} from '../../utils/colors.js'
 import FixedSidebar from '../../components/FixedSidebar/FixedSidebar'
 
 export default class Home extends Component {
-  static navigationOptions = {
+
+  static navigationOptions = ({navigation}) =>({
     headerTitle: 'Autographa Go',
-  };
+    headerRight:(
+        <TouchableOpacity onPress={()=>navigation.state.params.goToLanguage()} >
+          <Text style={{color:"#fff",margin:8}}>{navigation.state.params.bibleLanguage} {navigation.state.params.bibleVersion}</Text>
+        </TouchableOpacity>
+      )
+  })
 
   constructor(props){
     super(props)
-    console.log("last read in home page "+JSON.stringify(this.props.screenProps.lastRead))
-    console.log("last read in home page "+this.props.screenProps.lastRead.chapterNumber)
     this.handleViewableItemsChanged = this.handleViewableItemsChanged.bind(this)
 
     this.state = {
       colorFile:this.props.screenProps.colorFile,
       sizeFile:this.props.screenProps.sizeFile,
       lastRead:this.props.screenProps.lastRead,
+      // bibleLanguage:this.props.screenProps.languageCode,
+      // bibleVersion:this.props.screenProps.versionCode,
       activeTab:true,
       iconPress: [],
       booksList: this.props.screenProps.booksList,
     }
+    console.log("IN HOME, bok len"  + this.props.screenProps.booksList.length)
 
-    this.styleFile = homePageStyle(this.state.colorFile, this.state.sizeFile);
+    this.styles = homePageStyle(this.state.colorFile, this.state.sizeFile);
     
     this.viewabilityConfig = {
         itemVisiblePercentThreshold: 50,
         waitForInteraction: true
     }
-  }
 
+  }
+ 
   toggleButton(value){
     this.setState({activeTab:value})
     if(value == false){
       console.log("pressed")
-      this.elementIndex.scrollToIndex({index:39,viewPosition:0,animated: true,viewOffset:0})
+      this.flatlistRef.scrollToIndex({index:39,viewPosition:0,animated: false,viewOffset:0})
     }
     else{
-      this.elementIndex.scrollToIndex({index:0,viewPosition:0,animated: true,viewOffset:0})
+      this.flatlistRef.scrollToIndex({index:0,viewPosition:0,animated: false,viewOffset:0})
     }
   }
  
   componentWillReceiveProps(props){
-    console.log("will recievr props"+JSON.stringify(props))
+    console.log("WILLLLL recievr props"+props.screenProps.languageCode+"  version "+props.screenProps.versionCode)
     this.setState({
       colorFile:props.screenProps.colorFile,
       sizeFile:props.screenProps.sizeFile,
       lastRead: props.screenProps.lastRead
+    }, () => {
+      // this.props.navigation.setParams({bibleLanguage:props.screenProps.languageCode, 
+      //   bibleVersion: props.screenProps.versionCode})
     })
-    this.styleFile = homePageStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
+    this.styles = homePageStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
   }
-
+  goToLanguage = ()=>{
+    this.props.navigation.navigate("Language")
+  }
   getItemLayout = (data, index) => (
     { length: 48, offset: 48 * index, index }
   )
@@ -86,7 +99,15 @@ export default class Home extends Component {
     console.log("handleViewableItemsChanged.. "+viewableItems)
     // console.log("handleViewableItemsChanged changes.. "+changed)
   }
-  renderItem = ({item, index})=> {
+
+componentDidMount(){
+  // this.props.navigation.setParams({styles:this.styles})
+  console.log("data from router language props "+this.props.screenProps.data)
+  this.props.navigation.setParams({goToLanguage:this.goToLanguage,bibleLanguage: this.props.screenProps.languageCode, 
+    bibleVersion: this.props.screenProps.versionCode})
+}
+
+renderItem = ({item, index})=> {
     return (
       <TouchableOpacity 
           onPress={
@@ -94,17 +115,17 @@ export default class Home extends Component {
                 bookName: item.bookName, bookIndex: index, numOfChapters: item.numOfChapters})
           }>
           <View 
-            style={this.styleFile.bookList}>
+            style={this.styles.bookList}>
             <Text
               style={
-                this.styleFile.textStyle
+                this.styles.textStyle
               }>
               {item.bookName}
             </Text>
             <Icon 
               name='chevron-right' 
               color="gray" 
-              style={this.styleFile.iconCustom}
+              style={this.styles.iconCustom}
               size={24} />
           </View>
         </TouchableOpacity>
@@ -118,10 +139,11 @@ export default class Home extends Component {
   handlePressOut(){
     
   }
+  
 
-  render() {
+  render(){
     return (
-      <View style={this.styleFile.container}>
+      <View style={this.styles.container}>
         <FixedSidebar 
           onPress={(icon)=>{
             this.props.navigation.navigate(
@@ -134,13 +156,14 @@ export default class Home extends Component {
               })}}
           doAnimate = {false}
         />
-        <View style={this.styleFile.bookNameContainer}>
-            <Segment style={this.styleFile.segmentCustom}>
+        <View style={this.styles.bookNameContainer}>
+            <Segment style={this.styles.segmentCustom}>
+            {/* {this.state.booksList.length <40 } */}
               <Button 
-                first active={this.state.activeTab} 
+                active={this.state.activeTab} 
                 style={[
                   {backgroundColor:this.state.activeTab ?  "#3F51B5":"#fff"},
-                  this.styleFile.segmentButton
+                  this.styles.segmentButton
                 ]} 
                 onPress={this.toggleButton.bind(this,true)
                 }
@@ -152,10 +175,10 @@ export default class Home extends Component {
                 </Text>
               </Button>
               <Button 
-                last active={!this.state.activeTab} 
+                active={!this.state.activeTab} 
                 style={[
                   {backgroundColor:this.state.activeTab ?  "#fff" : "#3F51B5"},  
-                  this.styleFile.segmentButton
+                  this.styles.segmentButton
                 ]} 
                 onPress={this.toggleButton.bind(this,false)}>
                 <Text 
@@ -168,14 +191,14 @@ export default class Home extends Component {
               </Button>
             </Segment>
             <FlatList
-              ref={ref => this.elementIndex = ref}
+              ref={ref => this.flatlistRef = ref}
               data={this.state.booksList}
-              // getItemLayout={this.getItemLayout}
+              getItemLayout={this.getItemLayout}
               // onScroll={this.handleScroll}
               renderItem={this.renderItem}
-              extraData={this.styleFile}
-              onViewableItemsChanged={this.handleViewableItemsChanged}
-              viewabilityConfig={this.viewabilityConfig}
+              extraData={this.styles}
+              // onViewableItemsChanged={this.handleViewableItemsChanged}
+              // viewabilityConfig={this.viewabilityConfig}
             />
         </View> 
       </View>

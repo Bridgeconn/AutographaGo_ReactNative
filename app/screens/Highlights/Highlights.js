@@ -8,8 +8,9 @@ import {
   FlatList,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import DbQueries from '../utils/dbQueries'
-import id_name_map from '../assets/mappings.json'
+import DbQueries from '../../utils/dbQueries'
+import id_name_map from '../../assets/mappings.json'
+import { highlightstyle } from './styles'
 
 export default class HighLights extends Component {
   static navigationOptions = {
@@ -25,6 +26,8 @@ export default class HighLights extends Component {
     this.state = {
       modelData: [],
     }
+    this.styles = highlightstyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
+    
   }
 
   async componentDidMount() {
@@ -71,8 +74,8 @@ export default class HighLights extends Component {
           data={this.state.modelData}
           // getItemLayout={this.getItemLayout}
           renderItem={({item, index}) => 
-            <View style={{flexDirection:'row', justifyContent: 'space-between',margin:16}}>
-              <Text style={{fontSize:18}}>{this.getBookNameFromMapping(item.bookId)} {item.chapterNumber} {':'} {item.verseNumber}</Text>
+            <View style={this.styles.highlightsView}>
+              <Text style={this.styles.hightlightsText}>{this.getBookNameFromMapping(item.bookId)} {item.chapterNumber} {':'} {item.verseNumber}</Text>
               <Icon name='delete-forever' size={28} onPress={() => {this.removeHighlight(index)}} />
             </View>
           }

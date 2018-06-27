@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import {AppRegistry,StyleSheet,Text,ScrollView,FlatList} from 'react-native';
-import dbQueries from '../utils/dbQueries';
+import {AppRegistry,StyleSheet,Text,ScrollView,TouchableOpacity} from 'react-native';
+import dbQueries from '../../utils/dbQueries';
 import { View } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import {getBookNameFromMapping} from '../utils/UtilFunctions';
+import {getBookNameFromMapping} from '../../utils/UtilFunctions';
 import Accordion from 'react-native-collapsible/Accordion';
 import {List,ListItem} from 'native-base'
+import { historyStyle } from './styles.js'
+
 var moment = require('moment');
 
 export default class History extends Component{
@@ -30,10 +32,8 @@ export default class History extends Component{
         { time: "1 month ago", list:[]},
         { time: "2 month ago", list:[]}
     ],
-    heightDynamic : 0,
-    arrowPositionDown : true 
     }
-    this._setSection = this._setSection.bind(this)
+    this.styles = historyStyle(props.screenProps.colorFile, props.screenProps.sizeFile);       
   }
 
   async componentDidMount(){
@@ -72,40 +72,33 @@ export default class History extends Component{
         }
       }
   }
-  _setSection(section){
-    console.log("active section "+section)
-    this.setState({
-      activeSection:section,
-      arrowPositionDown:!this.state.arrowPositionDown
-    })
-    // console.log("value of arow "+!this.state.arrowPositionDown)
-
-  }
-
-  _renderHeader(data, index, isActive) {
+  _renderHeader = (data, index, isActive) =>{
     return (
       <View>
       {
         data.list.length == 0 ? null : 
-        <View  style={{flexDirection:"row",justifyContent:"space-between",margin:8}}>
-         <Text style={{fontSize:18}}>{data.time}</Text>
+        <View  style={this.styles.historyHeader}>
+         <Text style={this.styles.headerText}>{data.time}</Text>
          <Icon name={isActive ? "keyboard-arrow-down" : "keyboard-arrow-up" } size={24} />
         </View>
       }
       </View> 
     )
   }
-  _renderContent(data) {
+  _renderContent  = (data) => {
     console.log("is active ")
+    console.log("version model"+JSON.stringify(data))
     return (
-      <List dataArray={data.list}
-            renderRow={(item)=>
-              <ListItem>
-                <Text>{getBookNameFromMapping(item.bookId)} : {item.chapterNumber} </Text>
-              </ListItem>
-            }>
-          </List>
-      
+      <View >
+        {data.list.map((item, index) => 
+        <TouchableOpacity onPress={()=>this.props.navigation.navigate("Book",{bookId: item.bookId, 
+          bookName: getBookNameFromMapping(item.bookId), chapterNumber: item.chapterNumber })}>
+          <Text>{getBookNameFromMapping(item.bookId)} : {item.chapterNumber} </Text>
+        </TouchableOpacity>
+        )
+        }
+       
+        </View>
     )
   }
 
@@ -122,13 +115,4 @@ export default class History extends Component{
     )
   }
 }
-
-var styles = StyleSheet.create({
-  container: {
-    flex            : 1,
-    backgroundColor : '#f4f7f9',
-    paddingTop      : 30
-  },
-  
-});
 

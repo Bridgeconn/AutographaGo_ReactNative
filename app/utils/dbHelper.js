@@ -34,17 +34,19 @@ class DbHelper {
     }
 
     async query(model: string, filter?: string, sort?: string, desc?: bool) {
-    	let realm = await this.getRealm();
-    	if (realm) {
+		
+		let realm = await this.getRealm();
+    	if(realm) {
 			let results = realm.objects(model);
 		    if(filter) {
 		        results = results.filtered(filter);
 			}
-			if (sort) {
-				results = results.sorted(sort, desc);
+			if(sort) {
+			return results = results.sorted(sort,desc);
 			}
 			return results;
 		}
+		
 		return null;
 	}
 

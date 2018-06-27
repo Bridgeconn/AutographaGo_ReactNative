@@ -20,6 +20,7 @@ import { HeaderBackButton, NavigationActions } from 'react-navigation';
 import {RichTextEditor, actions} from 'react-native-zss-rich-text-editor';
 import RichTextToolbar from '../../utils/RichTextToolbar'
 const height = Dimensions.get('window').height;
+import { noteStyle } from './styles.js';
 
 export default class EditNote extends Component {
   static navigationOptions = ({navigation}) =>({
@@ -34,6 +35,7 @@ export default class EditNote extends Component {
   constructor(props){
     super(props);
     this.state = {
+
         noteIndex: this.props.navigation.state.params.index,
         noteObject: this.props.navigation.state.params.noteObject,
         noteBody: this.props.navigation.state.params.index == -1 
@@ -46,6 +48,8 @@ export default class EditNote extends Component {
         referenceList2: this.props.navigation.state.params.referenceList,
     }
 
+    this.styles = noteStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
+    
     this.getReference = this.getReference.bind(this)
     this.openReference = this.openReference.bind(this)
     this.deleteReference = this.deleteReference.bind(this)
@@ -211,7 +215,7 @@ export default class EditNote extends Component {
             deleteReference={(index) => {this.deleteReference(index)}}
           />
         }
-        <Icon name="add-circle" style={{flex:1}} size={28} color="gray" onPress={()=> {this.onAddVersePress()}} />
+        <Icon name="add-circle" style={this.styles.addIconCustom} size={28} color="gray" onPress={()=> {this.onAddVersePress()}} />
       </View>
       
       <View style={{flexDirection: 'column-reverse'}}>

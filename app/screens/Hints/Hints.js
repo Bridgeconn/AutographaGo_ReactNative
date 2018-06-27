@@ -53,7 +53,6 @@ constructor(props){
           doAnimate = {true}
 
         />
-         
           <View style={this.styleFile.textView}>
             {this.state.iconName.map((iconValue,index)=>
               <View style={this.styleFile.textRow}>
