@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import DbQueries from '../../utils/dbQueries.js'
-import {getBookNameFromMapping, getBookNumberFromMapping} from '../utils/UtilFunctions'
+import {getBookNameFromMapping, getBookNumberFromMapping} from '../../utils/UtilFunctions'
 const width = Dimensions.get('window').width-20;
 import SearchTab from '../../components/SearchTab'
 import { Segment } from 'native-base';

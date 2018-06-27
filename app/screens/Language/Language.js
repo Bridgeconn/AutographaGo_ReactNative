@@ -13,9 +13,11 @@ import {getBookNameFromMapping} from '../../utils/UtilFunctions';
 import Accordion from 'react-native-collapsible/Accordion';
 import {List,ListItem} from 'native-base'
 import { languageStyle } from './styles.js'
-
-
+import {NavigationActions} from 'react-navigation'
+import AsyncStorageUtil from '../../utils/AsyncStorageUtil';
+const AsyncStorageConstants = require('../../utils/AsyncStorageConstants')
 var moment = require('moment');
+
 
 export default class Language extends Component{
   static navigationOptions = ({navigation}) =>({
@@ -29,7 +31,6 @@ export default class Language extends Component{
       languageData:[],
     }
     this.styles = languageStyle(props.screenProps.colorFile, props.screenProps.sizeFile);     
-    // this.updateLanguage = this.updateLanguage.bind(this)  
   }
 
   componentDidMount(){
@@ -73,7 +74,7 @@ export default class Language extends Component{
     return (
       <View>
         {data.versionModels.map((item, index) => 
-             <TouchableOpacity onPress={()=>this._updateLanguage(data.languageCode, item.versionCode)}>
+             <TouchableOpacity onPress={()=>this._updateLanguage(data.languageCode,data.languageName, item.versionCode,item.versionName)}>
              <Text>
                {item.versionName}
                </Text>
@@ -85,10 +86,17 @@ export default class Language extends Component{
     )
   }
  
-  _updateLanguage = (lanCode, verCode) =>{
-    console.log("Update Language.....")
-    // this.props.navigation.dispatch(navigationActions.back())
+  _updateLanguage = (lanCode,langName, verCode, verName) =>{
+    console.log("Update Language ver code....."+verCode+ "language code " +lanCode)
+    AsyncStorageUtil.setAllItems([[AsyncStorageConstants.Keys.LanguageCode, lanCode],
+      [AsyncStorageConstants.Keys.LanguageName,langName],
+      [AsyncStorageConstants.Keys.VersionCode,verCode],
+      [AsyncStorageConstants.Keys.VersionName,verName]
+    ]);
+    this.props.screenProps.updateLanguage(lanCode,langName, verCode, verName);
+    this.props.navigation.dispatch(NavigationActions.back())    
   }
+  
   render(){
      return (
        <View>

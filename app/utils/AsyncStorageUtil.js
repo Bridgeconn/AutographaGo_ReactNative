@@ -13,7 +13,14 @@ export default class AsyncStorageUtil {
             return null;
         }
     }
-
+    static async setAllItems (keyValuePairs){
+        try {
+            AsyncStorage.multiSet(keyValuePairs);
+          } catch (error) {
+            console.error('AsyncStorage error: ' + error);
+          }
+    }
+    
     static async getItem(key, defaultValue) {
         try {
             const res = await AsyncStorage.getItem(key);

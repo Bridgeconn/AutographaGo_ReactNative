@@ -119,7 +119,7 @@ export default class App extends Component {
     this.updateSize = this.updateSize.bind(this)
     this.updateColor = this.updateColor.bind(this)
     this.updateVerseInLine = this.updateVerseInLine.bind(this)
-    this.updateLanguage  = this. updateLanguage .bind(this)
+    this.updateLanguage  = this.updateLanguage.bind(this)
   }
 
   updateBooks = (booksList) => {
@@ -137,9 +137,12 @@ export default class App extends Component {
   updateSize = (sizeMode, sizeFile) => {
     this.setState({sizeMode, sizeFile})
   }
+
   updateLanguage = (languageCode,languageName,versionCode,versionName) =>{
+    console.log("in ROTES update language")
     this.setState({languageCode, languageName,versionCode,versionName})
   }
+
   render(){
     return(
       <StackNav 
@@ -209,12 +212,12 @@ export default class App extends Component {
     this.setState({
       colorMode: res[0][1]== null ? AsyncStorageConstants.Values.DayMode : res[0][1],
       colorFile: res[0][1] == null ? dayColors : 
-        (res[0][1] == AsyncStorageConstants.Values.DayMode ? dayColors : nightColors),
-      verseInLine: res[2][1] == null ? AsyncStorageConstants.Values.VerseInLine : res[2][1],
+      (res[0][1] == AsyncStorageConstants.Values.DayMode ? dayColors : nightColors),
+      verseInLine:  res[2][1] == null ? AsyncStorageConstants.Values.VerseInLine : res[2][1],
       languageCode: res[3][1] == null ? AsyncStorageConstants.Values.DefLanguageCode : res[3][1],
-      versionCode: res[4][1] == null ? AsyncStorageConstants.Values.DefVersionCode : res[4][1],
+      versionCode:  res[4][1] == null ? AsyncStorageConstants.Values.DefVersionCode : res[4][1],
       languageName: res[5][1] == null ? AsyncStorageConstants.Values.DefLanguageName : res[5][1],
-      versionName: res[6][1] == null ? AsyncStorageConstants.Values.DefVersionName : res[6][1],
+      versionName:  res[6][1] == null ? AsyncStorageConstants.Values.DefVersionName : res[6][1],
     }, async ()=> {
       let models = await DbQueries.queryBookIdModels(this.state.versionCode, this.state.languageCode);
       console.log("routes len =" + models)

@@ -18,7 +18,7 @@ import {extraSmallFont,smallFont,mediumFont,largeFont,extraLargeFont} from '../.
 import { settingsPageStyle } from './styles.js'
 import {nightColors, dayColors} from '../../utils/colors.js'
 import AsyncStorageUtil from '../../utils/AsyncStorageUtil';
-// import SizeFileUtils from '../../utils/SizeFileUtils'
+import SizeFileUtils from '../../utils/SizeFileUtils'
 const AsyncStorageConstants = require('../../utils/AsyncStorageConstants')
 
 

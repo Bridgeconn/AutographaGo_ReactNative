@@ -24,8 +24,8 @@ export default class Home extends Component {
   static navigationOptions = ({navigation}) =>({
     headerTitle: 'Autographa Go',
     headerRight:(
-        <TouchableOpacity onPress={() => navigation.navigate('Language')} >
-          <Text style={{color:"#fff",margin:8}}>{navigation.state.params.languageCode} {navigation.state.params.versionCode}</Text>
+        <TouchableOpacity onPress={()=>navigation.state.params.goToLanguage()} >
+          <Text style={{color:"#fff",margin:8}}>{navigation.state.params.bibleLanguage} {navigation.state.params.bibleVersion}</Text>
         </TouchableOpacity>
       )
   })
@@ -33,11 +33,14 @@ export default class Home extends Component {
   constructor(props){
     super(props)
     console.log("navigation rops" +JSON.stringify(this.props.navigation))
+    console.log("navigation rops" +JSON.stringify(this.props.navigation))
     this.handleViewableItemsChanged = this.handleViewableItemsChanged.bind(this)
 
     this.state = {
       colorFile:this.props.screenProps.colorFile,
       sizeFile:this.props.screenProps.sizeFile,
+      // bibleLanguage:this.props.screenProps.languageCode,
+      // bibleVersion:this.props.screenProps.versionCode,
       activeTab:true,
       iconPress: [],
       booksList: this.props.screenProps.booksList,
@@ -64,14 +67,19 @@ export default class Home extends Component {
   }
  
   componentWillReceiveProps(props){
-    console.log("will recievr props"+JSON.stringify(props))
+    console.log("WILLLLL recievr props"+props.screenProps.languageCode+"  version "+props.screenProps.versionCode)
     this.setState({
       colorFile:props.screenProps.colorFile,
-      sizeFile:props.screenProps.sizeFile,
+      sizeFile:props.screenProps.sizeFile
+    }, () => {
+      // this.props.navigation.setParams({bibleLanguage:props.screenProps.languageCode, 
+      //   bibleVersion: props.screenProps.versionCode})
     })
     this.styles = homePageStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
   }
-
+  goToLanguage = ()=>{
+    this.props.navigation.navigate("Language")
+  }
   getItemLayout = (data, index) => (
     { length: 48, offset: 48 * index, index }
   )
@@ -89,10 +97,12 @@ export default class Home extends Component {
     console.log("handleViewableItemsChanged.. "+viewableItems)
     // console.log("handleViewableItemsChanged changes.. "+changed)
   }
-componentDidMount(){
-  this.props.navigation.setParams({styles:this.styles})
-  console.log("data from router language props "+this.props.screenProps.data)
 
+componentDidMount(){
+  // this.props.navigation.setParams({styles:this.styles})
+  console.log("data from router language props "+this.props.screenProps.data)
+  this.props.navigation.setParams({goToLanguage:this.goToLanguage,bibleLanguage: this.props.screenProps.languageCode, 
+    bibleVersion: this.props.screenProps.versionCode})
 
   console.log("BOOOK LENGTH"+this.state.booksList.length)
   console.log("BOOOKs "+JSON.stringify(this.state.booksList))
