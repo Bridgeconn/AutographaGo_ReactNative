@@ -14,6 +14,7 @@ import {
 	Platform,
 } from 'react-native';
 import { lang } from 'moment';
+import HistoryModel from '../models/HistoryModel';
 var RNFS = require('react-native-fs');
 
 class DbHelper {
@@ -26,7 +27,7 @@ class DbHelper {
 					Platform.OS === 'ios'
 					? RNFS.MainBundlePath + '/autographa.realm'
 					: RNFS.DocumentDirectoryPath + '/autographa.realm',
-				schema: [LanguageModel, VersionModel, BookModel, ChapterModel, VerseComponentsModel,NoteModel, StylingModel, ReferenceModel] });
+				schema: [LanguageModel, VersionModel, BookModel, ChapterModel, VerseComponentsModel,NoteModel, StylingModel, ReferenceModel,HistoryModel] });
     	} catch (err) {
     		return null;
     	}
@@ -287,6 +288,40 @@ class DbHelper {
 			console.log("value in db help "+charIndex+ " style option "+styleOption)
 		}
 	}
+
+	async addHistory(langCode, verCode, bId, cNum, timeStamp) {
+		let realm = await this.getRealm();
+		if (realm) {
+			realm.write(() => {
+				realm.create('HistoryModel', {
+					languageCode: langCode,
+					versionCode: verCode,
+					bookId: bId,
+					chapterNumber: cNum,
+					time: timeStamp
+				})
+				console.log("write.. history complete..")
+		  });
+		}
+	}
+
+	async queryHistory() {
+		let realm = await this.getRealm();
+    	if (realm) {
+			let results = realm.objects('HistoryModel')
+			return results.sorted('time');
+		}
+		return null
+	}
+
+	async clearHistory() {
+		let realm = await this.getRealm();
+		realm.write(() => {
+			let historyData = realm.objects('HistoryModel')
+			realm.delete(historyData); // Deletes all
+		});
+	}
+
 	// async addStyle(index,){
 	// 	console.log("value in db helper "+value)
 	// 	let realm = await this.getRealm();

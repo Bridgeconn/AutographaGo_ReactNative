@@ -1,24 +1,124 @@
 import React, { Component } from 'react';
-import {AppRegistry,StyleSheet,Text,ScrollView} from 'react-native';
-import HistoryAccordion from './HistoryAccordion';
+import {AppRegistry,StyleSheet,Text,ScrollView,FlatList} from 'react-native';
+import dbQueries from '../utils/dbQueries';
+import { View } from 'native-base';
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import {getBookNameFromMapping} from '../utils/UtilFunctions';
+import Accordion from 'react-native-collapsible/Accordion';
+import {List,ListItem} from 'native-base'
+var moment = require('moment');
 
 export default class History extends Component{
-  static navigationOptions = {
+  static navigationOptions = ({navigation}) =>({
     headerTitle: 'History',
-  };
-  render() {
+    headerRight:(
+      <View style={{flexDirection:"row"}}>
+        <Text style={{color:"#fff",marginHorizontal:8}}>clear</Text>
+          <Icon name="delete-forever" color="#fff" size={24} style={{marginHorizontal:8}} onPress={()=>navigation.state.params.onClearHistory()}/>
+      </View>
+      )
+  })
+
+  constructor(props){
+    super(props)
+    this.state = {
+      historyData:[],
+      historyList: [
+        { time: "Today", list: []},
+        { time: "Yesterday", list:[]},
+        { time: "1 week ago", list:[]},
+        { time: "1 month ago", list:[]},
+        { time: "2 month ago", list:[]}
+    ],
+    heightDynamic : 0,
+    arrowPositionDown : true 
+    }
+    this._setSection = this._setSection.bind(this)
+  }
+
+  async componentDidMount(){
+    let res  = await dbQueries.queryHistory()
+    console.log("resutl in history "+JSON.stringify(res))
+    this.setState({historyData:res})
+    this.dateDiff()
+    this.props.navigation.setParams({onClearHistory:this.onClearHistory})
+  }
+  
+ 
+  onClearHistory(){
+    console.log("hi clear history")
+    dbQueries.clearHistory()
+  }
+  dateDiff() {
+    var date = new Date()
+    var cur = moment(date).format('D')
+      for(i=0; i < this.state.historyData.length; i++){
+        var end = moment(this.state.historyData[i].time).format('D')
+        var timeDiff =  Math.floor(cur-end)
+        if(timeDiff == 0){
+          this.state.historyList[0].list.push(this.state.historyData[i])
+        }
+        if(timeDiff == 1){
+          this.state.historyList[1].list.push(this.state.historyData[i])
+        }
+        if(timeDiff > 2 && timeDiff < 8){
+          this.state.historyList[2].list.push(this.state.historyData[i])
+        }
+        if(timeDiff > 8 && timeDiff < 30){
+          this.state.historyList[3].list.push(this.state.historyData[i])
+        }
+        if(timeDiff > 30 ){
+          this.state.historyList[4].list.push(this.state.historyData[i])
+        }
+      }
+  }
+  _setSection(section){
+    console.log("active section "+section)
+    this.setState({
+      activeSection:section,
+      arrowPositionDown:!this.state.arrowPositionDown
+    })
+    // console.log("value of arow "+!this.state.arrowPositionDown)
+
+  }
+
+  _renderHeader(data, index, isActive) {
     return (
-      <ScrollView style={styles.container}>
-        <HistoryAccordion title="A Panel with short content text">
-          <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</Text>
-        </HistoryAccordion>
-        <HistoryAccordion title="A Panel with long content text">
-          <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Text>
-        </HistoryAccordion>
-        <HistoryAccordion title="Another Panel">
-          <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</Text>
-        </HistoryAccordion>
-      </ScrollView>
+      <View>
+      {
+        data.list.length == 0 ? null : 
+        <View  style={{flexDirection:"row",justifyContent:"space-between",margin:8}}>
+         <Text style={{fontSize:18}}>{data.time}</Text>
+         <Icon name={isActive ? "keyboard-arrow-down" : "keyboard-arrow-up" } size={24} />
+        </View>
+      }
+      </View> 
+    )
+  }
+  _renderContent(data) {
+    console.log("is active ")
+    return (
+      <List dataArray={data.list}
+            renderRow={(item)=>
+              <ListItem>
+                <Text>{getBookNameFromMapping(item.bookId)} : {item.chapterNumber} </Text>
+              </ListItem>
+            }>
+          </List>
+      
+    )
+  }
+
+  render(){
+     return (
+      <Accordion
+      activeSection={this.state.activeSection}
+      sections={this.state.historyList}
+      renderHeader={this._renderHeader}
+      renderContent={this._renderContent}
+      underlayColor="tranparent"
+      initiallyActiveSection={0}
+    />
     )
   }
 }
@@ -31,3 +131,4 @@ var styles = StyleSheet.create({
   },
   
 });
+

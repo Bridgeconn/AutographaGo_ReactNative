@@ -112,6 +112,16 @@ class DbQueries {
     deleteNote(time){
         DbHelper.deleteNote(time);
     }
+
+    addHistory(langCode, verCode, bookId, chapterNumber, time) {
+        DbHelper.addHistory(langCode, verCode, bookId, chapterNumber, time)
+    }
+    queryHistory(){
+        return DbHelper.queryHistory();
+    }
+    clearHistory(){
+        dbHelper.clearHistory()
+    }
 }
 
 export default new DbQueries();
