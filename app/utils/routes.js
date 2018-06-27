@@ -99,8 +99,6 @@ export default class App extends Component {
 
   constructor(props){
     super(props)
-      // console.log('in routes'+this.props)
-
     Realm.copyBundledRealmFiles();
       
     this.state = {
