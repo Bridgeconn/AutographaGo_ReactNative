@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "react-devtools": "react-devtools",
-    "test": "jest"
+    "test": "jest",
+    "version": "./version-ios.sh"
   },
   "dependencies": {
     "install": "^0.10.4",
