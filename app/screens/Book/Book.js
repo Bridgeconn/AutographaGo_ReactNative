@@ -42,16 +42,13 @@ export default class Book extends Component {
 
   constructor(props) {
     super(props);
-    // console.log("BOOK props--" + JSON.stringify(props))
 
     this.mappingData = id_name_map;
-    
     this.getSelectedReferences = this.getSelectedReferences.bind(this)
     this.queryBook = this.queryBook.bind(this)
     this.onBookmarkPress = this.onBookmarkPress.bind(this)
 
     this.updateCurrentChapter = this.updateCurrentChapter.bind(this)
-    // console.log("props RV chapter=  "  + this.props.navigation.state.params.chapterNumber)
     this.state = {
       languageCode: this.props.screenProps.languageCode,
       versionCode: this.props.screenProps.versionCode,
