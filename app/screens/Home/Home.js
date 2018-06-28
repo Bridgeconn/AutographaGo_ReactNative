@@ -19,6 +19,7 @@ const AsyncStorageConstants = require('../../utils/AsyncStorageConstants')
 import {getBookNameFromMapping} from '../../utils/UtilFunctions'
 import {nightColors, dayColors} from '../../utils/colors.js'
 import FixedSidebar from '../../components/FixedSidebar/FixedSidebar'
+import {constantFont} from '../../utils/dimens.js'
 
 export default class Home extends Component {
 
@@ -126,7 +127,7 @@ renderItem = ({item, index})=> {
               name='chevron-right' 
               color="gray" 
               style={this.styles.iconCustom}
-              size={24} />
+              />
           </View>
         </TouchableOpacity>
     );

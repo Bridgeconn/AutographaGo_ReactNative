@@ -11,7 +11,7 @@ export const homePageStyle =(colorFile, sizeFile) =>{
     flexDirection:'row'
    },
     textStyle: {
-        fontSize:sizeFile.fontSize,
+        fontSize:sizeFile.titleText,
         color:colorFile.textColor,
         justifyContent:'center'
    },
@@ -48,11 +48,10 @@ export const homePageStyle =(colorFile, sizeFile) =>{
         height:48
       },
     iconCustom:{
-        color:colorFile.iconColor
+        color:colorFile.iconColor,
+        fontSize:sizeFile.iconSize
     },
    cardItemStyle:{paddingTop:16,paddingBottom:16},
-   
-
 })
 }
 

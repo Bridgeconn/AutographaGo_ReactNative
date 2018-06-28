@@ -10,7 +10,9 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import DbQueries from '../../utils/dbQueries'
 import id_name_map from '../../assets/mappings.json'
+import {constantFont} from '../../utils/dimens.js'
 import { highlightstyle } from './styles'
+
 
 export default class HighLights extends Component {
   static navigationOptions = {
@@ -76,7 +78,7 @@ export default class HighLights extends Component {
           renderItem={({item, index}) => 
             <View style={this.styles.highlightsView}>
               <Text style={this.styles.hightlightsText}>{this.getBookNameFromMapping(item.bookId)} {item.chapterNumber} {':'} {item.verseNumber}</Text>
-              <Icon name='delete-forever' size={28} onPress={() => {this.removeHighlight(index)}} />
+              <Icon name='delete-forever' size={constantFont.iconMedium} onPress={() => {this.removeHighlight(index)}} />
             </View>
           }
           />

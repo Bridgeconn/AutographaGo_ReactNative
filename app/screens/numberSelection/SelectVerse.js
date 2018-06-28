@@ -11,7 +11,6 @@ import { numberSelectionPageStyle } from './styles.js';
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 import {nightColors, dayColors} from '../../utils/colors.js'
-import {extraSmallFont,smallFont,mediumFont,largeFont,extraLargeFont} from '../../utils/dimens.js'
 import { numberSelection } from './styles.js';
 export default class SelectVerse extends Component {
 

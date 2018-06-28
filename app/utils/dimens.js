@@ -2,32 +2,43 @@
 
 //fontSize extra small
 export const extraSmallFont = {
-        fontSize:12,
+        titleText:12,
+        contentText:8,
         iconSize: 12,
         verseText: 8
 };
 
 export const smallFont = {
-        fontSize:16,
+        titleText:16,
+        contentText:12,
         iconSize:16,
         verseText: 12
 };
 
 export const mediumFont = {
-        fontSize:20,
+        titleText:20,
+        contentText:16,
         iconSize:20,
         verseText: 14
 }
 export const largeFont = {
-        fontSize:24,
+        titleText:24,
+        contentText:20,
         iconSize:24,
         verseText: 18
 };
 
 export const extraLargeFont = {
-        fontSize:28,
+        titleText:28,
+        contentText:24,
         iconSize:28,
         verseText: 30
 };
+
+export const constantFont = {
+        iconSmall:24,
+        iconMedium:28,
+        iconLarge:32
+}
 
 

@@ -37,7 +37,6 @@ export default class Language extends Component{
     this.setState({isLoading: true}, async () => {
       var res = await DbQueries.queryLanguages()
       console.log("result in history page"+(res.length))
-
         let languageData = [];
         for (var i=0; i<res.length;i++) {
           let verList = [];

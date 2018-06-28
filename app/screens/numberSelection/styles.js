@@ -57,7 +57,7 @@ export const numberSelection =(colorFile, sizeFile) =>{
         justifyContent:"center"
     },
     chapterNum:{
-        fontSize:sizeFile.fontSize,
+        fontSize:sizeFile.titleText,
         textAlign:"center",
         alignItems:"center", 
         color:'black'
