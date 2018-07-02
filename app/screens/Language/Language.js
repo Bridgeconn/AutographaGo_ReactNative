@@ -57,6 +57,7 @@ export default class Language extends Component{
     return (
       <View>
       {
+        this.state.isLoading ? <ActivityIndicator animate = {true}/> : 
         data.versionModels.length == 0 ? null : 
         <View style={this.styles.LanguageHeader}>
          <Text style={this.styles.headerText}>{data.languageCode}</Text>
@@ -72,7 +73,9 @@ export default class Language extends Component{
     console.log("version model"+JSON.stringify(data))
     return (
       <View>
-        {data.versionModels.map((item, index) => 
+        {
+          this.state.isLoading ? <ActivityIndicator animate = {true}/> : 
+          data.versionModels.map((item, index) => 
              <TouchableOpacity onPress={()=>this._updateLanguage(data.languageCode,data.languageName, item.versionCode,item.versionName)}>
              <Text>
                {item.versionName}

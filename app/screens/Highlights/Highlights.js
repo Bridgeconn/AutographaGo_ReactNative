@@ -6,9 +6,11 @@ import {
   Button,
   TouchableOpacity,
   FlatList,
+  ActivityIndicator
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import DbQueries from '../../utils/dbQueries'
+import {getBookNameFromMapping} from '../../utils/UtilFunctions';
 import id_name_map from '../../assets/mappings.json'
 import {constantFont} from '../../utils/dimens.js'
 import { highlightstyle } from './styles'
@@ -27,36 +29,35 @@ export default class HighLights extends Component {
 
     this.state = {
       modelData: [],
+      isLoading:false
     }
     this.styles = highlightstyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
     
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    console.log("value of load..... "+this.state.isLoading)
+    
+    this.setState({isLoading: true}, async () => {
+    this.setState 
     let modelData = await DbQueries.queryHighlights(this.props.screenProps.versionCode, 
-        this.props.screenProps.languageCode);
+    this.props.screenProps.languageCode);
     console.log("routes len =" + modelData)
     console.log("routes len = done " + modelData.length )
-    this.setState({modelData})
-
+    this.setState({modelData,isLoading:false})
+    console.log("value of loader......... "+this.state.isLoading)
+      
   }
+)
+console.log("value of loader......... "+this.state.isLoading)
+
+}
 
   // getItemLayout = (data, index) => {
   //   return { length: height, offset: height * index, index };
   // }
 
-  getBookNameFromMapping(bookId) {
-    var obj = this.mappingData.id_name_map;
-    for (var key in obj) {
-        if (obj.hasOwnProperty(key)) {
-            if (key == bookId) {
-                var val = obj[key];
-                return val.book_name;
-            }
-        }
-    }
-    return null;
-  }
+  
 
   removeHighlight(index) {
     DbQueries.updateHighlightsInVerse(this.props.screenProps.languageCode, 
@@ -69,19 +70,25 @@ export default class HighLights extends Component {
   }
 
   render() {
+    console.log("value of loader "+this.state.isLoading)
     return (
       <View style={{flex:1}}>
-
-      <FlatList
-          data={this.state.modelData}
-          // getItemLayout={this.getItemLayout}
-          renderItem={({item, index}) => 
-            <View style={this.styles.highlightsView}>
-              <Text style={this.styles.hightlightsText}>{this.getBookNameFromMapping(item.bookId)} {item.chapterNumber} {':'} {item.verseNumber}</Text>
-              <Icon name='delete-forever' size={constantFont.iconMedium} onPress={() => {this.removeHighlight(index)}} />
-            </View>
-          }
-          />
+      {
+      this.state.isLoading ? 
+      <ActivityIndicator animate={true}/> 
+      : <FlatList
+      data={this.state.modelData}
+      // getItemLayout={this.getItemLayout}
+      renderItem={({item, index}) =>
+      <View style={this.styles.highlightsView}>
+         <Text style={this.styles.hightlightsText}>{getBookNameFromMapping(item.bookId)} {item.chapterNumber} {':'} {item.verseNumber}</Text>
+        <Icon name='delete-forever' size={constantFont.iconMedium} onPress={() => {this.removeHighlight(index)}} />
+      </View>
+    }
+      />
+        
+      }
+    
       </View>
     );
   }

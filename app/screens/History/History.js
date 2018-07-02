@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import {AppRegistry,StyleSheet,Text,ScrollView,TouchableOpacity} from 'react-native';
+import {
+  AppRegistry,
+  StyleSheet,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator
+} from 'react-native';
 import dbQueries from '../../utils/dbQueries';
 import { View } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -14,9 +21,9 @@ export default class History extends Component{
   static navigationOptions = ({navigation}) =>({
     headerTitle: 'History',
     headerRight:(
-      <View style={{flexDirection:"row"}}>
-        <Text style={{color:"#fff",marginHorizontal:8}}>clear</Text>
-          <Icon name="delete-forever" color="#fff" size={24} style={{marginHorizontal:8}} onPress={()=>navigation.state.params.onClearHistory()}/>
+      <View style={{flexDirection:"row",alignItems:'center',justifyContent:'center'}}>
+        <Text style={{color:"#fff",fontSize:20,marginHorizontal:8}}>clear</Text>
+        <Icon name="delete-forever" color="#fff" size={24}  onPress={()=>navigation.state.params.onClearHistory()}/>
       </View>
       )
   })
@@ -25,19 +32,21 @@ export default class History extends Component{
     super(props)
     this.state = {
       historyList: [
-        { time: "Today", list: []},
-        { time: "Yesterday", list:[]},
-        { time: "1 week ago", list:[]},
-        { time: "1 month ago", list:[]},
-        { time: "2 months ago", list:[]}
+        { time: "Today", list: [] },
+        { time: "Yesterday", list:[] },
+        { time: "1 week ago", list:[] },
+        { time: "1 month ago", list:[] },
+        { time: "2 months ago", list:[] }
     ],
+    isLoading:false
     }
     this.styles = historyStyle(props.screenProps.colorFile, props.screenProps.sizeFile);       
   }
 
   async componentDidMount(){
+    this.setState({isLoading: true}, async () => {
+    
     let historyData  = await dbQueries.queryHistory()
-    this.props.navigation.setParams({onClearHistory:this.onClearHistory})
 
     if (historyData) {
       let historyList = [...this.state.historyList]
@@ -69,10 +78,12 @@ export default class History extends Component{
             i--;
           }
         }
-
-        this.setState({historyList})
+        this.setState({historyList,isLoading:false})
     }
-  }
+    })
+this.props.navigation.setParams({onClearHistory:this.onClearHistory})
+
+}
   
  
   onClearHistory(){
@@ -97,13 +108,16 @@ export default class History extends Component{
     console.log("is active ")
     console.log("version model"+JSON.stringify(data))
     return (
-      <View >
-        {data.list.map((item, index) => 
-        <TouchableOpacity onPress={()=>this.props.navigation.navigate("Book",{bookId: item.bookId, 
-          bookName: getBookNameFromMapping(item.bookId), chapterNumber: item.chapterNumber })}>
-          <Text style={this.styles.contentText}>{getBookNameFromMapping(item.bookId)} : {item.chapterNumber} </Text>
-        </TouchableOpacity>
-        )
+      <View>
+        {
+          this.state.isLoading ? <ActivityIndicator animate = {true}/> : 
+            data.list.map((item, index) => 
+            <TouchableOpacity onPress={()=>this.props.navigation.navigate("Book",{bookId: item.bookId, 
+              bookName: getBookNameFromMapping(item.bookId), chapterNumber: item.chapterNumber })}>
+              <Text style={this.styles.contentText}>{getBookNameFromMapping(item.bookId)} : {item.chapterNumber} </Text>
+            </TouchableOpacity>
+            )
+           
         }
        
         </View>

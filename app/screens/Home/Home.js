@@ -56,7 +56,6 @@ export default class Home extends Component {
     }
 
   }
- 
   toggleButton(value){
     this.setState({activeTab:value})
     if(value == false){
