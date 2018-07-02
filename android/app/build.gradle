@@ -140,6 +140,7 @@ dependencies {
     compile project(':react-native-vector-icons')
     compile project(':react-native-webview-bridge')
     compile project(':react-native-zip-archive')
+    compile project(':react-native-cloud-fs')    
     implementation project(':realm')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     api "com.android.support:appcompat-v7:27.1.0"
