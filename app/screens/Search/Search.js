@@ -18,6 +18,7 @@ const width = Dimensions.get('window').width-20;
 import SearchTab from '../../components/SearchTab'
 import { Segment } from 'native-base';
 
+
 const SearchResultTypes = {
   ALL: 0,
   OT: 1,
@@ -33,15 +34,16 @@ export default class Search extends Component {
         headerTitle: (<TextInput
           placeholder="Search"
           underlineColorAndroid = 'transparent'
-          ref={ref => clear = ref}
           style={{width:width,color:"#fff"}}
           onChangeText={(text) =>params.onTextChange(text)}
           returnKeyType="search"
+          multiline={false}
+          numberOfLines={1}
+          value={params.text}
           onSubmitEditing={() => params.onSearchText()}
       />),
-     
       headerRight:(
-          <Icon name='clear' size={28} onPress={()=>navigation.state.params.clearData}/>
+          <Icon name='cancel' size={28} style={{marginHorizontal:8}}onPress={(text)=>params.clearData()}/>
         )
       }
     }
@@ -59,8 +61,9 @@ export default class Search extends Component {
       tabsData:[]
     }
     this.onSearchText = this.onSearchText.bind(this)
-    this.clearData = this.clearData.bind(this)
     this.toggleButton = this.toggleButton.bind(this)
+    this.clearData = this.clearData.bind(this)
+
   }
 
   
@@ -119,9 +122,13 @@ export default class Search extends Component {
 
   }
   clearData(){
-
-    console.log("params value "+JSON.stringify(navigation.state))
-
+    console.log("hi ")
+    this.props.navigation.setParams({
+      text: ''
+    })
+    if(this.state.text){
+      this.setState({text:""})
+    }
   }
   addReferenceToTab(reference) {
     console.log("reference " +reference)
@@ -228,9 +235,6 @@ export default class Search extends Component {
         :null
       }
     </View>
-      // animating={this.state.isLoading == true ? true : false} 
-      // size="large" 
-      // color="#0000ff"/> 
     )
   }
   searchedData = ({item,index}) => {
@@ -253,7 +257,7 @@ export default class Search extends Component {
 }
   render() {
     return (
-      <View style={{backgroundColor:"white"}}>
+      <View style={{backgroundColor:"#fff",flex:1}}>
         <SearchTab
          toggleFunction={this.toggleButton}
          activeTab={this.state.activeTab}
