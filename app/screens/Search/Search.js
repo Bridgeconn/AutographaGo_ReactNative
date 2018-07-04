@@ -15,10 +15,10 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import DbQueries from '../../utils/dbQueries.js'
 import {getBookNameFromMapping, getBookNumberFromMapping} from '../../utils/UtilFunctions'
 const width = Dimensions.get('window').width-20;
-import SearchTab from '../../components/SearchTab'
+import SearchTab from '../../components/SearchTab/SearchTab'
 import { Segment } from 'native-base';
-
-
+import {searchStyle} from './styles'
+ 
 const SearchResultTypes = {
   ALL: 0,
   OT: 1,
@@ -63,7 +63,7 @@ export default class Search extends Component {
     this.onSearchText = this.onSearchText.bind(this)
     this.toggleButton = this.toggleButton.bind(this)
     this.clearData = this.clearData.bind(this)
-
+    this.styles = searchStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
   }
 
   
@@ -220,7 +220,7 @@ export default class Search extends Component {
 
   ListEmptyComponent = () =>{
     return (
-      <View style={{alignSelf:'center'}}>
+      <View style={this.styles.ListEmptyContainer}>
       {this.state.isLoading == false && this.state.tabsData == null ? 
       <Text>No Result Found</Text>:null
       } 
@@ -239,30 +239,24 @@ export default class Search extends Component {
   }
   searchedData = ({item,index}) => {
     return (
-      <View style={{margin:8,backgroundColor:"white"}}>
+      <View style={this.styles.searchedDataContainer}>
         <Text
-          style={{
-            padding:4,
-            borderBottomColor: 'silver',
-            borderBottomWidth: 0.5,
-            margin:4,
-            fontSize:18
-          }}
+          style={this.styles.searchedData}
         > 
           {item.bookName} {item.chapterNumber} : {item.verseNumber} 
         </Text>
-        <Text style={{margin:8,fontSize:16}}>{item.text}</Text>
+        <Text style={this.styles.textStyle}>{item.text}</Text>
       </View>
   )
 }
   render() {
     return (
-      <View style={{backgroundColor:"#fff",flex:1}}>
+      <View style={this.styles.container}>
         <SearchTab
          toggleFunction={this.toggleButton}
          activeTab={this.state.activeTab}
         />
-        <Text style={{alignSelf:"center"}}>{this.state.tabsData.length} searched result found</Text>
+        <Text style={this.styles.textLength}>{this.state.tabsData.length} searched result found</Text>
         {
           this.state.isLoading ? <ActivityIndicator
           animating={true} 

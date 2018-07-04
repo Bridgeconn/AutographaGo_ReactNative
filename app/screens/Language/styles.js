@@ -6,6 +6,7 @@ export const languageStyle =(colorFile, sizeFile) =>{
     return StyleSheet.create({
     container:{
         flex:1,
+        backgroundColor:colorFile.backgroundColor
     },
     LanguageHeader:{
         flexDirection:"row",
@@ -13,9 +14,18 @@ export const languageStyle =(colorFile, sizeFile) =>{
         margin:8
     },
     headerText:{
-        fontSize:sizeFile.fontSize
+        fontSize:sizeFile.titleText,
+        color:colorFile.textColor
+    },
+    contentText:{
+        marginHorizontal:16,
+        marginVertical:4,
+        fontSize:sizeFile.contentText,
+        color:colorFile.textColor
+    },
+    iconCustom:{
+        fontSize:sizeFile.iconSize,
+        color:colorFile.iconColor
     }
-
-
     })
 }

@@ -6,6 +6,7 @@ export const highlightstyle=(colorFile, sizeFile) =>{
     return StyleSheet.create({
     container:{
         flex:1,
+        backgroundColor:colorFile.backgroundColor,
     },
     highlightsView:{
         flexDirection:'row',
@@ -14,8 +15,22 @@ export const highlightstyle=(colorFile, sizeFile) =>{
         fontSize:sizeFile.fontSize
     },
     hightlightsText:{
-        fontSize:sizeFile.fontSize
-    }
+        fontSize:sizeFile.fontSize,
+        color:colorFile.textColor
+    },
+    flatListContainer:{
+        justifyContent:'center',
+    },
+    emptyMessage:{
+        fontSize:sizeFile.iconSize,
+        color:colorFile.textColor,
+        textAlign: 'center',
+    },
+    iconCustom:{
+        color:colorFile.textColor,
+        fontSize:sizeFile.contentText
+    },
+    centerEmptySet: { justifyContent: 'center', alignItems: 'center', height: '100%' }
 
     })
 }

@@ -1,11 +1,13 @@
 import {StyleSheet,Dimensions} from 'react-native'
 import { Icon } from 'native-base';
 const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
 
 export const noteStyle =(colorFile, sizeFile) =>{
     return StyleSheet.create({
     container:{
         flex:1,
+        backgroundColor:colorFile.backgroundColor
     },
     noteCardItem:{
         justifyContent:'space-between', 
@@ -22,28 +24,26 @@ export const noteStyle =(colorFile, sizeFile) =>{
     noteContent:{
         flex:1
     },
-    notesView:{
-        flex:1
+    centerEmptySet: { 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: height 
+    },
+    noteFontCustom:{
+        fontSize:sizeFile.contentText,
+        color:colorFile.textColor
     },
     noteFlatlistCustom:{
         flex:1
     },
-    noteFontCustom:{
-        fontSize:sizeFile.fontSize
-    },
-  
     //editNote
-    noteReferenceViewCustom:{
-        justifyContent:'space-between',
-        flexDirection:'row',
-        alignItems:'center',
-        margin:8
-    },
+
+
     NoteAddButton:{
         flex:8
     },
     noteTextSize:{
-    fontSize:sizeFile.fontSize,      
+    fontSize:sizeFile.contentText,      
     },
     FlowLayoutCustom:{
         flex:8
@@ -56,6 +56,46 @@ export const noteStyle =(colorFile, sizeFile) =>{
     backgroundColor:'gray', 
     marginHorizontal:8
     },
+    containerEditNote:{
+        flex:1, 
+        flexDirection:'column', 
+        backgroundColor:colorFile.backgroundColor
+
+    },
+    subContainer:{
+        justifyContent:'space-between',
+        flexDirection:'row',
+         alignItems:'center',
+          margin:8
+    },
+    noteReferenceViewCustom:{
+        justifyContent:'space-between',
+        flexDirection:'row',
+        alignItems:'center',
+        margin:8
+    },
+    tapButton:{
+        flex:8,
+        color:colorFile.textColor
+    },
+    emptyMessage:{
+        fontSize:sizeFile.contentText,
+        color:colorFile.textColor,
+        textAlign: 'center',
+    },
+    textEditorView:{
+        flexDirection: 'column-reverse'
+    },
+    richTextEditor:{
+        flex:1, 
+        height:height,
+        color:colorFile.textColor,
+        backgroundColor:colorFile.backgroundColor
+    },
+    iconCustom:{
+        margin:8, 
+        padding:8, 
+    }
 
     
 })

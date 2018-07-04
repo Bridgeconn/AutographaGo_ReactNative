@@ -84,16 +84,22 @@ export default class BookMarks extends Component {
           : 
         <FlatList
           data={this.state.bookmarkList}
+          contentContainerStyle={this.state.bookmarkList.length === 0 && this.styles.centerEmptySet}
           // getItemLayout={this.getItemLayout}
           renderItem={({item, index}) => 
             <View style={this.styles.bookmarksView}>
               <Text style={this.styles.bookmarksText}>{item.bookName} {item.chapterNumber}</Text>
-              <Icon name='delete-forever' size={28} onPress={() => {
+              <Icon name='delete-forever' style={this.styles.iconCustom}  size={28} onPress={() => {
+                
                 this.removeBookmark(item.bookId, item.chapterNumber, index)
                 }
                 } 
               />
+          
             </View>
+          }
+          ListEmptyComponent={
+            <Text style={this.styles.emptyMessage}>No bookmark added yet</Text>
           }
         />
         }

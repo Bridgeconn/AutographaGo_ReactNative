@@ -119,12 +119,16 @@ export default class Notes extends Component {
 
   render() {
     return (
-      <View style={this.styles.notesView}>
+      <View style={this.styles.container}>
       <FlatList
-        style={this.styles.noteFlatlistCustom}
+        contentContainerStyle={this.state.notesData.length === 0 ? this.styles.centerEmptySet: this.styles.noteFlatlistCustom}
         data={this.state.notesData}
         renderItem={this.renderItem}
+        ListEmptyComponent={
+          <Text style={this.styles.emptyMessage}>No note added yet</Text>
+        }
       />
+      
       </View>
 
     );

@@ -95,9 +95,10 @@ this.props.navigation.setParams({onClearHistory:this.onClearHistory})
     return (
       <View>
       {
+        data.list.length  == 0  ? <Text style={this.styles.emptyPage}>You read nothing yet</Text> :
         <View  style={this.styles.historyHeader}>
          <Text style={this.styles.headerText}>{data.time}</Text>
-         <Icon name={isActive ? "keyboard-arrow-down" : "keyboard-arrow-up" } size={24} />
+         <Icon name={isActive ? "keyboard-arrow-down" : "keyboard-arrow-up" } style={this.styles.iconCustom} />
         </View>
       }
       </View> 
@@ -110,6 +111,7 @@ this.props.navigation.setParams({onClearHistory:this.onClearHistory})
     return (
       <View>
         {
+          
           this.state.isLoading ? <ActivityIndicator animate = {true}/> : 
             data.list.map((item, index) => 
             <TouchableOpacity onPress={()=>this.props.navigation.navigate("Book",{bookId: item.bookId, 
@@ -126,6 +128,8 @@ this.props.navigation.setParams({onClearHistory:this.onClearHistory})
 
   render(){
      return (
+     <View style={this.styles.container}>
+
       <Accordion
       activeSection={this.state.activeSection}
       sections={this.state.historyList}
@@ -134,6 +138,7 @@ this.props.navigation.setParams({onClearHistory:this.onClearHistory})
       underlayColor="tranparent"
       initiallyActiveSection={0}
     />
+    </View>
     )
   }
 }

@@ -204,13 +204,13 @@ export default class EditNote extends Component {
 
   render() {
     return (
-     <ScrollView style={{flex:1, flexDirection:'column', backgroundColor:'#ffffff'}}>
-      <View style={{justifyContent:'space-between', flexDirection:'row', alignItems:'center', margin:8}}>
+     <ScrollView style={this.styles.containerEditNote}>
+      <View style={this.styles.subContainer}>
         {this.state.referenceList.length == 0 
           ? 
-          <Text style={{flex:8}}>Tap button to add references</Text> 
+          <Text style={this.styles.tapButton}>Tap button to add references</Text> 
           : 
-          <FlowLayout style={{flex:8}} ref="flow" dataValue={this.state.referenceList} 
+          <FlowLayout style={this.styles.tapButton} ref="flow" dataValue={this.state.referenceList} 
             openReference={(index) => {this.openReference(index)}} 
             deleteReference={(index) => {this.deleteReference(index)}}
           />
@@ -218,10 +218,10 @@ export default class EditNote extends Component {
         <Icon name="add-circle" style={this.styles.addIconCustom} size={28} color="gray" onPress={()=> {this.onAddVersePress()}} />
       </View>
       
-      <View style={{flexDirection: 'column-reverse'}}>
+      <View style={this.styles.textEditorView}>
 
         <RichTextEditor
-          style={{flex:1, height:height}}
+          style={this.styles.richTextEditor}
           ref={(r)=>this.richtext = r}
           hiddenTitle={true}
           contentPlaceholder="New Note"
@@ -278,7 +278,14 @@ export default class EditNote extends Component {
     }
 
     return(
-      <Icon name={iconName} size={28} color={selected ? 'black' : 'white'} style={{margin:8, padding:8, backgroundColor: selected ? 'white': 'transparent'}}
+      <Icon name={iconName} 
+      size={28} 
+      color={selected ? 'black' : 'white'} 
+      style={[
+        // this.styles.iconCustom,
+        {backgroundColor: selected ? 'white': 'transparent', margin:8, 
+        padding:8, }
+      ]}
         onPress={method} 
       />
     );

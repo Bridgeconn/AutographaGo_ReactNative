@@ -6,7 +6,9 @@ export const styles =(colorFile, sizeFile) =>{
     return StyleSheet.create({
     container:{
         flex:1,
+        backgroundColor:sizeFile.backgroundColor
     },
+    
 
     })
 }

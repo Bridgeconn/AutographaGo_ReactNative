@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Button,Segment,Text, Container, Content,Header,Left,Right,Body,Title} from 'native-base'
-
+import { styles } from './styles'
 
 const SearchResultTypes = {
     ALL: 0,
@@ -17,9 +17,9 @@ export default class SearchTab extends Component {
     }
     render(){
     return (
-            <Segment style={{height:32,marginHorizontal:6,marginVertical:16}}>
+            <Segment style={styles.container}>
                 <Button 
-                style={{paddingRight:0,paddingLeft:0}}
+                style={styles.button}
                 onPress={() =>this.props.toggleFunction(SearchResultTypes.ALL)} 
                 active={this.props.activeTab == SearchResultTypes.ALL ? true : false} 
                 >
@@ -28,6 +28,7 @@ export default class SearchTab extends Component {
                 </Text>
                 </Button>
                 <Button 
+                style={styles.button}
                 style={{paddingRight:0,paddingLeft:0}}
                 onPress={() =>this.props.toggleFunction(SearchResultTypes.OT)}  
                 active={this.props.activeTab == SearchResultTypes.OT ? true : false} 
@@ -37,7 +38,7 @@ export default class SearchTab extends Component {
                 </Text>
                 </Button>
                 <Button 
-                style={{paddingRight:0,paddingLeft:0}}
+                style={styles.button}
                 onPress={()=>this.props.toggleFunction(SearchResultTypes.NT)} 
                 active={this.props.activeTab == SearchResultTypes.NT ? true : false} 
                 >

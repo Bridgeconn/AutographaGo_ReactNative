@@ -14,7 +14,7 @@ export const settingsPageStyle =(colorFile, sizeFile) =>{
     },
     textStyle: {
             color: colorFile.textColor,   
-            fontSize:sizeFile.fontSize,
+            fontSize:sizeFile.contentText,
             marginLeft:4
     },
     // IconCustom:{
@@ -27,10 +27,9 @@ export const settingsPageStyle =(colorFile, sizeFile) =>{
     },
     switchButtonCard:{
         paddingTop:16,
-       paddingBottom:16,
-       backgroundColor:colorFile.backgroundColor,
-       justifyContent:'space-between',
-       marginLeft:4
+        paddingBottom:16,
+        backgroundColor:colorFile.backgroundColor,
+        justifyContent:'space-between',
     },
     cardItemRow:{
         flexDirection:'row'
@@ -56,6 +55,9 @@ export const settingsPageStyle =(colorFile, sizeFile) =>{
         marginHorizontal:4,
         marginVertical:8,
         color:colorFile.settingsIconColor   
+    },
+    switchIcon:{
+        color:colorFile.iconColor,
     }
 })
 }

@@ -25,14 +25,15 @@ export default class Language extends Component{
   })
   constructor(props){
     super(props)
-    console.log("language page")
+      console.log("language page")
     this.state = {
       isLoading: false,
       languageData:[],
     }
-    this.styles = languageStyle(props.screenProps.colorFile, props.screenProps.sizeFile);     
-  }
+    this.styles = languageStyle(props.screenProps.colorFile, props.screenProps.sizeFile);    
 
+    }
+     
   componentDidMount(){
     this.setState({isLoading: true}, async () => {
       var res = await DbQueries.queryLanguages()
@@ -61,7 +62,7 @@ export default class Language extends Component{
         data.versionModels.length == 0 ? null : 
         <View style={this.styles.LanguageHeader}>
          <Text style={this.styles.headerText}>{data.languageCode}</Text>
-         <Icon name={isActive ? "keyboard-arrow-down" : "keyboard-arrow-up" } size={24} />
+         <Icon name={isActive ? "keyboard-arrow-down" : "keyboard-arrow-up" } style={this.styles.iconCustom} />
         </View>
       }
       </View> 
@@ -77,13 +78,12 @@ export default class Language extends Component{
           this.state.isLoading ? <ActivityIndicator animate = {true}/> : 
           data.versionModels.map((item, index) => 
              <TouchableOpacity onPress={()=>this._updateLanguage(data.languageCode,data.languageName, item.versionCode,item.versionName)}>
-             <Text>
+             <Text style={this.styles.contentText}>
                {item.versionName}
                </Text>
              </TouchableOpacity>
         )
-        }
-       
+      }
         </View>
     )
   }
@@ -96,12 +96,13 @@ export default class Language extends Component{
       [AsyncStorageConstants.Keys.VersionName,verName]
     ]);
     this.props.screenProps.updateLanguage(lanCode,langName, verCode, verName);
+
     this.props.navigation.dispatch(NavigationActions.back())    
   }
   
   render(){
      return (
-       <View>
+       <View  style={this.styles.container}>
       {this.state.isLoading ? 
         <ActivityIndicator 
         animating={this.state.isLoading} 

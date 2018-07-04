@@ -40,21 +40,21 @@ export default class Setting extends Component {
     super(props);
 
     this.state = {
-      sizeMode: this.props.screenProps.sizeMode,
+      sizeMode:JSON.parse(this.props.screenProps.sizeMode),
       sizeFile:this.props.screenProps.sizeFile,
       colorMode: this.props.screenProps.colorMode,
       colorFile:this.props.screenProps.colorFile,
       verseInLine:JSON.parse(this.props.screenProps.verseInLine)
     };
     
-    this.styleFile = settingsPageStyle(this.state.colorFile, this.state.sizeFile);
+    this.styles = settingsPageStyle(this.state.colorFile, this.state.sizeFile);
   }
   
   onSizeFileUpdate(sizeMode, sizeFile){
     this.setState({sizeFile})
     this.props.screenProps.updateSize(sizeMode, sizeFile)
     this.props.navigation.dispatch(setParamsAction2(sizeFile));
-    this.styleFile = settingsPageStyle(this.state.colorFile, sizeFile);
+    this.styles = settingsPageStyle(this.state.colorFile, sizeFile);
   }
 
   onChangeSlider(value) {
@@ -104,7 +104,7 @@ export default class Setting extends Component {
       
       AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.ColorMode,this.state.colorMode);
       
-      this.styleFile = settingsPageStyle(changeColorFile, this.state.sizeFile)
+      this.styles = settingsPageStyle(changeColorFile, this.state.sizeFile)
     })
     
   }
@@ -118,24 +118,24 @@ export default class Setting extends Component {
 
   render() {
     return (
-      <View style={this.styleFile.container}>
-        <View style={this.styleFile.containerMargin}>
+      <View style={this.styles.container}>
+        <View style={this.styles.containerMargin}>
           <ScrollView showsVerticalScrollIndicator={false}>
             <Card >
-              <CardItem style={this.styleFile.cardItemStyle}>
+              <CardItem style={this.styles.cardItemStyle}>
                 <Left>
-                  <Text style={this.styleFile.textStyle}>
+                  <Text style={this.styles.textStyle}>
                     Reading Mode
                   </Text>
                 </Left>
                 <Right>
                   <View 
                     style={
-                      this.styleFile.cardItemRow
+                      this.styles.cardItemRow
                     }>
                     <Text 
                       style={
-                        this.styleFile.nightModeCustom
+                        this.styles.nightModeCustom
                       }>  
                       Night
                     </Text>
@@ -153,11 +153,11 @@ export default class Setting extends Component {
                   </View>
                   <View
                     style={
-                      this.styleFile.cardItemRow
+                      this.styles.cardItemRow
                     }>
                     <Text 
                       style={
-                        this.styleFile.dayModeCustom
+                        this.styles.dayModeCustom
                       }>  
                       Day
                     </Text>
@@ -176,14 +176,14 @@ export default class Setting extends Component {
             </Card>
             
             <Card>
-              <CardItem style={this.styleFile.cardItemStyle}>
-                <Right style={this.styleFile.cardItemAlignRight}>
-                  <View style={this.styleFile.cardItemRow}>
-                    <Icon name='format-size' size={24} style={this.styleFile.cardItemIconCustom} />
-                      <Text style={this.styleFile.textStyle}>Text Size</Text>
+              <CardItem style={this.styles.cardItemStyle}>
+                <Right style={this.styles.cardItemAlignRight}>
+                  <View style={this.styles.cardItemRow}>
+                    <Icon name='format-size' size={24} style={this.styles.cardItemIconCustom} />
+                      <Text style={this.styles.textStyle}>Text Size</Text>
                   </View>
                   <Slider
-                    style={this.styleFile.segmentCustom}
+                    style={this.styles.segmentCustom}
                     step={1}
                     minimumValue={0}
                     maximumValue={4}
@@ -197,10 +197,11 @@ export default class Setting extends Component {
             </Card>
            
             <Card>
-              <CardItem style={this.styleFile.switchButtonCard}>
-                <Text style={this.styleFile.textStyle}>One Verse Per Line</Text>
+              <CardItem style={this.styles.switchButtonCard}>
+                <Text style={this.styles.textStyle}>One Verse Per Line</Text>
                 <Switch 
                   size={24} 
+                  thumbTintColor={this.state.colorMode == AsyncStorageConstants.Values.DayMode ? '#F62459': '#26A65B'}
                   onValueChange={this.onVerseInLineModeChange.bind(this)}
                   value={this.state.verseInLine}
                 />
@@ -208,34 +209,34 @@ export default class Setting extends Component {
             </Card>
             
             <Card>
-              <CardItem style={this.styleFile.cardItemStyle}>
-                <Icon name='settings-backup-restore' size={24} style={this.styleFile.cardItemIconCustom} />
-                <Text style={this.styleFile.textStyle}>Backup and Restore</Text>
+              <CardItem style={this.styles.cardItemStyle}>
+                <Icon name='settings-backup-restore' size={24} style={this.styles.cardItemIconCustom} />
+                <Text style={this.styles.textStyle}>Backup and Restore</Text>
               </CardItem>
             </Card>
            
             <Card>
               <TouchableOpacity onPress={()=>this.props.navigation.navigate('DownloadLanguage')}>              
-                <CardItem style={this.styleFile.cardItemStyle}>
-                  <Icon name='cloud-download' size={24} style={this.styleFile.cardItemIconCustom} />
-                  <Text style={this.styleFile.textStyle}>Download More Bibles</Text>
+                <CardItem style={this.styles.cardItemStyle}>
+                  <Icon name='cloud-download' size={24} style={this.styles.cardItemIconCustom} />
+                  <Text style={this.styles.textStyle}>Download More Bibles</Text>
                 </CardItem>
               </TouchableOpacity>
             </Card>
             
             <Card>
               <TouchableOpacity onPress={()=>this.props.navigation.navigate('Hints')}>
-                <CardItem style={this.styleFile.cardItemStyle}>
-                  <Icon name='help' size={24} style={this.styleFile.cardItemIconCustom} />
-                  <Text style={this.styleFile.textStyle}>Open Hints</Text>
+                <CardItem style={this.styles.cardItemStyle}>
+                  <Icon name='help' size={24} style={this.styles.cardItemIconCustom} />
+                  <Text style={this.styles.textStyle}>Open Hints</Text>
                 </CardItem>
               </TouchableOpacity>
             </Card>
             
             <Card>
-              <CardItem style={this.styleFile.cardItemStyle}>
-                <Icon name='info' size={24} style={this.styleFile.cardItemIconCustom}/>
-                <Text style={this.styleFile.textStyle}>About</Text>
+              <CardItem style={this.styles.cardItemStyle}>
+                <Icon name='info' size={24} style={this.styles.cardItemIconCustom}/>
+                <Text style={this.styles.textStyle}>About</Text>
               </CardItem>
             </Card>
           </ScrollView>

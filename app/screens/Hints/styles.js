@@ -20,7 +20,7 @@ export const HintStyle = (colorFile, sizeFile) =>{
         },
         textStyle:{
             color:colorFile.textColor,
-            fontSize: 16,
+            fontSize: sizeFile.contentText,
             marginHorizontal:8
         },
         iconColor:{

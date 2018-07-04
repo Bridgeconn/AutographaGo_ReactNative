@@ -72,17 +72,22 @@ console.log("value of loader......... "+this.state.isLoading)
   render() {
     console.log("value of loader "+this.state.isLoading)
     return (
-      <View style={{flex:1}}>
+      <View style={this.styles.container}>
       {
       this.state.isLoading ? 
       <ActivityIndicator animate={true}/> 
       : <FlatList
+      contentContainerStyle={this.state.modelData.length === 0 && this.styles.centerEmptySet}
+      // contentContainerStyle={this.styles.flatListContainer}
       data={this.state.modelData}
+      ListEmptyComponent={
+          <Text style={this.styles.emptyMessage}>No highlight added yet</Text>
+        }
       // getItemLayout={this.getItemLayout}
       renderItem={({item, index}) =>
       <View style={this.styles.highlightsView}>
          <Text style={this.styles.hightlightsText}>{getBookNameFromMapping(item.bookId)} {item.chapterNumber} {':'} {item.verseNumber}</Text>
-        <Icon name='delete-forever' size={constantFont.iconMedium} onPress={() => {this.removeHighlight(index)}} />
+        <Icon name='delete-forever' size={constantFont.iconMedium} style={this.styles.iconCustom}  onPress={() => {this.removeHighlight(index)}} />
       </View>
     }
       />
