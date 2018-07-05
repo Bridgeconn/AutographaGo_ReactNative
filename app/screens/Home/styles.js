@@ -32,13 +32,16 @@ export const homePageStyle =(colorFile, sizeFile) =>{
     },
     segmentCustom:{
         borderColor:'#3F51B5',
-        borderBottomWidth:1
+        borderWidth:0.5,
+       
     },
     segmentButton:{
-        padding: 0,
+        padding:4,
         height: 45,
         width:width*2/5,
-        
+        borderLeftWidth:1,
+        borderRightWidth:1,
+        borderColor:'#3F51B5',
     },
     bookList:{
         flexDirection:'row',

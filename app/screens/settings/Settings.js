@@ -176,7 +176,7 @@ export default class Setting extends Component {
             </Card>
             
             <Card>
-              <CardItem style={this.styles.cardItemStyle}>
+              <CardItem  bordered style={this.styles.cardItemStyle}>
                 <Right style={this.styles.cardItemAlignRight}>
                   <View style={this.styles.cardItemRow}>
                     <Icon name='format-size' size={24} style={this.styles.cardItemIconCustom} />
@@ -196,7 +196,7 @@ export default class Setting extends Component {
               </CardItem>
             </Card>
            
-            <Card>
+            <Card style={{elevation:4}}>
               <CardItem style={this.styles.switchButtonCard}>
                 <Text style={this.styles.textStyle}>One Verse Per Line</Text>
                 <Switch 
@@ -207,7 +207,6 @@ export default class Setting extends Component {
                 />
               </CardItem>
             </Card>
-            
             <Card>
               <CardItem style={this.styles.cardItemStyle}>
                 <Icon name='settings-backup-restore' size={24} style={this.styles.cardItemIconCustom} />

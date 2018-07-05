@@ -27,7 +27,7 @@ export const noteStyle =(colorFile, sizeFile) =>{
     centerEmptySet: { 
         justifyContent: 'center', 
         alignItems: 'center', 
-        height: height 
+        height: '100%' 
     },
     noteFontCustom:{
         fontSize:sizeFile.contentText,
@@ -79,7 +79,7 @@ export const noteStyle =(colorFile, sizeFile) =>{
         color:colorFile.textColor
     },
     emptyMessage:{
-        fontSize:sizeFile.contentText,
+        fontSize:sizeFile.titleText,
         color:colorFile.textColor,
         textAlign: 'center',
     },
@@ -96,8 +96,6 @@ export const noteStyle =(colorFile, sizeFile) =>{
         margin:8, 
         padding:8, 
     }
-
-    
 })
 }
 

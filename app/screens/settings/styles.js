@@ -15,11 +15,10 @@ export const settingsPageStyle =(colorFile, sizeFile) =>{
     textStyle: {
             color: colorFile.textColor,   
             fontSize:sizeFile.contentText,
-            marginLeft:4
+            marginLeft:4,
+            alignSelf:'center'
     },
-    // IconCustom:{
-        // color:colorFile.iconColor
-    // },
+    
     cardItemStyle:{
        paddingTop:16,
        paddingBottom:16,

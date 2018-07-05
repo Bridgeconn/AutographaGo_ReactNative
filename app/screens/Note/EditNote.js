@@ -28,14 +28,15 @@ export default class EditNote extends Component {
     headerLeft:(<HeaderBackButton style={{color:"#fff"}} onPress={()=>navigation.state.params.handleBack()}/>),
     headerRight:(
       <TouchableOpacity style={{margin:8}} onPress={()=>navigation.state.params.handleAdd()}>
-        <Text style={{fontSize:12,color:'#fff'}} >DONE</Text>
-      </TouchableOpacity>)
+        <Text style={{fontSize:12,color:'#fff'}}>DONE</Text>
+      </TouchableOpacity>
+      ),
+      headerTintColor: '#fff'
   });
 
   constructor(props){
     super(props);
     this.state = {
-
         noteIndex: this.props.navigation.state.params.index,
         noteObject: this.props.navigation.state.params.noteObject,
         noteBody: this.props.navigation.state.params.index == -1 

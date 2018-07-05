@@ -23,14 +23,18 @@ import {constantFont} from '../../utils/dimens.js'
 
 export default class Home extends Component {
 
-  static navigationOptions = ({navigation}) =>({
-    headerTitle: 'Autographa Go',
-    headerRight:(
-        <TouchableOpacity onPress={() =>{navigation.navigate('Language')}}>
-          <Text style={{color:"#fff",margin:8}}>{navigation.state.params.bibleLanguage} {navigation.state.params.bibleVersion}</Text>
-        </TouchableOpacity>
-      )
-  })
+  static navigationOptions = ({navigation}) =>{
+    const { params = {} } = navigation.state;
+    console.log("props navigation home")
+    return{
+      headerTitle: 'Autographa Go',
+      headerRight:(
+          <TouchableOpacity onPress={() =>{navigation.navigate('Language')}}>
+            <Text style={{color:"#fff",margin:8}}>{navigation.state.params.bibleLanguage} {navigation.state.params.bibleVersion}</Text>
+          </TouchableOpacity>
+        )
+      }
+  }
 
   constructor(props){
     super(props)
@@ -171,7 +175,7 @@ renderItem = ({item, index})=> {
                 }
               >
                 <Text 
-                  style={{color:this.state.activeTab? "#fff" : "#000"
+                  style={{color:this.state.activeTab? "#fff" : "#3F51B5"
                   }}>
                   Old Testament
                 </Text>
@@ -186,7 +190,7 @@ renderItem = ({item, index})=> {
                 <Text 
                   active={!this.state.activeTab} 
                   style={{
-                    color:!this.state.activeTab ? "#fff":"#000" 
+                    color:!this.state.activeTab ? "#fff":"#3F51B5" 
                   }}>
                   New Testament
                 </Text>

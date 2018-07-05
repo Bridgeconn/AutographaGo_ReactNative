@@ -19,30 +19,53 @@ export default class SearchTab extends Component {
     return (
             <Segment style={styles.container}>
                 <Button 
-                style={styles.button}
+                style={[
+                    {backgroundColor:this.props.activeTab === SearchResultTypes.ALL ?  "#3F51B5":"#fff"},
+                    styles.button
+                  ]} 
                 onPress={() =>this.props.toggleFunction(SearchResultTypes.ALL)} 
                 active={this.props.activeTab == SearchResultTypes.ALL ? true : false} 
                 >
-                <Text>
+                <Text
+                    active={this.props.activeTab} 
+                    style={{
+                    color:this.props.activeTab == SearchResultTypes.ALL ? "#fff":"#3F51B5" 
+                    }}
+                >
                     All
                 </Text>
                 </Button>
                 <Button 
-                style={styles.button}
-                style={{paddingRight:0,paddingLeft:0}}
+                style={[
+                    {backgroundColor:this.props.activeTab  == SearchResultTypes.OT ?  "#3F51B5":"#fff"},
+                    styles.buttonCenter
+                  ]} 
                 onPress={() =>this.props.toggleFunction(SearchResultTypes.OT)}  
                 active={this.props.activeTab == SearchResultTypes.OT ? true : false} 
                 >
-                <Text >
+                <Text
+                 active={this.props.activeTab} 
+                 style={{
+                   color:this.props.activeTab == SearchResultTypes.OT ? "#fff":"#3F51B5" 
+                 }}
+                >
                     Old Testament
                 </Text>
                 </Button>
                 <Button 
-                style={styles.button}
+                style={[
+                    {backgroundColor:this.props.activeTab == SearchResultTypes.NT ?  "#3F51B5":"#fff"},
+                    styles.button
+                  ]} 
                 onPress={()=>this.props.toggleFunction(SearchResultTypes.NT)} 
                 active={this.props.activeTab == SearchResultTypes.NT ? true : false} 
                 >
-                <Text >
+                <Text
+                 active={this.props.activeTab} 
+                 style={{
+                   color:this.props.activeTab == SearchResultTypes.NT ? "#fff":"#3F51B5" 
+                 }}
+                >
                     New Testament
                 </Text>
                 </Button>

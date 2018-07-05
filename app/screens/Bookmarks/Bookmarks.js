@@ -99,7 +99,7 @@ export default class BookMarks extends Component {
             </View>
           }
           ListEmptyComponent={
-            <Text style={this.styles.emptyMessage}>No bookmark added yet</Text>
+            <Text style={this.styles.emptyMessage}>No Bookmark added</Text>
           }
         />
         }

@@ -8,6 +8,7 @@ export const nightColors = {
     accentColor: colorConstants.Pink,
     primaryColor:  colorConstants.Navy_Blue,
     primaryDarkColor:  colorConstants.Dark_Blue,
+    
 
 };
 
