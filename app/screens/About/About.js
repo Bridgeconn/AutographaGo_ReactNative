@@ -6,15 +6,21 @@ import {
   ScrollView
 } from 'react-native';
 import packageJson from '../../../package.json'
+import { aboutPage } from './styles.js'
+
 
 export default class About extends Component {
   static navigationOptions = {
     headerTitle: 'About',
   };
+  constructor(props){
+    super(props);
+    this.styles = aboutPage(props.screenProps.colorFile, props.screenProps.sizeFile);   
+  }
   render() {
     return (
       <ScrollView style={{margin:12}} showsVerticalScrollIndicator ={false}>
-        <Text>
+        <Text style={this.styles.textStyle}>
 
           <Text>Version {packageJson.version}{"\n\n"}</Text>
           <Text>

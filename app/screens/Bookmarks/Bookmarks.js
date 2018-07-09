@@ -99,7 +99,16 @@ export default class BookMarks extends Component {
             </View>
           }
           ListEmptyComponent={
-            <Text style={this.styles.emptyMessage}>No Bookmark added</Text>
+
+            <View style={this.styles.emptyMessageContainer}>
+            <Icon name="collections-bookmark" style={this.styles.emptyMessageIcon}/>
+              <Text
+                style={this.styles.messageEmpty}
+              >
+               No Bookmark added
+              </Text>
+              
+            </View>
           }
         />
         }

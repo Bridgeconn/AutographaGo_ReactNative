@@ -1,5 +1,6 @@
 
 import colorConstants from './colorConstants.js'
+
 export const nightColors = {
     backgroundColor: colorConstants.Dark_Gray,
     settingsIconColor: colorConstants.White, 
@@ -8,7 +9,7 @@ export const nightColors = {
     accentColor: colorConstants.Pink,
     primaryColor:  colorConstants.Navy_Blue,
     primaryDarkColor:  colorConstants.Dark_Blue,
-    
+    tabColor: colorConstants.White
 
 };
 
@@ -20,6 +21,7 @@ export const dayColors = {
     accentColor:colorConstants.Green,
     primaryColor:colorConstants.Dark_Blue,
     primaryDarkColor:colorConstants.Dark_Blue,
+    tabColor: colorConstants.Dark_Blue,
 
 };
 

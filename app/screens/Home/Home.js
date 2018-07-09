@@ -85,7 +85,7 @@ export default class Home extends Component {
     //   bibleVersion: this.props.screenProps.versionCode})
     
 
-    this.styles = homePageStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
+    this.styles = homePageStyle(props.screenProps.colorFile, props.screenProps.sizeFile,this.state.activeTab);   
   }
  
   getItemLayout = (data, index) => (
@@ -108,7 +108,6 @@ export default class Home extends Component {
 
 componentDidMount(){
   // this.props.navigation.setParams({styles:this.styles})
-  console.log("data from router language props "+this.props.screenProps.data)
   this.props.navigation.setParams({bibleLanguage: this.props.screenProps.languageCode, 
     bibleVersion: this.props.screenProps.versionCode})
 }
@@ -164,7 +163,6 @@ renderItem = ({item, index})=> {
         />
         <View style={this.styles.bookNameContainer}>
             <Segment style={this.styles.segmentCustom}>
-            {/* {this.state.booksList.length <40 } */}
               <Button 
                 active={this.state.activeTab} 
                 style={[
@@ -189,9 +187,11 @@ renderItem = ({item, index})=> {
                 onPress={this.toggleButton.bind(this,false)}>
                 <Text 
                   active={!this.state.activeTab} 
-                  style={{
+                  style={
+                    {
                     color:!this.state.activeTab ? "#fff":"#3F51B5" 
-                  }}>
+                  }
+                  }>
                   New Testament
                 </Text>
               </Button>

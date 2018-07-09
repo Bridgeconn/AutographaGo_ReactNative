@@ -12,12 +12,16 @@ export const styles = StyleSheet.create({
         borderRightWidth:1,
         borderBottomWidth:0,
         borderTopWidth:0,
-        borderColor:"#000",
+        borderColor:"#3F51B5",
         
     },
     buttonCenter:{
         paddingRight:0,
         paddingLeft:0,
+        borderBottomWidth:0,
+        borderTopWidth:0,
+        borderLeftWidth:0,
+        borderRightWidth:0,
     }
 
 

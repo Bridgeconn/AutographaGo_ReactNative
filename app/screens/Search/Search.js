@@ -34,8 +34,9 @@ export default class Search extends Component {
         headerTitle: (<TextInput
           placeholder="Search"
           underlineColorAndroid = 'transparent'
-          style={{width:width,color:"#fff"}}
+          style={params.headerStyle}
           onChangeText={(text) =>params.onTextChange(text)}
+          placeholderTextColor={'#fff'} 
           returnKeyType="search"
           multiline={false}
           numberOfLines={1}
@@ -198,10 +199,12 @@ export default class Search extends Component {
   }
   
   componentDidMount(){
-    this.props.navigation.setParams({onTextChange: this.onTextChange,
+    this.props.navigation.setParams({
+      onTextChange: this.onTextChange,
       onSearchText: this.onSearchText,
       onChangeText:this.onChangeText,
-      clearData:this.clearData
+      clearData:this.clearData,
+      headerStyle:this.styles.headerText,
     })
     console.log("props of navigation option"+JSON.stringify(this.props.navigation))
     // console.log("value of navigationOprion "+this.props.navigation.getParams())

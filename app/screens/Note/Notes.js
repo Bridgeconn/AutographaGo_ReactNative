@@ -125,9 +125,9 @@ export default class Notes extends Component {
         data={this.state.notesData}
         renderItem={this.renderItem}
         ListEmptyComponent={
-          <TouchableOpacity onPress={()=>this.createNewNote(-1)}>
-            <Icon name="note-add"  style={this.styles.emptyMessage} />
-            <Text style={this.styles.emptyMessage}>Tap to create a new note</Text>
+          <TouchableOpacity onPress={()=>this.createNewNote(-1)} style={this.styles.emptyMessageContainer}>
+            <Icon name="note-add"  style={this.styles.emptyMessageIcon} />
+            <Text style={this.styles.messageEmpty}>Tap to create a new note</Text>
           </TouchableOpacity>
         }
       />

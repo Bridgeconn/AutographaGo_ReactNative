@@ -210,7 +210,7 @@ export default class App extends Component {
       <StackNav 
         screenProps={{
           colorMode: this.state.colorMode, 
-          sizeMode: this.state.sizeMode, 
+          sizeMode: parseInt(this.state.sizeMode), 
           colorFile:this.state.colorFile,
           sizeFile:this.state.sizeFile,
           booksList: this.state.booksList, 
@@ -245,11 +245,12 @@ export default class App extends Component {
       AsyncStorageConstants.Keys.LanguageName,
       AsyncStorageConstants.Keys.VersionName
     ])
+    
     if (res == null) {
       return
     }
-
-    this.setState({sizeMode: res[1][1] == null ? AsyncStorageConstants.Values.SizeModeNormal : res[1][1]}, ()=> {
+    console.log("ROUTES.... size mode "+res[1][1])
+    this.setState({sizeMode: res[1][1] == null ? AsyncStorageConstants.Values.SizeModeNormal : parseInt(res[1][1])}, ()=> {
       switch (this.state.sizeMode) {
         case  AsyncStorageConstants.Values.SizeModeXSmall : {
           this.setState({sizeFile:extraSmallFont})
@@ -268,6 +269,7 @@ export default class App extends Component {
           break;
         }
         case AsyncStorageConstants.Values.SizeModeXLarge : {
+          console.log("SIZEFILEIS XLLLL...")
           this.setState({sizeFile:extraLargeFont})
           break;
         }
@@ -284,6 +286,7 @@ export default class App extends Component {
       languageName: res[5][1] == null ? AsyncStorageConstants.Values.DefLanguageName : res[5][1],
       versionName:  res[6][1] == null ? AsyncStorageConstants.Values.DefVersionName : res[6][1],
     }, async ()=> {
+
       let models = await DbQueries.queryBookIdModels(this.state.versionCode, this.state.languageCode);
       console.log("routes len =" + models)
       console.log("VERSE VALUE ++++ " + res[2][1])
@@ -297,5 +300,6 @@ export default class App extends Component {
       ).then((lastRead) => {
           this.setState({lastRead})
     })
+  console.log("DSIDI mount value "+typeof this.state.sizeMode)
   }
 }

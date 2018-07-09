@@ -22,14 +22,25 @@ export const highlightstyle=(colorFile, sizeFile) =>{
     flatListContainer:{
         justifyContent:'center',
     },
-    emptyMessage:{
+    emptyMessageContainer:{
+        alignItems:'center',
+        flexDirection:'column',
+        justifyContent:'center'
+    },
+    messageEmpty:{
         fontSize:sizeFile.titleText,
         color:colorFile.textColor,
-        textAlign: 'center',
+        // textAlign:'center',
     },
+    emptyMessageIcon:{
+        fontSize:sizeFile.emptyIconSize,
+        margin:16,
+        color:colorFile.iconColor,
+    },
+   
     iconCustom:{
         color:colorFile.textColor,
-        fontSize:sizeFile.contentText
+        fontSize:sizeFile.emptyIconSize
     },
     centerEmptySet: { justifyContent: 'center', alignItems: 'center', height: '100%' }
 

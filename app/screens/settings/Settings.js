@@ -18,7 +18,6 @@ import {extraSmallFont,smallFont,mediumFont,largeFont,extraLargeFont} from '../.
 import { settingsPageStyle } from './styles.js'
 import {nightColors, dayColors} from '../../utils/colors.js'
 import AsyncStorageUtil from '../../utils/AsyncStorageUtil';
-import SizeFileUtils from '../../utils/SizeFileUtils'
 const AsyncStorageConstants = require('../../utils/AsyncStorageConstants')
 
 const setParamsAction = ({colorFile}) => NavigationActions.setParams({
@@ -40,7 +39,7 @@ export default class Setting extends Component {
     super(props);
 
     this.state = {
-      sizeMode:JSON.parse(this.props.screenProps.sizeMode),
+      sizeMode:this.props.screenProps.sizeMode,
       sizeFile:this.props.screenProps.sizeFile,
       colorMode: this.props.screenProps.colorMode,
       colorFile:this.props.screenProps.colorFile,
@@ -49,8 +48,8 @@ export default class Setting extends Component {
     
     this.styles = settingsPageStyle(this.state.colorFile, this.state.sizeFile);
   }
-  
-  onSizeFileUpdate(sizeMode, sizeFile){
+
+   onSizeFileUpdate(sizeMode, sizeFile){
     this.setState({sizeFile})
     this.props.screenProps.updateSize(sizeMode, sizeFile)
     this.props.navigation.dispatch(setParamsAction2(sizeFile));
@@ -58,9 +57,10 @@ export default class Setting extends Component {
   }
 
   onChangeSlider(value) {
-    AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.SizeMode, value);
-    this.setState({sizeMode: value})
-    // SizeFileUtils.onSizeFileChange(value)
+    AsyncStorageUtil.setAllItems([
+      [AsyncStorageConstants.Keys.SizeMode,JSON.stringify(value)],
+    ]);
+    console.log("on change slider value "+value)
     switch(value) {
       case AsyncStorageConstants.Values.SizeModeXSmall: {
         this.onSizeFileUpdate(value, extraSmallFont)
@@ -90,7 +90,7 @@ export default class Setting extends Component {
     }
   }
 
-  onColorModeChange(value){
+   onColorModeChange(value){
     if (this.state.colorMode == value) {
       return;
     }
@@ -102,18 +102,22 @@ export default class Setting extends Component {
       this.props.screenProps.updateColor(this.state.colorMode,this.state.colorFile);
       this.props.navigation.dispatch(setParamsAction(this.state.colorFile))
       
-      AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.ColorMode,this.state.colorMode);
+      AsyncStorageUtil.setAllItems([
+        [AsyncStorageConstants.Keys.ColorMode, this.state.colorMode],
+      ]);
       
       this.styles = settingsPageStyle(changeColorFile, this.state.sizeFile)
     })
     
   }
 
-  onVerseInLineModeChange(){
+   onVerseInLineModeChange(){
     this.setState({verseInLine:!this.state.verseInLine}, ()=>{
         this.props.screenProps.updateVerseInLine(this.state.verseInLine);
-        AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.VerseViewMode,this.state.verseInLine);
-    })
+          AsyncStorageUtil.setAllItems([
+          [AsyncStorageConstants.Keys.VerseViewMode, this.state.verseInLine],
+        ]);
+      })
   }
 
   render() {

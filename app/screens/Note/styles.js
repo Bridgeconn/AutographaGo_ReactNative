@@ -78,10 +78,20 @@ export const noteStyle =(colorFile, sizeFile) =>{
         flex:8,
         color:colorFile.textColor
     },
-    emptyMessage:{
+    emptyMessageContainer:{
+        alignItems:'center',
+        flexDirection:'column',
+        justifyContent:'center'
+    },
+    messageEmpty:{
         fontSize:sizeFile.titleText,
         color:colorFile.textColor,
-        textAlign: 'center',
+        // textAlign:'center',
+    },
+    emptyMessageIcon:{
+        fontSize:sizeFile.emptyIconSize,
+        margin:16,
+        color:colorFile.iconColor,
     },
     textEditorView:{
         flexDirection: 'column-reverse'

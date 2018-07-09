@@ -23,16 +23,21 @@ export const searchStyle =(colorFile, sizeFile) =>{
             fontSize:sizeFile.titleText,
             color:colorFile.textColor
           },
-          textStyle:{
+        textStyle:{
             margin:8,
             fontSize:sizeFile.contentText,
             color : colorFile.textColor
-          },
-          textLength:{
+        },
+        textLength:{
             alignSelf:"center",
             color:colorFile.textColor
-          }
-
-
+        },
+        headerText:{
+            width:width,
+            color:colorFile.textColor
+        },
+        placeholderColor:{
+            color:colorFile.textColor
+        }
     })
 }

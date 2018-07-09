@@ -4,7 +4,7 @@ const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 import colorConstants from '../../utils/colorConstants.js'
 
-export const homePageStyle =(colorFile, sizeFile) =>{
+export const homePageStyle =(colorFile, sizeFile,activeTab) =>{
     return StyleSheet.create({
    container:{
     flex:1,
@@ -33,6 +33,7 @@ export const homePageStyle =(colorFile, sizeFile) =>{
     segmentCustom:{
         borderColor:'#3F51B5',
         borderWidth:0.5,
+        backgroundColor:activeTab ?  "#fff" : "#3F51B5"
        
     },
     segmentButton:{
@@ -42,6 +43,11 @@ export const homePageStyle =(colorFile, sizeFile) =>{
         borderLeftWidth:1,
         borderRightWidth:1,
         borderColor:'#3F51B5',
+    },
+    tabText:{
+        color:colorFile.textColor,
+        fontSize:sizeFile.contentText,
+        color:activeTab ? "#fff" : "#3F51B5"
     },
     bookList:{
         flexDirection:'row',

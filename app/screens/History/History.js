@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator
 } from 'react-native';
-import dbQueries from '../../utils/dbQueries';
+import DbQueries from '../../utils/dbQueries';
 import { View } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import {getBookNameFromMapping} from '../../utils/UtilFunctions';
@@ -21,9 +21,16 @@ export default class History extends Component{
   static navigationOptions = ({navigation}) =>({
     headerTitle: 'History',
     headerRight:(
-      <View style={{flexDirection:"row",alignItems:'center',justifyContent:'center'}}>
-        <Text style={{color:"#fff",fontSize:20,marginHorizontal:8}}>clear</Text>
-        <Icon name="delete-forever" color="#fff" size={24}  onPress={()=>navigation.state.params.onClearHistory()}/>
+      <View>
+      {
+        navigation.state.params.historyListLength == 0 ? null :
+      
+      <TouchableOpacity style={{flexDirection:"row",alignItems:'center',justifyContent:'center',marginHorizontal:16}} 
+        onPress={()=>navigation.state.params.onClearHistory()}>
+        <Text style={{color:"#fff",fontSize:20,marginHorizontal:8}}>Clear</Text>
+        <Icon name="delete-forever" color="#fff" size={24}  />
+      </TouchableOpacity>
+      }
       </View>
       )
   })
@@ -41,66 +48,81 @@ export default class History extends Component{
     isLoading:false
     }
     this.styles = historyStyle(props.screenProps.colorFile, props.screenProps.sizeFile);       
+    this.onClearHistory = this.onClearHistory.bind(this)
+
+    this.props.navigation.setParams({
+      onClearHistory:this.onClearHistory,
+      historyListLength:0
+    })
   }
 
   async componentDidMount(){
+
     this.setState({isLoading: true}, async () => {
     
-    let historyData  = await dbQueries.queryHistory()
+      let historyData  = await DbQueries.queryHistory()
 
-    if (historyData) {
-      let historyList = [...this.state.historyList]
-      var date = new Date()
-      var cur = moment(date).format('D')
-        for(i=0; i < historyData.length; i++){
-          var end = moment(historyData[i].time).format('D')
-          var timeDiff =  Math.floor(cur-end)
-          if(timeDiff == 0){
-            historyList[0].list.push(historyData[i])
+      if (historyData) {
+        let historyList = [...this.state.historyList]
+        var date = new Date()
+        var cur = moment(date).format('D')
+          for(i=0; i < historyData.length; i++){
+            var end = moment(historyData[i].time).format('D')
+            var timeDiff =  Math.floor(cur-end)
+            if(timeDiff == 0){
+              historyList[0].list.push(historyData[i])
+            }
+            if(timeDiff == 1){
+              historyList[1].list.push(historyData[i])
+            }
+            if(timeDiff >= 2 && timeDiff <= 7){
+              historyList[2].list.push(historyData[i])
+            }
+            if(timeDiff > 7 && timeDiff <= 30){
+              historyList[3].list.push(historyData[i])
+            }
+            if(timeDiff > 30 ){
+              historyList[4].list.push(historyData[i])
+            }
           }
-          if(timeDiff == 1){
-            historyList[1].list.push(historyData[i])
-          }
-          if(timeDiff >= 2 && timeDiff <= 7){
-            historyList[2].list.push(historyData[i])
-          }
-          if(timeDiff > 7 && timeDiff <= 30){
-            historyList[3].list.push(historyData[i])
-          }
-          if(timeDiff > 30 ){
-            historyList[4].list.push(historyData[i])
-          }
-        }
 
-        for(i=0; i < historyList.length; i++){
-          if (historyList[i].list.length  == 0) {
-            historyList.splice(i, 1)
-            i--;
+          for(i=0; i < historyList.length; i++){
+            if (historyList[i].list.length  == 0) {
+              historyList.splice(i, 1)
+              i--;
+            }
           }
-        }
-        this.setState({historyList,isLoading:false})
-    }
+          this.setState({historyList,isLoading:false})
+
+          this.props.navigation.setParams({
+            // onClearHistory:this.onClearHistory,
+            historyListLength:historyList.length
+          })
+
+      }
     })
-this.props.navigation.setParams({onClearHistory:this.onClearHistory})
+
 
 }
   
  
-  onClearHistory(){
+  onClearHistory = () =>{
     console.log("hi clear history")
-    dbQueries.clearHistory()
+    DbQueries.clearHistory()
+    this.setState({historyList: []})
+    this.props.navigation.setParams({
+      // onClearHistory:this.onClearHistory,
+      historyListLength:0
+    })
   }
 
   _renderHeader = (data, index, isActive) =>{
     return (
       <View>
-      {
-        data.list.length  == 0  ? <Text style={this.styles.emptyPage}>You read nothing yet</Text> :
         <View  style={this.styles.historyHeader}>
          <Text style={this.styles.headerText}>{data.time}</Text>
          <Icon name={isActive ? "keyboard-arrow-down" : "keyboard-arrow-up" } style={this.styles.iconCustom} />
         </View>
-      }
       </View> 
     )
   }
@@ -129,15 +151,27 @@ this.props.navigation.setParams({onClearHistory:this.onClearHistory})
   render(){
      return (
      <View style={this.styles.container}>
-
-      <Accordion
-      activeSection={this.state.activeSection}
-      sections={this.state.historyList}
-      renderHeader={this._renderHeader}
-      renderContent={this._renderContent}
-      underlayColor="tranparent"
-      initiallyActiveSection={0}
-    />
+      {
+        this.state.historyList.length == 0 ? 
+        <View style={this.styles.emptyMessageContainer}>
+        <Icon name="import-contacts" style={this.styles.emptyMessageIcon}/>
+          <Text
+            style={this.styles.messageEmpty}
+          >
+            Start reading
+          </Text>
+          
+        </View>
+      :
+        <Accordion
+          activeSection={this.state.activeSection}
+          sections={this.state.historyList}
+          renderHeader={this._renderHeader}
+          renderContent={this._renderContent}
+          underlayColor="tranparent"
+          initiallyActiveSection={0}
+        /> 
+      }
     </View>
     )
   }

@@ -81,7 +81,15 @@ console.log("value of loader......... "+this.state.isLoading)
       // contentContainerStyle={this.styles.flatListContainer}
       data={this.state.modelData}
       ListEmptyComponent={
-          <Text style={this.styles.emptyMessage}>No reference highlighted</Text>
+        
+        <View style={this.styles.emptyMessageContainer}>
+        <Icon name="border-color" style={this.styles.emptyMessageIcon}/>
+          <Text
+            style={this.styles.messageEmpty}
+          >
+           No reference highlighted</Text>
+        </View>
+       
         }
       // getItemLayout={this.getItemLayout}
       renderItem={({item, index}) =>
