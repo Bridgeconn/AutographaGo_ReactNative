@@ -15,7 +15,7 @@ export const bookStyle=(colorFile, sizeFile) =>{
         fontSize:sizeFile.fontSize
     },
     bookmarksText:{
-        fontSize:sizeFile.fontSize,
+        fontSize:sizeFile.titleText,
         color:colorFile.iconColor
     },
     iconCustom:{
@@ -37,7 +37,11 @@ export const bookStyle=(colorFile, sizeFile) =>{
         margin:16,
         color:colorFile.iconColor,
     },
-    centerEmptySet: { justifyContent: 'center', alignItems: 'center', height: '100%' }
+    centerEmptySet: { 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        height: '100%' 
+    }
 
 
     })

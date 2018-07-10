@@ -5,6 +5,7 @@ const width = Dimensions.get('window').width;
 import colorConstants from '../../utils/colorConstants.js'
 
 export const homePageStyle =(colorFile, sizeFile,activeTab) =>{
+    console.log("style active color "+activeTab)
     return StyleSheet.create({
    container:{
     flex:1,
@@ -36,18 +37,31 @@ export const homePageStyle =(colorFile, sizeFile,activeTab) =>{
         backgroundColor:activeTab ?  "#fff" : "#3F51B5"
        
     },
-    segmentButton:{
+    segmentButton1:{
         padding:4,
         height: 45,
         width:width*2/5,
         borderLeftWidth:1,
         borderRightWidth:1,
         borderColor:'#3F51B5',
+        backgroundColor:activeTab ?  "#3F51B5":"#fff"
+
     },
+    segmentButton2:{
+        padding:4,
+        height: 45,
+        width:width*2/5,
+        borderLeftWidth:1,
+        borderRightWidth:1,
+        borderColor:'#3F51B5',
+        backgroundColor:activeTab ?  "#fff" : "#3F51B5"
+    },
+
     tabText:{
         color:colorFile.textColor,
         fontSize:sizeFile.contentText,
-        color:activeTab ? "#fff" : "#3F51B5"
+        color:activeTab ? "#fff" : "#3F51B5",
+        
     },
     bookList:{
         flexDirection:'row',

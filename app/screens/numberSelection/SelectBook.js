@@ -7,12 +7,11 @@ import {
   Dimensions
 } from 'react-native';
 import DbQueries from '../../utils/dbQueries'
-import { numberSelectionPageStyle } from './styles.js';
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 import {nightColors, dayColors} from '../../utils/colors.js'
 import {extraSmallFont,smallFont,mediumFont,largeFont,extraLargeFont} from '../../utils/dimens.js'
-import { numberSelection } from './styles.js';
+
 export default class SelectBook extends Component {
 
   constructor(props){
@@ -25,7 +24,6 @@ export default class SelectBook extends Component {
       booksList: this.props.screenProps.booksList,
       selectedIndex: 0,
     }
-      this.styles = numberSelection(props.screenProps.colorFile, props.screenProps.sizeFile);   
     
   }
 
@@ -38,19 +36,20 @@ export default class SelectBook extends Component {
   }
   
   render() {
+    var styles = this.props.screenProps.styles
     return (
-      <View style={this.styles.containerBook}>
+      <View style={styles.tabContainer}>
         <FlatList
         numColumns={1}
         data={this.state.booksList}
         extraData={this.state.selectedIndex}
         renderItem={({item, index}) => 
         <TouchableOpacity style={[
-          this.styles.selectBookTouchable,
+          styles.selectBookTouchable,
           {
           backgroundColor:index == this.state.selectedIndex ? 'blue' : 'transparent'}]}
           onPress={()=>this.onBookSelected(index)} >
-            <Text style={this.styles.bookName}>{item.bookName}</Text>
+            <Text style={styles.bookName}>{item.bookName}</Text>
         </TouchableOpacity>
         }
       />

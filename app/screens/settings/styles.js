@@ -14,7 +14,7 @@ export const settingsPageStyle =(colorFile, sizeFile) =>{
     },
     textStyle: {
             color: colorFile.textColor,   
-            fontSize:sizeFile.contentText,
+            fontSize:sizeFile.titleText,
             marginLeft:4,
             alignSelf:'center'
     },
@@ -53,7 +53,8 @@ export const settingsPageStyle =(colorFile, sizeFile) =>{
     cardItemIconCustom:{
         marginHorizontal:4,
         marginVertical:8,
-        color:colorFile.settingsIconColor   
+        color:colorFile.settingsIconColor,
+        fontSize:sizeFile.settingsIcon   
     },
     switchIcon:{
         color:colorFile.iconColor,

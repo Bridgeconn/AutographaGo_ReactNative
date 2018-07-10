@@ -11,7 +11,7 @@ import DbQueries from '../../utils/dbQueries';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import {getBookNameFromMapping} from '../../utils/UtilFunctions';
 import Accordion from 'react-native-collapsible/Accordion';
-import {List,ListItem} from 'native-base'
+import {List,ListItem, Header} from 'native-base'
 import { languageStyle } from './styles.js'
 import {NavigationActions} from 'react-navigation'
 import AsyncStorageUtil from '../../utils/AsyncStorageUtil';
@@ -56,7 +56,7 @@ export default class Language extends Component{
   _renderHeader = (data, index, isActive) =>{
     console.log("language code "+data.languageCode)
     return (
-      <View>
+      <View style={this.styles.headerContainer}>
       {
         this.state.isLoading ? <ActivityIndicator animate = {true}/> : 
         data.versionModels.length == 0 ? null : 
@@ -77,10 +77,11 @@ export default class Language extends Component{
         {
           this.state.isLoading ? <ActivityIndicator animate = {true}/> : 
           data.versionModels.map((item, index) => 
-             <TouchableOpacity onPress={()=>this._updateLanguage(data.languageCode,data.languageName, item.versionCode,item.versionName)}>
-             <Text style={this.styles.contentText}>
+             <TouchableOpacity style={this.styles.VersionView}onPress={()=>this._updateLanguage(data.languageCode,data.languageName, item.versionCode,item.versionName)}>
+              <Text style={this.styles.contentText}>
                {item.versionName}
-               </Text>
+              </Text>
+              <Icon name= {this.props.screenProps.versionCode == item.versionCode ? 'check' : null} style={this.styles.checkIcon}/>
              </TouchableOpacity>
         )
       }
@@ -97,6 +98,7 @@ export default class Language extends Component{
     ]);
     this.props.screenProps.updateLanguage(lanCode,langName, verCode, verName);
 
+    this.props.navigation.state.params.updateLanguage(lanCode,verCode)
     this.props.navigation.dispatch(NavigationActions.back())    
   }
   

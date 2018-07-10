@@ -11,7 +11,8 @@ import { numberSelectionPageStyle } from './styles.js';
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 import {nightColors, dayColors} from '../../utils/colors.js'
-import { numberSelection } from './styles.js';
+
+
 export default class SelectVerse extends Component {
 
   constructor(props){
@@ -28,7 +29,6 @@ export default class SelectVerse extends Component {
       bookData: [], 
       selectedIndex: 0,
     }
-    this.styles = numberSelection(props.screenProps.colorFile, props.screenProps.sizeFile);   
     
   }
 
@@ -76,17 +76,18 @@ export default class SelectVerse extends Component {
   }
   
   render() {
+    var styles = this.props.screenProps.styles
     return (
-      <View style={{flex:1}}>
+      <View style={styles.tabContainer}>
         <FlatList
         numColumns={4}
         data={this.state.bookData}
         renderItem={({item, index}) => 
-        <TouchableOpacity style={[this.styles.selectGridNum,
+        <TouchableOpacity style={[styles.selectGridNum,
           {backgroundColor: this.state.selectedIndex == index ? 'blue' : 'transparent'}]}
           onPress={()=>this.onVerseSelected(item, index)}
           >
-                <Text style={this.styles.selectText}>{item}</Text>
+                <Text style={styles.selectText}>{item}</Text>
             </TouchableOpacity>
         }
       />

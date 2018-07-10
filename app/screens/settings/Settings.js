@@ -237,10 +237,12 @@ export default class Setting extends Component {
             </Card>
             
             <Card>
+            <TouchableOpacity onPress={()=>this.props.navigation.navigate('About')}>
               <CardItem style={this.styles.cardItemStyle}>
                 <Icon name='info' size={24} style={this.styles.cardItemIconCustom}/>
                 <Text style={this.styles.textStyle}>About</Text>
               </CardItem>
+            </TouchableOpacity>
             </Card>
           </ScrollView>
         </View>

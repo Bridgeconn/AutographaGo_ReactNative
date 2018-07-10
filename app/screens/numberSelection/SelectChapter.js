@@ -12,13 +12,12 @@ const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 import {nightColors, dayColors} from '../../utils/colors.js'
 import {extraSmallFont,smallFont,mediumFont,largeFont,extraLargeFont} from '../../utils/dimens.js'
-import { numberSelection } from './styles.js';
 
 export default class SelectChapter extends Component {
 
   constructor(props){
     super(props)
-    console.log("props number : "+JSON.stringify(props.screenProps.numOfChapters))
+    console.log("props SELECT  CHAPTER : "+JSON.stringify(props.screenProps))
 
     this.onChapterSelected = this.onChapterSelected.bind(this)
     
@@ -27,7 +26,6 @@ export default class SelectChapter extends Component {
       bookData: Array.from(new Array(this.props.screenProps.numOfChapters), (x,i) => i+1),
       selectedIndex: 0,
     }
-    this.styles = numberSelection(props.screenProps.colorFile, props.screenProps.sizeFile);   
     
   }
 
@@ -40,17 +38,18 @@ export default class SelectChapter extends Component {
   }
   
   render() {
+    var styles = this.props.screenProps.styles
     return (
-      <View style={this.styles.flexValue}>
+      <View style={styles.tabContainer}>
         <FlatList
         numColumns={4}
         data={this.state.bookData}
         renderItem={({item, index}) => 
-        <TouchableOpacity style={[this.styles.selectGridNum,
+        <TouchableOpacity style={[styles.selectGridNum,
           {backgroundColor: this.state.selectedIndex == index ? 'blue' : 'transparent'}]}
           onPress={()=>this.onChapterSelected(item, index)}
           >
-                <Text style={this.styles.selectText}>{item}</Text>
+                <Text style={styles.selectText}>{item}</Text>
             </TouchableOpacity>
         }
       />

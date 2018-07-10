@@ -16,6 +16,8 @@ import {createMaterialTopTabNavigator, TabNavigator} from 'react-navigation'
 import SelectBook from './SelectBook'
 import SelectChapter from './SelectChapter'
 import SelectVerse from './SelectVerse'
+import { numberSelection } from './styles.js'
+
 
 const TabNav = TabNavigator({
   TabItemBook: {
@@ -70,14 +72,16 @@ export default class ReferenceSelection extends Component {
       numOfChapters: this.props.screenProps.booksList[0].numOfChapters,
       selectedChapterIndex: 0,
       selectedChapterNumber: 1,
-
+      
       selectedVerseIndex: 0,
       selectedVerseNumber: '',
+
     }
 
     this.updateSelectedBook = this.updateSelectedBook.bind(this)
     this.updateSelectedChapter = this.updateSelectedChapter.bind(this)
     this.updateSelectedVerse = this.updateSelectedVerse.bind(this)
+    this.styles = numberSelection(props.screenProps.colorFile, props.screenProps.sizeFile)
   }
 
   updateSelectedBook = (index, bookId) => {
@@ -118,7 +122,10 @@ export default class ReferenceSelection extends Component {
           
           updateSelectedBook: this.updateSelectedBook,
           updateSelectedChapter: this.updateSelectedChapter,
-          updateSelectedVerse: this.updateSelectedVerse
+          updateSelectedVerse: this.updateSelectedVerse,
+          styles :this.styles 
+
+          
         }}/>
     );
   }

@@ -29,8 +29,8 @@ export default class Home extends Component {
     return{
       headerTitle: 'Autographa Go',
       headerRight:(
-          <TouchableOpacity onPress={() =>{navigation.navigate('Language')}}>
-            <Text style={{color:"#fff",margin:8}}>{navigation.state.params.bibleLanguage} {navigation.state.params.bibleVersion}</Text>
+          <TouchableOpacity onPress={() =>{navigation.state.params.openLanguages()}} >
+            <Text style={{color:"#fff",margin:16}}>{navigation.state.params.bibleLanguage} {navigation.state.params.bibleVersion}</Text>
           </TouchableOpacity>
         )
       }
@@ -51,8 +51,8 @@ export default class Home extends Component {
       booksList: this.props.screenProps.booksList,
     }
     console.log("IN HOME, bok len"  + this.props.screenProps.booksList.length)
-
-    this.styles = homePageStyle(this.state.colorFile, this.state.sizeFile);
+    console.log("IN HOME, ACTIVE TAB"  + this.state.activeTab)
+    this.styles = homePageStyle(this.state.colorFile, this.state.sizeFile, this.state.activeTab);
     
     this.viewabilityConfig = {
         itemVisiblePercentThreshold: 50,
@@ -70,7 +70,17 @@ export default class Home extends Component {
       this.flatlistRef.scrollToIndex({index:0,viewPosition:0,animated: false,viewOffset:0})
     }
   }
- 
+  
+  updateLanguage = (language,version) =>{
+    this.props.navigation.setParams({
+      bibleLanguage: language,
+      bibleVersion: version
+  
+    })
+  }
+  openLanguages = ()=>{
+    this.props.navigation.navigate("Language", {updateLanguage:this.updateLanguage})
+  }
    componentWillReceiveProps(props){
     console.log("WILLLLL recievr props  version "+JSON.stringify(props))
      this.setState({
@@ -108,8 +118,12 @@ export default class Home extends Component {
 
 componentDidMount(){
   // this.props.navigation.setParams({styles:this.styles})
-  this.props.navigation.setParams({bibleLanguage: this.props.screenProps.languageCode, 
-    bibleVersion: this.props.screenProps.versionCode})
+  this.props.navigation.setParams({
+    bibleLanguage: this.props.screenProps.languageCode, 
+    bibleVersion: this.props.screenProps.versionCode,
+    openLanguages: this.openLanguages
+
+  })
 }
 
 renderItem = ({item, index})=> {
@@ -165,10 +179,7 @@ renderItem = ({item, index})=> {
             <Segment style={this.styles.segmentCustom}>
               <Button 
                 active={this.state.activeTab} 
-                style={[
-                  {backgroundColor:this.state.activeTab ?  "#3F51B5":"#fff"},
-                  this.styles.segmentButton
-                ]} 
+                style={this.styles.segmentButton1} 
                 onPress={this.toggleButton.bind(this,true)
                 }
               >
@@ -180,10 +191,7 @@ renderItem = ({item, index})=> {
               </Button>
               <Button 
                 active={!this.state.activeTab} 
-                style={[
-                  {backgroundColor:this.state.activeTab ?  "#fff" : "#3F51B5"},  
-                  this.styles.segmentButton
-                ]} 
+                style={this.styles.segmentButton2} 
                 onPress={this.toggleButton.bind(this,false)}>
                 <Text 
                   active={!this.state.activeTab} 

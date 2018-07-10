@@ -8,6 +8,9 @@ export const languageStyle =(colorFile, sizeFile) =>{
         flex:1,
         backgroundColor:colorFile.backgroundColor
     },
+    headerContainer:{
+        margin:8
+    },
     LanguageHeader:{
         flexDirection:"row",
         justifyContent:"space-between",
@@ -24,6 +27,15 @@ export const languageStyle =(colorFile, sizeFile) =>{
         color:colorFile.textColor
     },
     iconCustom:{
+        fontSize:sizeFile.iconSize,
+        color:colorFile.iconColor
+    },
+    VersionView:{
+        flexDirection:"row",
+        justifyContent:'space-between',
+        marginHorizontal:16
+    },
+    checkIcon:{
         fontSize:sizeFile.iconSize,
         color:colorFile.iconColor
     }

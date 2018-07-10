@@ -16,7 +16,7 @@ export const highlightstyle=(colorFile, sizeFile) =>{
         fontSize:sizeFile.fontSize
     },
     hightlightsText:{
-        fontSize:sizeFile.fontSize,
+        fontSize:sizeFile.titleText,
         color:colorFile.textColor
     },
     flatListContainer:{
