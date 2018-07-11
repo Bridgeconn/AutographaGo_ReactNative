@@ -24,10 +24,9 @@ export default class History extends Component{
       <View>
       {
         navigation.state.params.historyListLength == 0 ? null :
-      
-      <TouchableOpacity style={{flexDirection:"row",alignItems:'center',justifyContent:'center',marginHorizontal:16}} 
+      <TouchableOpacity style={navigation.state.params.headerContainer} 
         onPress={()=>navigation.state.params.onClearHistory()}>
-        <Text style={{color:"#fff",fontSize:20,marginHorizontal:8}}>Clear</Text>
+        <Text style={navigation.state.params.headerText}>Clear</Text>
         <Icon name="delete-forever" color="#fff" size={24}  />
       </TouchableOpacity>
       }
@@ -57,7 +56,10 @@ export default class History extends Component{
   }
 
   async componentDidMount(){
-
+    this.props.navigation.setParams({
+      headerText:this.styles.headerText,
+      headerContainer:this.styles.headerContainer
+    })
     this.setState({isLoading: true}, async () => {
     
       let historyData  = await DbQueries.queryHistory()
@@ -93,10 +95,9 @@ export default class History extends Component{
             }
           }
           this.setState({historyList,isLoading:false})
-
           this.props.navigation.setParams({
-            // onClearHistory:this.onClearHistory,
-            historyListLength:historyList.length
+            historyListLength:historyList.length,
+           
           })
 
       }
@@ -120,7 +121,7 @@ export default class History extends Component{
     return (
       <View>
         <View  style={this.styles.historyHeader}>
-         <Text style={this.styles.headerText}>{data.time}</Text>
+         <Text style={this.styles.accordionHeaderText}>{data.time}</Text>
          <Icon name={isActive ? "keyboard-arrow-down" : "keyboard-arrow-up" } style={this.styles.iconCustom} />
         </View>
       </View> 

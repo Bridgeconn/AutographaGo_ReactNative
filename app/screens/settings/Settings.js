@@ -103,7 +103,7 @@ export default class Setting extends Component {
       this.props.navigation.dispatch(setParamsAction(this.state.colorFile))
       
       AsyncStorageUtil.setAllItems([
-        [AsyncStorageConstants.Keys.ColorMode, this.state.colorMode],
+        [AsyncStorageConstants.Keys.ColorMode, JSON.stringify(this.state.colorMode)],
       ]);
       
       this.styles = settingsPageStyle(changeColorFile, this.state.sizeFile)

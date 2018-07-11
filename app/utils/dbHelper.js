@@ -172,7 +172,7 @@ class DbHelper {
 			let resultsA = result.versionModels;
 			resultsA = resultsA.filtered('versionCode == [c] "' + verCode + '"');
 			if (resultsA.length > 0) {
-				let resultsB = resultsA[0].bookModels;
+				let resultsB = resultsA[0].bookModels.sorted("bookNumber");
 				let bookIdModels = [];
 				for (var i=0; i<resultsB.length; i++) {
 					var bModel = {bookId:resultsB[i].bookId, bookName:resultsB[i].bookName,

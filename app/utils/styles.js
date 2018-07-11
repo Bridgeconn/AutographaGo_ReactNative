@@ -3,18 +3,16 @@ import { Icon } from 'native-base';
 
 export const styleFile =(colorMode, sizeMode) =>{
     return StyleSheet.create({
-   container:{
-       flex:1,
-       backgroundColor:colorMode.backgroundColor 
-   },
-   textStyle: {
-        // color: colorMode.accentColor,   
-        // fontSize:sizeMode.fontSize
-   },
-   IconCustom:{
-    // iconColor:colorMode.iconColor
-   },
-   cardItemStyle:{paddingTop:16,paddingBottom:16}
-
+       
+        HistoryHeader:{ 
+            flexDirection:"row",
+            alignItems:'center',
+            justifyContent:'center',
+            marginHorizontal:16
+        },
+        
+        headerStyle:{
+            backgroundColor:"#3F51B5"
+        }
 })
 }

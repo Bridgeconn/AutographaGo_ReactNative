@@ -4,8 +4,7 @@ const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 import colorConstants from '../../utils/colorConstants.js'
 
-export const homePageStyle =(colorFile, sizeFile,activeTab) =>{
-    console.log("style active color "+activeTab)
+export const homePageStyle =(colorFile, sizeFile) =>{
     return StyleSheet.create({
    container:{
     flex:1,
@@ -15,6 +14,10 @@ export const homePageStyle =(colorFile, sizeFile,activeTab) =>{
         fontSize:sizeFile.titleText,
         color:colorFile.textColor,
         justifyContent:'center'
+   },
+   headerRightText:{
+    color:"#fff",
+    margin:16
    },
     sideBarContainer:{
         flexDirection:'column',
@@ -31,38 +34,16 @@ export const homePageStyle =(colorFile, sizeFile,activeTab) =>{
         width:width*4/5,
         backgroundColor:colorFile.backgroundColor
     },
-    segmentCustom:{
-        borderColor:'#3F51B5',
-        borderWidth:0.5,
-        backgroundColor:activeTab ?  "#fff" : "#3F51B5"
-       
-    },
-    segmentButton1:{
+  
+    segmentButton:{
         padding:4,
         height: 45,
         width:width*2/5,
         borderLeftWidth:1,
         borderRightWidth:1,
         borderColor:'#3F51B5',
-        backgroundColor:activeTab ?  "#3F51B5":"#fff"
-
-    },
-    segmentButton2:{
-        padding:4,
-        height: 45,
-        width:width*2/5,
-        borderLeftWidth:1,
-        borderRightWidth:1,
-        borderColor:'#3F51B5',
-        backgroundColor:activeTab ?  "#fff" : "#3F51B5"
     },
 
-    tabText:{
-        color:colorFile.textColor,
-        fontSize:sizeFile.contentText,
-        color:activeTab ? "#fff" : "#3F51B5",
-        
-    },
     bookList:{
         flexDirection:'row',
         justifyContent:'space-between',

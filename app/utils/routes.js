@@ -27,9 +27,8 @@ import { styleFile } from './styles.js'
 import DbQueries from '../utils/dbQueries'
 import Realm from 'realm'
 
-const StackNav = StackNavigator(
+const StackNavigate = (styles) => StackNavigator(
   {  
-   
       Splash: {
         screen: Splash,
       },
@@ -89,9 +88,7 @@ const StackNav = StackNavigator(
   {
     navigationOptions: {
       headerTintColor: '#fff',
-      headerStyle: {
-        backgroundColor: '#3F51B5'
-      },
+      headerStyle: styles.headerStyle
     }
   }
 )
@@ -125,6 +122,9 @@ export default class App extends Component {
     this.changeSizeByOne = this.changeSizeByOne.bind(this)
     this.updateLastRead = this.updateLastRead.bind(this)
     this.updateLanguage  = this.updateLanguage.bind(this)
+
+    this.styles = styleFile(this.state.colorFile,this.state.sizeFile)
+    this.StackNav = StackNavigate(this.styles)
   }
 
   updateBooks = (booksList) => {
@@ -200,12 +200,22 @@ export default class App extends Component {
     }
   }
 
-  updateLanguage = (languageCode,languageName,versionCode,versionName) =>{
+  updateLanguage = async(languageCode,languageName,versionCode,versionName) =>{
     console.log("in ROTES update language")
     this.setState({languageCode, languageName,versionCode,versionName})
+
+    let models = await DbQueries.queryBookIdModels(this.state.versionCode, this.state.languageCode);
+      console.log("routes len =" + models)
+      console.log("VERSE VALUE ++++ " + res[2][1])
+      // this.setState({isDbLoading: false})
+      if (models && models.length > 0) {
+        this.setState({booksList: models})
+      }
+
   }
 
   render(){
+    let  StackNav = this.StackNav
     return(
       <StackNav 
         screenProps={{
@@ -249,7 +259,7 @@ export default class App extends Component {
     if (res == null) {
       return
     }
-    console.log("ROUTES.... size mode "+res[1][1])
+    console.log("ROUTES.... color mode "+res[0][1])
     this.setState({sizeMode: res[1][1] == null ? AsyncStorageConstants.Values.SizeModeNormal : parseInt(res[1][1])}, ()=> {
       switch (this.state.sizeMode) {
         case  AsyncStorageConstants.Values.SizeModeXSmall : {
@@ -277,9 +287,9 @@ export default class App extends Component {
     })
 
     this.setState({
-      colorMode: res[0][1]== null ? AsyncStorageConstants.Values.DayMode : res[0][1],
+      colorMode: res[0][1]== null ? AsyncStorageConstants.Values.DayMode : parseInt(res[0][1]),
       colorFile: res[0][1] == null ? dayColors : 
-      (res[0][1] == AsyncStorageConstants.Values.DayMode ? dayColors : nightColors),
+      (parseInt(res[0][1]) == AsyncStorageConstants.Values.DayMode ? dayColors : nightColors),
       verseInLine:  res[2][1] == null ? AsyncStorageConstants.Values.VerseInLine : res[2][1],
       languageCode: res[3][1] == null ? AsyncStorageConstants.Values.DefLanguageCode : res[3][1],
       versionCode:  res[4][1] == null ? AsyncStorageConstants.Values.DefVersionCode : res[4][1],
