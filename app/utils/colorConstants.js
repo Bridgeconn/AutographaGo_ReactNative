@@ -3,11 +3,12 @@ module.exports = {
         Black:'#000',
         White:'#fff',
         Grey:'#808080',
-        Pink:'#FF1493',
+        Pink:'#F62459',
         Dark_Blue:'#191970',
         Navy_Blue:'#000080',
-        Green:'#008000',
-        Off_White:'#f4f4f1'
+        Green:'#26A65B',
+        Off_White:'#f4f4f1',
+        SPY_COLOR: "#3F51B5"
 }
 
 

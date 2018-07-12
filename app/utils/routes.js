@@ -21,7 +21,7 @@ import DownloadVersion from '../screens/Downloads/DownloadVersion'
 
 const AsyncStorageConstants = require('./AsyncStorageConstants')
 import AsyncStorageUtil from './AsyncStorageUtil';
-import {nightColors, dayColors} from './colors.js'
+import {nightColors, dayColors, constColors} from './colors.js'
 import {extraSmallFont,smallFont,mediumFont,largeFont,extraLargeFont} from './dimens.js'
 import { styleFile } from './styles.js'
 import DbQueries from '../utils/dbQueries'
@@ -125,6 +125,7 @@ export default class App extends Component {
 
     this.styles = styleFile(this.state.colorFile,this.state.sizeFile)
     this.StackNav = StackNavigate(this.styles)
+    console.log("ALL HEADER COLOR /////// "+JSON.stringify(this.styles))
   }
 
   updateBooks = (booksList) => {

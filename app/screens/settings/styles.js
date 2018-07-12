@@ -30,18 +30,19 @@ export const settingsPageStyle =(colorFile, sizeFile) =>{
         backgroundColor:colorFile.backgroundColor,
         justifyContent:'space-between',
     },
+    cardItemColumn:{
+        flexDirection:'column',
+    },
     cardItemRow:{
-        flexDirection:'row'
+        flexDirection:'row',
     },
-    nightModeCustom:{
-        marginRight:8,
-        marginBottom:20,
-        color:colorFile.textColor
+    modeTextCustom:{
+        color:colorFile.textColor,
+        fontSize:sizeFile.contentText,
+        position: 'absolute', 
+        right: 50,
     },
-    dayModeCustom:{
-        marginRight:8,
-        color:colorFile.textColor
-    },
+
     cardItemAlignRight:{
         alignItems:'flex-start'
     },
@@ -55,6 +56,11 @@ export const settingsPageStyle =(colorFile, sizeFile) =>{
         marginVertical:8,
         color:colorFile.settingsIconColor,
         fontSize:sizeFile.settingsIcon   
+    },
+    
+    modeIconCustom:{
+        fontSize:sizeFile.settingsIcon,
+        textAlign:'center'  
     },
     switchIcon:{
         color:colorFile.iconColor,

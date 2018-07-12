@@ -6,10 +6,10 @@ export const nightColors = {
     settingsIconColor: colorConstants.White, 
     iconColor: colorConstants.White,
     textColor:colorConstants.White,
-    accentColor: colorConstants.Pink,
+    accentColor: colorConstants.Green,
     primaryColor:  colorConstants.Navy_Blue,
     primaryDarkColor:  colorConstants.Dark_Blue,
-    tabColor: colorConstants.White
+    tabColor: colorConstants.White,
 
 };
 
@@ -18,10 +18,12 @@ export const dayColors = {
     settingsIconColor:colorConstants.Grey,
     iconColor:colorConstants.Grey, 
     textColor:colorConstants.Grey, 
-    accentColor:colorConstants.Green,
+    accentColor:colorConstants.Pink,
     primaryColor:colorConstants.Dark_Blue,
     primaryDarkColor:colorConstants.Dark_Blue,
     tabColor: colorConstants.Dark_Blue,
-
 };
 
+export const constColors = {
+    accentColor:colorConstants.Grey
+}

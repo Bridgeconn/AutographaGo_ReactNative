@@ -16,7 +16,7 @@ import { Container, Header, Content, Card, CardItem, Right, Left } from 'native-
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {extraSmallFont,smallFont,mediumFont,largeFont,extraLargeFont} from '../../utils/dimens.js'
 import { settingsPageStyle } from './styles.js'
-import {nightColors, dayColors} from '../../utils/colors.js'
+import {nightColors, dayColors, constColors} from '../../utils/colors.js'
 import AsyncStorageUtil from '../../utils/AsyncStorageUtil';
 const AsyncStorageConstants = require('../../utils/AsyncStorageConstants')
 
@@ -121,6 +121,11 @@ export default class Setting extends Component {
   }
 
   render() {
+
+    const dayModeIconColor = this.state.colorMode == AsyncStorageConstants.Values.DayMode  ? dayColors.accentColor : 'grey'
+    const nightModeIconColor =  this.state.colorMode == AsyncStorageConstants.Values.NightMode  ? nightColors.accentColor : 'grey'
+    // const modeIconConstColor = constColors.accentColor
+
     return (
       <View style={this.styles.container}>
         <View style={this.styles.containerMargin}>
@@ -135,46 +140,43 @@ export default class Setting extends Component {
                 <Right>
                   <View 
                     style={
-                      this.styles.cardItemRow
+                      this.styles.cardItemColumn
                     }>
+                    <View style={this.styles.cardItemRow}>
                     <Text 
                       style={
-                        this.styles.nightModeCustom
+                        this.styles.modeTextCustom
                       }>  
                       Night
                     </Text>
                     <Icon 
                       name="brightness-7" 
-                      size={24} 
+                      style={this.styles.modeIconCustom}
                       color={
-                        this.state.colorMode != AsyncStorageConstants.Values.DayMode 
-                        ? '#26A65B' : "gray"
+                        nightModeIconColor 
                       } 
                       onPress={
                         this.onColorModeChange.bind(this, 0)
                       }
                     />
                   </View>
-                  <View
-                    style={
-                      this.styles.cardItemRow
-                    }>
+                  <View style={this.styles.cardItemRow}>
                     <Text 
                       style={
-                        this.styles.dayModeCustom
+                        this.styles.modeTextCustom
                       }>  
                       Day
                     </Text>
                     <Icon 
                       name="brightness-5" 
-                      size={24} 
-                      color={this.state.colorMode == AsyncStorageConstants.Values.DayMode 
-                      ? '#F62459' : "gray"}  
+                      style={this.styles.modeIconCustom}
+                      color={dayModeIconColor}
                       onPress={
                         this.onColorModeChange.bind(this, 1)
                       }
                     />
                   </View>
+                </View>
                 </Right>
               </CardItem>
             </Card>
@@ -183,7 +185,7 @@ export default class Setting extends Component {
               <CardItem  bordered style={this.styles.cardItemStyle}>
                 <Right style={this.styles.cardItemAlignRight}>
                   <View style={this.styles.cardItemRow}>
-                    <Icon name='format-size' size={24} style={this.styles.cardItemIconCustom} />
+                    <Icon name='format-size' style={this.styles.cardItemIconCustom} />
                       <Text style={this.styles.textStyle}>Text Size</Text>
                   </View>
                   <Slider
@@ -191,8 +193,8 @@ export default class Setting extends Component {
                     step={1}
                     minimumValue={0}
                     maximumValue={4}
-                    thumbTintColor={this.state.colorMode == AsyncStorageConstants.Values.DayMode ? '#F62459': '#26A65B'}
-                    minimumTrackTintColor={this.state.colorMode == AsyncStorageConstants.Values.DayMode ? '#F62459': '#26A65B'}
+                    thumbTintColor={this.state.colorMode == AsyncStorageConstants.Values.DayMode ? dayModeIconColor: nightModeIconColor}
+                    minimumTrackTintColor={this.state.colorMode == AsyncStorageConstants.Values.DayMode ? dayModeIconColor: nightModeIconColor}
                     onValueChange={this.onChangeSlider.bind(this)}
                     value={this.state.sizeMode}
                   />
@@ -205,7 +207,7 @@ export default class Setting extends Component {
                 <Text style={this.styles.textStyle}>One Verse Per Line</Text>
                 <Switch 
                   size={24} 
-                  thumbTintColor={this.state.colorMode == AsyncStorageConstants.Values.DayMode ? '#F62459': '#26A65B'}
+                  thumbTintColor={this.state.colorMode == AsyncStorageConstants.Values.DayMode ? dayModeIconColor: nightModeIconColor}
                   onValueChange={this.onVerseInLineModeChange.bind(this)}
                   value={this.state.verseInLine}
                 />
@@ -213,7 +215,7 @@ export default class Setting extends Component {
             </Card>
             <Card>
               <CardItem style={this.styles.cardItemStyle}>
-                <Icon name='settings-backup-restore' size={24} style={this.styles.cardItemIconCustom} />
+                <Icon name='settings-backup-restore' style={this.styles.cardItemIconCustom} />
                 <Text style={this.styles.textStyle}>Backup and Restore</Text>
               </CardItem>
             </Card>
@@ -221,7 +223,7 @@ export default class Setting extends Component {
             <Card>
               <TouchableOpacity onPress={()=>this.props.navigation.navigate('DownloadLanguage')}>              
                 <CardItem style={this.styles.cardItemStyle}>
-                  <Icon name='cloud-download' size={24} style={this.styles.cardItemIconCustom} />
+                  <Icon name='cloud-download' style={this.styles.cardItemIconCustom} />
                   <Text style={this.styles.textStyle}>Download More Bibles</Text>
                 </CardItem>
               </TouchableOpacity>
@@ -230,7 +232,7 @@ export default class Setting extends Component {
             <Card>
               <TouchableOpacity onPress={()=>this.props.navigation.navigate('Hints')}>
                 <CardItem style={this.styles.cardItemStyle}>
-                  <Icon name='help' size={24} style={this.styles.cardItemIconCustom} />
+                  <Icon name='help' style={this.styles.cardItemIconCustom} />
                   <Text style={this.styles.textStyle}>Open Hints</Text>
                 </CardItem>
               </TouchableOpacity>
@@ -239,7 +241,7 @@ export default class Setting extends Component {
             <Card>
             <TouchableOpacity onPress={()=>this.props.navigation.navigate('About')}>
               <CardItem style={this.styles.cardItemStyle}>
-                <Icon name='info' size={24} style={this.styles.cardItemIconCustom}/>
+                <Icon name='info' style={this.styles.cardItemIconCustom}/>
                 <Text style={this.styles.textStyle}>About</Text>
               </CardItem>
             </TouchableOpacity>
