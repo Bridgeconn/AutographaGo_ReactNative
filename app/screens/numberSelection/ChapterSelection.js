@@ -41,7 +41,7 @@ export default class ChapterSelection extends Component {
   
   render() {
     return (
-      <View style={this.styles.flexValue}>
+      <View style={this.styles.chapterSelectionContainer}>
         <FlatList
         numColumns={4}
         data={this.state.bookData}

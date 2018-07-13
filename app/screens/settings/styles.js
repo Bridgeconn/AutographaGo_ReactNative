@@ -35,6 +35,7 @@ export const settingsPageStyle =(colorFile, sizeFile) =>{
     },
     cardItemRow:{
         flexDirection:'row',
+        marginVertical:4
     },
     modeTextCustom:{
         color:colorFile.textColor,

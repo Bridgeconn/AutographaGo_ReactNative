@@ -7,7 +7,9 @@ export const extraSmallFont = {
         iconSize: 16,
         verseText: 8,
         emptyIconSize: 34,
-        settingsIcon:18
+        settingsIcon:18,
+        chevronIconSize:28
+        
         
 };
 
@@ -17,7 +19,8 @@ export const smallFont = {
         iconSize:18,
         verseText: 12,
         emptyIconSize:38,
-        settingsIcon:22
+        settingsIcon:22,
+        chevronIconSize:32
                 
 };
 
@@ -27,7 +30,8 @@ export const mediumFont = {
         iconSize:22,
         verseText: 16,
         emptyIconSize: 42,
-        settingsIcon:26
+        settingsIcon:26,
+        chevronIconSize:36
         
         
 }
@@ -37,17 +41,21 @@ export const largeFont = {
         iconSize:26,
         verseText: 20,
         emptyIconSize: 46,
-        settingsIcon:30
+        settingsIcon:30,
+        chevronIconSize:42
+        
         
 };
 
 export const extraLargeFont = {
         titleText:28,
-        contentText:24,
+        contentText:30,
         iconSize:30,
         verseText: 24,
         emptyIconSize: 50,
-        settingsIcon:34        
+        settingsIcon:34,
+        chevronIconSize:42
+                
 };
 
 export const constantFont = {

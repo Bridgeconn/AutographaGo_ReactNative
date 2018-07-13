@@ -34,7 +34,7 @@ export default class Search extends Component {
         headerTitle: (<TextInput
           placeholder="Search"
           underlineColorAndroid = 'transparent'
-          style={params.headerStyle}
+          style={{color:'white'}}
           onChangeText={(text) =>params.onTextChange(text)}
           placeholderTextColor={'#fff'} 
           returnKeyType="search"
@@ -259,7 +259,7 @@ export default class Search extends Component {
          toggleFunction={this.toggleButton}
          activeTab={this.state.activeTab}
         />
-        <Text style={this.styles.textLength}>{this.state.tabsData.length} searched result found</Text>
+        <Text style={this.styles.textLength}>{this.state.tabsData.length} search results found</Text>
         {
           this.state.isLoading ? <ActivityIndicator
           animating={true} 

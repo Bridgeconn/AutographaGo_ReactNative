@@ -3,6 +3,7 @@ import colorConstants from './colorConstants.js'
 
 export const nightColors = {
     backgroundColor: colorConstants.Dark_Gray,
+    chevronIconColor:colorConstants.White,
     settingsIconColor: colorConstants.White, 
     iconColor: colorConstants.White,
     textColor:colorConstants.White,
@@ -10,20 +11,24 @@ export const nightColors = {
     primaryColor:  colorConstants.Navy_Blue,
     primaryDarkColor:  colorConstants.Dark_Blue,
     tabColor: colorConstants.White,
+    gridBorderColor:colorConstants.White,
 
 };
 
 export const dayColors = {
     backgroundColor: colorConstants.White,
-    settingsIconColor:colorConstants.Grey,
-    iconColor:colorConstants.Grey, 
-    textColor:colorConstants.Grey, 
+    chevronIconColor:colorConstants.Dark_Gray,
+    settingsIconColor:colorConstants.Gray,
+    iconColor:colorConstants.Gray, 
+    textColor:colorConstants.Gray, 
     accentColor:colorConstants.Pink,
     primaryColor:colorConstants.Dark_Blue,
     primaryDarkColor:colorConstants.Dark_Blue,
     tabColor: colorConstants.Dark_Blue,
+    gridBorderColor:colorConstants.Dark_Gray,
+    
 };
 
 export const constColors = {
-    accentColor:colorConstants.Grey
+    accentColor:colorConstants.Gray
 }

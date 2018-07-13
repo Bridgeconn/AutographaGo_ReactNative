@@ -32,12 +32,22 @@ export const languageStyle =(colorFile, sizeFile) =>{
     },
     VersionView:{
         flexDirection:"row",
-        justifyContent:'space-between',
-        marginHorizontal:16
+        // justifyContent:'space-between',
+        marginHorizontal:16,
+        
     },
     checkIcon:{
         fontSize:sizeFile.iconSize,
-        color:colorFile.iconColor
+        color:colorFile.iconColor,
+        position:'absolute',
+        right:0
+    },
+    divider:{
+        height:0.2,
+        backgroundColor:colorFile.iconColor,
+        marginLeft:32,
+        marginRight:16,
+        marginVertical:8
     }
     })
 }

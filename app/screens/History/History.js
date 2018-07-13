@@ -24,9 +24,15 @@ export default class History extends Component{
       <View>
       {
         navigation.state.params.historyListLength == 0 ? null :
-      <TouchableOpacity style={navigation.state.params.headerContainer} 
+      <TouchableOpacity 
+        style={{
+          flexDirection:"row",
+          alignItems:'center',
+          justifyContent:'center',
+          marginHorizontal:16
+        }}
         onPress={()=>navigation.state.params.onClearHistory()}>
-        <Text style={navigation.state.params.headerText}>Clear</Text>
+        <Text style={{ color:'white',fontSize:22, marginHorizontal:8}}>Clear</Text>
         <Icon name="delete-forever" color="#fff" size={24}  />
       </TouchableOpacity>
       }
@@ -56,10 +62,6 @@ export default class History extends Component{
   }
 
   async componentDidMount(){
-    this.props.navigation.setParams({
-      headerText:this.styles.headerText,
-      headerContainer:this.styles.headerContainer
-    })
     this.setState({isLoading: true}, async () => {
     
       let historyData  = await DbQueries.queryHistory()

@@ -9,6 +9,10 @@ export const numberSelection = (colorFile, sizeFile) =>{
         flex:1,
         flexDirection:'row'
    },
+    chapterSelectionContainer:{
+        flex:1,
+        backgroundColor:colorFile.backgroundColor        
+    },
    tabContainer:{
         flex:1,
         backgroundColor:colorFile.backgroundColor
@@ -49,7 +53,7 @@ export const numberSelection = (colorFile, sizeFile) =>{
    },
    chapterSelectionTouchable:{
         flex:0.25,
-        borderColor:'black',
+        borderColor:colorFile.gridBorderColor,
         borderRightWidth:1, 
         borderBottomWidth:1,
         height:width/4, 

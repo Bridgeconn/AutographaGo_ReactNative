@@ -44,7 +44,7 @@ export default class Home extends Component {
       sizeFile:this.props.screenProps.sizeFile,
       colorMode:this.props.screenProps.colorMode,
       lastRead:this.props.screenProps.lastRead,
-      bibleLanguage:this.props.screenProps.languageCode,
+      bibleLanguage:this.props.screenProps.languageName,
       bibleVersion:this.props.screenProps.versionCode,
       activeTab:true,
       iconPress: [],
@@ -99,8 +99,6 @@ export default class Home extends Component {
       colorMode: props.screenProps.colorMode,
       sizeFile:props.screenProps.sizeFile,
       lastRead: props.screenProps.lastRead,
-      bibleVersion:props.screenProps.versionCode,
-      bibleLanguage:props.screenProps.bibleLanguage,
       booksList: this.props.screenProps.booksList,
       OTSize:this.getOTSize(this.props.screenProps.booksList),
       NTSize:this.getNTSize(this.props.screenProps.booksList)
@@ -117,7 +115,7 @@ export default class Home extends Component {
 
   componentDidMount(){
     this.props.navigation.setParams({
-      bibleLanguage: this.props.screenProps.languageCode, 
+      bibleLanguage: this.props.screenProps.languageName, 
       bibleVersion: this.props.screenProps.versionCode,
       openLanguages: this.openLanguages,
       headerRightText:this.styles.headerRightText

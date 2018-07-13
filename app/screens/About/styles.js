@@ -5,12 +5,16 @@ const width = Dimensions.get('window').width;
 export const aboutPage =(colorFile, sizeFile) =>{
     return StyleSheet.create({
         container:{
-            flex:1,
             backgroundColor:colorFile.backgroundColor,
         },
         textStyle:{
                 fontSize:sizeFile.contentText,
-                color:colorFile.textColor
+                color:colorFile.textColor,
+        },
+        
+        textContainer:{
+            margin:16,
+            padding:8
         },
         featureList:{
             fontSize:sizeFile.contentText,
@@ -25,7 +29,8 @@ export const aboutPage =(colorFile, sizeFile) =>{
         },
         linkText:{
                 color: 'red',
-                textDecorationLine:'underline'
+                textDecorationLine:'underline',
+                fontSize:sizeFile.contentText
         },
         featureView:{
             flexDirection:'row'

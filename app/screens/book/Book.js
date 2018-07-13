@@ -323,7 +323,7 @@ export default class Book extends Component {
                                         />
                                 </Text>
                             }
-                            ListFooterComponent={<View style={{height:64, marginBottom:4}} />}
+                            ListFooterComponent={<View style={styles.addToSharefooterComponent} />}
                             />
                         :
                             <View style={this.styles.chapterList}>
@@ -356,20 +356,18 @@ export default class Book extends Component {
                 
                 {this.state.showBottomBar || this.state.currentVisibleChapter == 1
                 ? null :
-                <View style={{borderRadius: 40, margin:8, position:'absolute', bottom:0, left:0,
-                    width: 64, height: 64, backgroundColor: 'white', justifyContent:'center'}}>
+                <View style={this.styles.bottomBarPrevView}>
                     <Icon name={'chevron-left'} color="black" size={36} 
-                        style={{ alignItems:'center', zIndex:2, alignSelf:'center'}} 
+                        style={this.styles.bottomBarChevrontIcon} 
                         onPress={()=> this.updateCurrentChapter(-1)}
                         />
                 </View>
                 }
                 {this.state.showBottomBar || this.state.currentVisibleChapter == this.state.modelData.length 
                 ? null :
-                <View style={{borderRadius: 40, margin:8, position:'absolute', bottom:0, right:0,
-                    width: 64, height: 64, backgroundColor: 'white', justifyContent:'center'}}>
-                    <Icon name={'chevron-right'} color="black" size={36} 
-                        style={{ alignItems:'center', zIndex:2, alignSelf:'center'}} 
+                <View style={this.styles.bottomBarNextView}>
+                    <Icon name={'chevron-right'} 
+                        style={this.styles.bottomBarChevrontIcon} 
                         onPress={()=> this.updateCurrentChapter(1)}
                         />
                 </View>

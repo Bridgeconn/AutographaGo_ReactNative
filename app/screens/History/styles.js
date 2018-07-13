@@ -18,14 +18,6 @@ export const historyStyle =(colorFile, sizeFile) =>{
         fontSize:sizeFile.titleText,
         color:colorFile.textColor
     },
-    headerText:{
-        color:colorFile.textColor,
-        fontSize:sizeFile.titleText,
-        marginHorizontal:8
-    },
-    headerContainer:{
-        flexDirection:"row",alignItems:'center',justifyContent:'center',marginHorizontal:16
-    },
     contentText:{
         marginHorizontal:16,
         marginVertical:4,

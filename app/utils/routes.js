@@ -29,6 +29,7 @@ import Realm from 'realm'
 
 const StackNavigate = (styles) => StackNavigator(
   {  
+    
       Splash: {
         screen: Splash,
       },
@@ -71,16 +72,16 @@ const StackNavigate = (styles) => StackNavigator(
       Book: {
         screen: Book,
       },
-      
+      Language:{
+        screen:Language
+      },
       DownloadLanguage: {
         screen: DownloadLanguage
       },
       DownloadVersion: {
         screen: DownloadVersion
       },
-      Language:{
-        screen:Language
-      },
+     
       Search: {
         screen: Search,
       },

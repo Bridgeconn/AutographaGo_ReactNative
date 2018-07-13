@@ -10,6 +10,7 @@ import {
 import DbQueries from '../../utils/dbQueries';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import {getBookNameFromMapping} from '../../utils/UtilFunctions';
+import colorConstants from '../../utils/colorConstants.js'
 import Accordion from 'react-native-collapsible/Accordion';
 import {List,ListItem, Header} from 'native-base'
 import { languageStyle } from './styles.js'
@@ -28,7 +29,10 @@ export default class Language extends Component{
       console.log("language page")
     this.state = {
       isLoading: false,
+      colorMode:this.props.screenProps.colorMode,
       languageData:[],
+      index:0
+
     }
     this.styles = languageStyle(props.screenProps.colorFile, props.screenProps.sizeFile);    
 
@@ -37,22 +41,31 @@ export default class Language extends Component{
   componentDidMount(){
     this.setState({isLoading: true}, async () => {
       var res = await DbQueries.queryLanguages()
-      console.log("result in history page"+(res.length))
+      // console.log("result in history page"+(res.length))
         let languageData = [];
         for (var i=0; i<res.length;i++) {
+          if (res[i].languageCode == 'ENG'){
+            this.setState({index:i})
+          }
           let verList = [];
           for (var j=0;j<res[i].versionModels.length;j++) {
             let verModel = {versionName: res[i].versionModels[j].versionName,
-              versionCode: res[i].versionModels[j].versionCode }
+              versionCode: res[i].versionModels[j].versionCode, languageCode: res[i].languageCode }
             verList.push(verModel);
           }
           languageData.push({"languageCode" : res[i].languageCode, "languageName": res[i].languageName,
             versionModels: verList})
         }
+        
+
       this.setState({languageData, isLoading: false})
       })
   }
+  onDeleteVersion(lanCode, verCode){
+    // DbQueries.deleteLangVersion(lanCode,verCode)
 
+    console.log("next task for language")
+  }
   _renderHeader = (data, index, isActive) =>{
     console.log("language code "+data.languageCode)
     return (
@@ -61,7 +74,7 @@ export default class Language extends Component{
         this.state.isLoading ? <ActivityIndicator animate = {true}/> : 
         data.versionModels.length == 0 ? null : 
         <View style={this.styles.LanguageHeader}>
-         <Text style={this.styles.headerText}>{data.languageCode}</Text>
+         <Text style={this.styles.headerText}>{data.languageName}  </Text>
          <Icon name={isActive ? "keyboard-arrow-down" : "keyboard-arrow-up" } style={this.styles.iconCustom} />
         </View>
       }
@@ -72,17 +85,32 @@ export default class Language extends Component{
   _renderContent  = (data) => {
     console.log("is active ")
     console.log("version model"+JSON.stringify(data))
+
+    let activeBgColor = 
+      this.state.colorMode == AsyncStorageConstants.Values.DayMode ? colorConstants.Dark_Gray : colorConstants.White
+    let inactiveBgColor = 
+      this.state.colorMode == AsyncStorageConstants.Values.DayMode ? colorConstants.Gray : colorConstants.Light_Gray
+
     return (
       <View>
         {
           this.state.isLoading ? <ActivityIndicator animate = {true}/> : 
           data.versionModels.map((item, index) => 
-             <TouchableOpacity style={this.styles.VersionView}onPress={()=>this._updateLanguage(data.languageCode,data.languageName, item.versionCode,item.versionName)}>
-              <Text style={this.styles.contentText}>
+          <View>
+             <TouchableOpacity style={this.styles.VersionView} onPress={()=>this._updateLanguage(data.languageCode,data.languageName, item.versionCode,item.versionName)}>
+              <Text style={[this.styles.contentText,
+                  {color:this.props.screenProps.versionCode == item.versionCode && this.props.screenProps.languageCode == item.languageCode
+                    ? activeBgColor : inactiveBgColor}]}>
                {item.versionName}
               </Text>
-              <Icon name= {this.props.screenProps.versionCode == item.versionCode ? 'check' : null} style={this.styles.checkIcon}/>
+              <Icon 
+                name= {(item.languageCode == 'ENG') && (item.versionCode == 'ULB' || item.versionCode=='UDB') ? null : 'delete'} 
+                style={this.styles.checkIcon} 
+                onPress={()=>{this.onDeleteVersion(item.languageCode,item.versionCode)}}
+              />
              </TouchableOpacity>
+             <View style={this.styles.divider}/>
+          </View>
         )
       }
         </View>
@@ -98,7 +126,7 @@ export default class Language extends Component{
     ]);
     this.props.screenProps.updateLanguage(lanCode,langName, verCode, verName);
 
-    this.props.navigation.state.params.updateLanguage(lanCode,verCode)
+    this.props.navigation.state.params.updateLanguage(langName,verCode)
     this.props.navigation.dispatch(NavigationActions.back())    
   }
   
@@ -116,7 +144,7 @@ export default class Language extends Component{
         renderHeader={this._renderHeader}
         renderContent={this._renderContent}
         underlayColor="tranparent"
-        initiallyActiveSection={0}
+        initiallyActiveSection={this.state.index}
       />
       }
       </View>
