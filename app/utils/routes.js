@@ -44,6 +44,9 @@ const StackNavigate = (styles) => StackNavigator(
       },
       EditNote: {
         screen: EditNote,
+        navigationOptions: {
+          headerBackTitleStyle: 'white',
+        }
       },
       Highlights: {
         screen: Highlights,

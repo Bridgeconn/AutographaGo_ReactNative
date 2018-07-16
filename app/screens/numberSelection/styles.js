@@ -82,14 +82,15 @@ export const numberSelection = (colorFile, sizeFile) =>{
     bookName:{
         textAlign:"center",
         alignItems:"center",
-        color:'black', 
-        margin:8
+        color:colorFile.textColor,
+        margin:8,
+        fontSize:sizeFile.contentText
     },
     //SelectChapter
 
     selectGridNum:{
         flex:0.25,
-        borderColor:'black',
+        borderColor:colorFile.gridBorderColor,
         borderRightWidth:1, 
         borderBottomWidth:1,
         height:width/4,

@@ -46,8 +46,7 @@ const TabNav = TabNavigator({
     tabBarPosition: 'bottom',
     swipeEnabled: false,
     labelStyle: {
-      fontSize: 22,
-      padding: 12
+      fontSize: 18,
     }
   }
 });

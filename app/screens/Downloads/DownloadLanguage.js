@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import DownloadUtil from '../../utils/DownloadUtil'
 import {Card} from 'native-base'
+import {downloadPageStyle} from './styles.js'
 
 export default class DownloadLanguage extends Component {
 
@@ -22,6 +23,7 @@ export default class DownloadLanguage extends Component {
             isLoading: false,
             refreshing: false,
         }
+        this.styles = downloadPageStyle(this.props.screenProps.colorFile, this.props.screenProps.sizeFile);
     }
 
     componentDidMount() {
@@ -37,13 +39,14 @@ export default class DownloadLanguage extends Component {
                 this.setState({isLoading: false, refreshing: false})
             });
         })
+
     }
     
     renderItem = ({item,index})=>{
         return(
-            <Card style={{padding:8}}>
-                <TouchableOpacity onPress={()=> this.props.navigation.navigate('DownloadVersion', {languageName: item})} >
-                    <Text>{item}</Text>
+            <Card style={this.styles.cardStyle}>
+                <TouchableOpacity onPress={()=> this.props.navigation.navigate('DownloadVersion', {languageName: item})} style={this.styles.cardItemStyle}>
+                    <Text style={this.styles.textStyle}>{item}</Text>
                 </TouchableOpacity>
             </Card>
         )
@@ -51,7 +54,8 @@ export default class DownloadLanguage extends Component {
 
     render() {
         return (
-            <View style={{flex:1,margin:8}}>
+            <View style={this.styles.container}>
+            <View style={this.styles.containerMargin}>
                 {this.state.isLoading ? 
                 <ActivityIndicator
                     animating={this.state.isLoading} 
@@ -63,6 +67,7 @@ export default class DownloadLanguage extends Component {
                     renderItem={this.renderItem}
                 />
                 }
+            </View>
             </View>
         );
     }

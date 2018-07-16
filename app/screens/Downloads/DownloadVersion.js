@@ -11,6 +11,8 @@ import {Card} from 'native-base'
 var RNFS = require('react-native-fs');
 import { zip, unzip, unzipAssets, subscribe } from 'react-native-zip-archive'
 import USFMParser from '../../utils/USFMParser'
+import {downloadPageStyle} from './styles.js'
+
 
 export default class DownloadVersion extends Component {
 
@@ -31,6 +33,8 @@ export default class DownloadVersion extends Component {
         }
         this.downloadZip = this.downloadZip.bind(this)
         this.readDirectory = this.readDirectory.bind(this)
+        this.styles = downloadPageStyle(this.props.screenProps.colorFile, this.props.screenProps.sizeFile);
+        
     }
 
     componentDidMount() {
@@ -65,7 +69,7 @@ export default class DownloadVersion extends Component {
     downloadZip(version) {
         this.downloadMetadata(this.state.languageName, version)
 
-        this.setState({isDownloading:true, isLoadingText: 'GET ZIP'}, () => {
+        this.setState({isDownloading:true,isLoading:false, isLoadingText: 'GET ZIP'}, () => {
             RNFS.mkdir(RNFS.DocumentDirectoryPath+'/AutoBibles').then(result => {
                 RNFS.downloadFile({
                     fromUrl: 
@@ -136,9 +140,9 @@ export default class DownloadVersion extends Component {
     
     renderItem = ({item,index})=>{
         return(
-            <Card style={{padding:8}}>
-            <TouchableOpacity onPress={() => this.downloadZip(item)} >
-                <Text >{item}</Text>
+            <Card style={this.styles.cardStyle}>
+            <TouchableOpacity onPress={() => this.downloadZip(item)} style={this.styles.cardItemStyle}>
+                <Text style={this.styles.textStyle}>{item}</Text>
             </TouchableOpacity>
             </Card>
         )
@@ -146,7 +150,8 @@ export default class DownloadVersion extends Component {
 
     render() {
         return (
-            <View style={{flex:1,margin:8}}>
+            <View style={this.styles.container}>
+            <View style={this.styles.containerMargin}>
             {this.state.isLoading ? 
                 <ActivityIndicator
                     animating={this.state.isLoading} 
@@ -159,8 +164,8 @@ export default class DownloadVersion extends Component {
                 />
             }
             {this.state.isDownloading ? 
-                <View style={{flex:1, alignItems:'center', justifyContent:'center', flexDirection:'row'}}>
-                <Text>
+                <View style={this.styles.loaderStyle}>
+                <Text style={this.styles.textLoader}>
                     Downloading
                 </Text>
                 <ActivityIndicator
@@ -170,9 +175,10 @@ export default class DownloadVersion extends Component {
 
                 </View>
              : null}
-             <Text>
+             <Text style={this.styles.textLoader}>
                  {this.state.isLoadingText}
              </Text>
+            </View>
             </View>
         );
     }

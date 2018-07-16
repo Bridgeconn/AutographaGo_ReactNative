@@ -5,14 +5,14 @@ import {
   ActivityIndicator,
   View,
   TouchableOpacity,
-  TouchableHighlight
+  TouchableHighlight,
+  Button
 } from 'react-native';
 import DbQueries from '../../utils/dbQueries';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import {getBookNameFromMapping} from '../../utils/UtilFunctions';
 import colorConstants from '../../utils/colorConstants.js'
 import Accordion from 'react-native-collapsible/Accordion';
-import {List,ListItem, Header} from 'native-base'
 import { languageStyle } from './styles.js'
 import {NavigationActions} from 'react-navigation'
 import AsyncStorageUtil from '../../utils/AsyncStorageUtil';
@@ -62,7 +62,7 @@ export default class Language extends Component{
       })
   }
   onDeleteVersion(lanCode, verCode){
-    // DbQueries.deleteLangVersion(lanCode,verCode)
+    // DbQueries.deleteLangVerszion(lanCode,verCode)
 
     console.log("next task for language")
   }
@@ -147,6 +147,16 @@ export default class Language extends Component{
         initiallyActiveSection={this.state.index}
       />
       }
+       <View
+        style={this.styles.buttonCustom}
+       >
+      <Button
+        onPress={()=>this.props.navigation.navigate("DownloadLanguage")}
+        title="Download More Bibles"
+        color="#000"
+        // accessibilityLabel="Learn more about this purple button"
+      />
+      </View>
       </View>
   )
 }

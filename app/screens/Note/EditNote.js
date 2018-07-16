@@ -226,6 +226,7 @@ export default class EditNote extends Component {
           ref={(r)=>this.richtext = r}
           hiddenTitle={true}
           contentPlaceholder="New Note"
+          
           initialContentHTML={this.state.noteBody}
           editorInitializedCallback={() => this.onEditorInitialized()}
         />

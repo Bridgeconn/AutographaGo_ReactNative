@@ -49,7 +49,9 @@ export const noteStyle =(colorFile, sizeFile) =>{
         flex:8
     },
     addIconCustom:{
-    flex:1
+    flex:1,
+    fontSize:sizeFile.iconSize,
+    color:colorFile.iconColor
     },
     noteTextView:
     {height:2, 
@@ -66,7 +68,8 @@ export const noteStyle =(colorFile, sizeFile) =>{
         justifyContent:'space-between',
         flexDirection:'row',
          alignItems:'center',
-          margin:8
+        marginHorizontal:8,
+        marginVertical:16
     },
     noteReferenceViewCustom:{
         justifyContent:'space-between',
@@ -76,7 +79,8 @@ export const noteStyle =(colorFile, sizeFile) =>{
     },
     tapButton:{
         flex:8,
-        color:colorFile.textColor
+        color:colorFile.textColor,
+        fontSize:sizeFile.titleText
     },
     emptyMessageContainer:{
         alignItems:'center',

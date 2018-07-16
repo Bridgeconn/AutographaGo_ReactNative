@@ -48,6 +48,12 @@ export const languageStyle =(colorFile, sizeFile) =>{
         marginLeft:32,
         marginRight:16,
         marginVertical:8
+    },
+    buttonCustom:{
+        borderRadius: 10,            
+        position: 'absolute',                                          
+        bottom: 20,                                                    
+        right: 20, 
     }
     })
 }
