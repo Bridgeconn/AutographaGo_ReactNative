@@ -101,7 +101,6 @@ export const noteStyle =(colorFile, sizeFile) =>{
         flexDirection: 'column-reverse'
     },
     richTextEditor:{
-        flex:1, 
         height:height,
         color:colorFile.textColor,
         backgroundColor:colorFile.backgroundColor

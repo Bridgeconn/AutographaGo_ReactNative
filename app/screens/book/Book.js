@@ -315,7 +315,7 @@ export default class Book extends Component {
                                             ref={child => (this[`child_${item.chapterNumber}_${index}`] = child)}
                                             verseData = {item}
                                             index = {index}
-                                            styles = {this.styles}
+                                            styles = {this.styles.VerseText}
                                             selectedReferences = {this.state.selectedReferenceSet}
                                             getSelection = {(verseIndex, chapterNumber, verseNumber) => {
                                             this.getSelectedReferences(verseIndex, chapterNumber, verseNumber)
@@ -386,7 +386,7 @@ export default class Book extends Component {
           <View style={this.styles.bottomBar}>
   
             <View style={this.styles.bottomOption}>
-            <TouchableOpacity onPress={this.doHighlight}>
+            <TouchableOpacity onPress={this.doHighlight}  style={this.styles.touchableView}>
               <Text style={this.styles.bottomOptionText}>
                 {this.state.bottomHighlightText == true ? 'HIGHLIGHT' : 'REMOVE HIGHLIGHT' }
               </Text>
@@ -397,7 +397,7 @@ export default class Book extends Component {
             <View style={this.styles.bottomOptionSeparator} />
             
             <View style={this.styles.bottomOption}>  
-              <TouchableOpacity onPress={this.addToNotes}>        
+              <TouchableOpacity onPress={this.addToNotes} style={this.styles.touchableView}>        
                 <Text style={this.styles.bottomOptionText}>
                   NOTES
                 </Text>
@@ -408,7 +408,7 @@ export default class Book extends Component {
             <View style={this.styles.bottomOptionSeparator} />          
   
             <View style={this.styles.bottomOption}>   
-              <TouchableOpacity onPress={this.addToShare}>       
+              <TouchableOpacity onPress={this.addToShare}  style={this.styles.touchableView}>       
                 <Text style={this.styles.bottomOptionText}>
                   SHARE
                 </Text>

@@ -72,8 +72,15 @@ export default class Notes extends Component {
     this.setState({ notesData: res})
   }
 
+  updateNote(){
+    console.log("updateLanguage")
+  }
+
   componentDidMount(){
-    this.props.navigation.setParams({ newNote: this.createNewNote})
+    this.props.navigation.setParams({ 
+      newNote: this.createNewNote,
+      updateNote:this.updateNote
+    })
     this.queryDb()
   }
 
@@ -83,7 +90,8 @@ export default class Notes extends Component {
       referenceList: this.state.referenceList,
       bookId: this.state.bookId,
       versionCode: this.state.versionCode,
-      languageCode: this.state.languageCode
+      languageCode: this.state.languageCode,
+      updateNote:this.updateNote
     })
   }
   

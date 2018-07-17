@@ -25,13 +25,14 @@ import { noteStyle } from './styles.js';
 export default class EditNote extends Component {
   static navigationOptions = ({navigation}) =>({
     headerTitle: 'Edit Note',
-    headerLeft:(<HeaderBackButton style={{color:"#fff"}} onPress={()=>navigation.state.params.handleBack()}/>),
+    tintColor:'white',
+    headerLeft:(<HeaderBackButton onPress={()=>navigation.state.params.handleBack()}/>),
     headerRight:(
       <TouchableOpacity style={{margin:8}} onPress={()=>navigation.state.params.handleAdd()}>
         <Text style={{fontSize:12,color:'#fff'}}>DONE</Text>
       </TouchableOpacity>
       ),
-      headerTintColor: '#fff'
+    
   });
 
   constructor(props){
@@ -89,6 +90,7 @@ export default class EditNote extends Component {
       this.props.navigation.state.params.onRefresh(this.state.noteIndex, contentBody, 
         this.state.noteIndex == -1 ? time : this.state.noteObject.createdTime, time, this.state.referenceList);
     }
+    this.props.navigation.state.params.updateNote()
     this.props.navigation.dispatch(NavigationActions.back())
   }
 
@@ -107,14 +109,14 @@ export default class EditNote extends Component {
   onBack = async () =>{
     var contentBody = await this.getHtml()
       if (this.state.noteIndex == -1) {
-        if (contentBody != '' || this.state.referenceList.length > 0) {
+        if (contentBody != '' && this.state.referenceList.length > 0) {
           this.showAlert();
           return;
         }
       } else {
         if(contentBody !== this.props.navigation.state.params.noteObject.body
-            || !this.checkRefArrayEqual()){
-          this.showAlert();
+            && !this.checkRefArrayEqual()){
+            this.showAlert();
           return
         }
       }
@@ -226,7 +228,6 @@ export default class EditNote extends Component {
           ref={(r)=>this.richtext = r}
           hiddenTitle={true}
           contentPlaceholder="New Note"
-          
           initialContentHTML={this.state.noteBody}
           editorInitializedCallback={() => this.onEditorInitialized()}
         />

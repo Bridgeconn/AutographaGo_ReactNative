@@ -1,6 +1,7 @@
 import {StyleSheet,Dimensions} from 'react-native'
 import { Icon } from 'native-base';
 const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
 
 export const styles =(colorFile, sizeFile) =>{
     return StyleSheet.create({
@@ -20,18 +21,38 @@ export const styles =(colorFile, sizeFile) =>{
         marginBottom:4
     },
     bottomBar:{
+        position:'absolute', 
+        bottom:0,
+        width: width, 
+        height: 60, 
+        backgroundColor:"blue",
+        flexDirection:'row',
+        justifyContent:'center'
 
     },
     bottomOption:{
-
+        flexDirection:'row',
+        width:width/3,
+        justifyContent:'center',
+        alignItems:'center'
+        
     },
     bottomOptionText:{
-
+        alignItems:'center'
+    },
+    bottomOptionIcon:{
+        alignItems:'center',
+        color:colorFile.backgroundColor,   
+        fontSize:sizeFile.iconSize 
     },
     bottomOptionSeparator:{
 
     },
-
+    touchableView:{
+        alignItems:'center'
+    },
+    VerseText:{
+    },
     bottomBarPrevView:{
         borderRadius: 40, 
         margin:8, 
@@ -40,7 +61,8 @@ export const styles =(colorFile, sizeFile) =>{
         left:0,
         width: 64, 
         height: 64, 
-        backgroundColor: colorFile.backgroundColor,
+        // backgroundColor: colorFile.backgroundColor,
+        backgroundColor:'rgba(255,255,255,0.8)',
         justifyContent:'center'
     },
     bottomBarNextView:{
@@ -51,7 +73,7 @@ export const styles =(colorFile, sizeFile) =>{
         right:0,
         width: 64, 
         height: 64, 
-        backgroundColor: colorFile.backgroundColor,
+        backgroundColor:'rgba(255,255,255,0.8)',
         justifyContent:'center'
     },
     bottomBarChevrontIcon:{ 
@@ -60,6 +82,30 @@ export const styles =(colorFile, sizeFile) =>{
         alignSelf:'center',
         color:colorFile.chevronIconColor,
         fontSize: sizeFile.chevronIconSize
+    },
+    verseNumber:{
+        fontSize:sizeFile.contentText
+    },
+    verseChapterNumber:{
+        fontSize:sizeFile.titleText,
+        fontWeight:'bold'
+    },
+    verseTextSelectedHighlighted:{
+        backgroundColor:'yellow',
+        textDecorationLine: 'underline',
+        
+    },
+    verseTextNotSelectedNotHighlighted:{
+
+    },
+    verseTextNotSelectedHighlighted:{
+        backgroundColor:'yellow'
+    },
+    verseTextSelectedNotHighlighted:{
+        textDecorationLine: 'underline',
+    },
+    addToSharefooterComponent:{
+
     }
 
    
