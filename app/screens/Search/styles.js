@@ -30,7 +30,8 @@ export const searchStyle =(colorFile, sizeFile) =>{
         },
         textLength:{
             alignSelf:"center",
-            color:colorFile.textColor
+            color:colorFile.textColor,
+            fontSize:sizeFile.contentText
         },
         headerText:{
             width:width,

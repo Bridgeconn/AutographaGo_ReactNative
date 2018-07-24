@@ -87,7 +87,6 @@ export default class Home extends Component {
     this.props.navigation.setParams({
       bibleLanguage: language,
       bibleVersion: version
-  
     })
   }
 
@@ -258,14 +257,13 @@ renderItem = ({item, index})=> {
               ref={ref => this.flatlistRef = ref}
               data={this.state.booksList}
               getItemLayout={this.getItemLayout}
-              // onScroll={this.handleScroll}
+              onScroll={this.handleScroll}
               renderItem={this.renderItem}
               extraData={this.styles}
-
+                  
               onViewableItemsChanged={this.onViewableItemsChanged}
               viewabilityConfig={this.viewabilityConfig}
               // onViewableItemsChanged={this.handleViewableItemsChanged}
-              // viewabilityConfig={this.viewabilityConfig}
             />
         </View> 
       </View>

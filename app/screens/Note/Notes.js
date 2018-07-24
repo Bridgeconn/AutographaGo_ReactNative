@@ -66,32 +66,35 @@ export default class Notes extends Component {
 
   async queryDb() {
     let res = await DbQueries.queryNotes();
+    console.log("NOTES RESULTS ............"+res)
+    // this.setState(prevState => ({
+    //   notesData: [...prevState.notesData, res]
+    // }))
     if(res==null){
       return
     }
-    this.setState({ notesData: res})
   }
 
-  updateNote(){
-    console.log("updateLanguage")
-  }
+  
 
   componentDidMount(){
     this.props.navigation.setParams({ 
       newNote: this.createNewNote,
       updateNote:this.updateNote
     })
+   
     this.queryDb()
   }
 
   openEdit(index, noteObject) {
-    this.props.navigation.navigate('EditNote',{index:index, noteObject: noteObject, 
-      onDelete: this.onDelete, onRefresh: this.onRefresh, 
+    this.props.navigation.navigate('EditNote',{index:index, 
+      noteObject: noteObject, 
+      onDelete: this.onDelete, 
+      onRefresh: this.onRefresh, 
       referenceList: this.state.referenceList,
       bookId: this.state.bookId,
       versionCode: this.state.versionCode,
       languageCode: this.state.languageCode,
-      updateNote:this.updateNote
     })
   }
   

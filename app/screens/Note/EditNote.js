@@ -25,8 +25,7 @@ import { noteStyle } from './styles.js';
 export default class EditNote extends Component {
   static navigationOptions = ({navigation}) =>({
     headerTitle: 'Edit Note',
-    tintColor:'white',
-    headerLeft:(<HeaderBackButton onPress={()=>navigation.state.params.handleBack()}/>),
+    headerLeft:(<HeaderBackButton tintColor='white' onPress={()=>navigation.state.params.handleBack()}/>),
     headerRight:(
       <TouchableOpacity style={{margin:8}} onPress={()=>navigation.state.params.handleAdd()}>
         <Text style={{fontSize:12,color:'#fff'}}>DONE</Text>
@@ -90,7 +89,6 @@ export default class EditNote extends Component {
       this.props.navigation.state.params.onRefresh(this.state.noteIndex, contentBody, 
         this.state.noteIndex == -1 ? time : this.state.noteObject.createdTime, time, this.state.referenceList);
     }
-    this.props.navigation.state.params.updateNote()
     this.props.navigation.dispatch(NavigationActions.back())
   }
 
@@ -111,11 +109,11 @@ export default class EditNote extends Component {
       if (this.state.noteIndex == -1) {
         if (contentBody != '' && this.state.referenceList.length > 0) {
           this.showAlert();
-          return;
+          return
         }
       } else {
-        if(contentBody !== this.props.navigation.state.params.noteObject.body
-            && !this.checkRefArrayEqual()){
+        if(contentBody !== this.props.navigation.state.params.noteObject.body 
+            || !this.checkRefArrayEqual()){
             this.showAlert();
           return
         }
@@ -213,9 +211,11 @@ export default class EditNote extends Component {
           ? 
           <Text style={this.styles.tapButton}>Tap button to add references</Text> 
           : 
-          <FlowLayout style={this.styles.tapButton} ref="flow" dataValue={this.state.referenceList} 
+          <FlowLayout style={this.styles.tapButton} ref="flow" 
+            dataValue={this.state.referenceList} 
             openReference={(index) => {this.openReference(index)}} 
             deleteReference={(index) => {this.deleteReference(index)}}
+            styles={this.styles}
           />
         }
         <Icon name="add-circle" style={this.styles.addIconCustom} size={28} color="gray" onPress={()=> {this.onAddVersePress()}} />

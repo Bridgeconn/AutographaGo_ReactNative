@@ -5,13 +5,12 @@ import VersionModel from '../models/VersionModel'
 import BookModel from '../models/BookModel'
 import ChapterModel from '../models/ChapterModel'
 import VerseComponentsModel from '../models/VerseComponentsModel'
-import dbHelper from './dbHelper';
 import NoteModel from '../models/NoteModel';
 
 class DbQueries {
 
     queryLanguages() {
-        return DbHelper.query('LanguageModel', null, 'languageCode', false);
+        return DbHelper.query('LanguageModel', null, 'languageName', false);
     }
 
     queryLanguageWithCode(code: string) {
@@ -116,11 +115,17 @@ class DbQueries {
     addHistory(langCode, verCode, bookId, chapterNumber, time) {
         DbHelper.addHistory(langCode, verCode, bookId, chapterNumber, time)
     }
+
     queryHistory(){
         return DbHelper.queryHistory();
     }
+
     clearHistory(){
-        dbHelper.clearHistory()
+        DbHelper.clearHistory()
+    }
+
+    deleteLanguage(lanCode, verCode){
+        DbHelper.deleteLanguage(lanCode, verCode)
     }
 }
 

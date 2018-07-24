@@ -24,6 +24,7 @@ export default class BookMarks extends Component {
 
     this.mappingData = id_name_map;
     this.removeBookmark = this.removeBookmark.bind(this)
+    this.refreshData = this.refreshData.bind(this)
 
     this.state = {
       bookmarkList: [],
@@ -32,36 +33,24 @@ export default class BookMarks extends Component {
     }
     
     this.styles = bookStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
-    
+    this.refreshData = this.refreshData.bind(this)
   }
 
   async componentDidMount() {
-    this.setState({isLoading: true}, async () => {
-    let modelData = await DbQueries.queryBooks(this.props.screenProps.versionCode, 
-    this.props.screenProps.languageCode);
-    console.log("model len= " + modelData.length)
-    this.setState({modelData})
-    var bookmarkList = []
-    for (var i=0; i<modelData.length; i++) {
-      var list = modelData[i].bookmarksList
-      if (list) {
-        console.log("loist len = "+modelData[i].bookId+" : "+modelData[i].bookmarksList.length)
-        for (var j=0; j<list.length; j++) {
-          var model={bookId: modelData[i].bookId, bookName: getBookNameFromMapping(modelData[i].bookId), 
-            chapterNumber: list[j]}
-          bookmarkList.push(model)
-        }
-      }
-    }
-    this.setState({bookmarkList,isLoading:false})
-  }
-)
-}
+    this.refreshData()  
+  } 
 
   // getItemLayout = (data, index) => {
   //   return { length: height, offset: height * index, index };
   // }
 
+  // componentWillReceiveProps(props) {
+  //   console.log("RECEIVE PROPS ::: " + JSON.stringify(props))
+  //   console.log("RECEIVE PROPS BOOK<ARKS ::: " + JSON.stringify(props.screenProps.updateBookmarks))
+  //   if (props.screenProps.updateBookmarks == true) {
+  //     this.refreshData()
+  //   }
+  // }
 
 
   removeBookmark(bookId, chapterNumber, index) {
@@ -75,6 +64,37 @@ export default class BookMarks extends Component {
     bookmarkList.splice(index, 1);
     this.setState({bookmarkList})
   }
+
+  refreshData(){
+    this.setState({isLoading: true}, async () => {
+      let modelData = await DbQueries.queryBooks(this.props.screenProps.versionCode, 
+      this.props.screenProps.languageCode);
+      console.log("model len= " + modelData.length)
+      this.setState({modelData})
+      var bookmarkList = []
+      for (var i=0; i<modelData.length; i++) {
+        var list = modelData[i].bookmarksList
+        if (list) {
+          console.log("loist len = "+modelData[i].bookId+" : "+modelData[i].bookmarksList.length)
+          for (var j=0; j<list.length; j++) {
+            var model={bookId: modelData[i].bookId, bookName: getBookNameFromMapping(modelData[i].bookId), 
+              chapterNumber: list[j]}
+            bookmarkList.push(model)
+          }
+        }
+      }
+      this.setState({bookmarkList,isLoading:false})
+    }
+  )
+  }
+
+  updateBookmark(){
+    this.refreshData()
+  }
+  // componentWillUnmount(){
+  //   console.log("book mark add")
+  //   this.props.navigation.setParams({updateBookmark:this.updateBookmark})
+  // }
   
   render() {
     return (
@@ -87,16 +107,22 @@ export default class BookMarks extends Component {
           contentContainerStyle={this.state.bookmarkList.length === 0 && this.styles.centerEmptySet}
           // getItemLayout={this.getItemLayout}
           renderItem={({item, index}) => 
-            <View style={this.styles.bookmarksView}>
-              <Text style={this.styles.bookmarksText}>{item.bookName} {item.chapterNumber}</Text>
+            <TouchableOpacity style={this.styles.bookmarksView}
+              onPress={()=>this.props.navigation.navigate('Book', {bookId: item.bookId, 
+                bookName: item.bookName, chapterNumber: item.chapterNumber,
+                updateBookmark:this.updateBookmark
+              })}>
+
+              <Text style={this.styles.bookmarksText}>
+                {item.bookName} {item.chapterNumber}
+              </Text>
               <Icon name='delete-forever' style={this.styles.iconCustom}  size={28} onPress={() => {
-                
                 this.removeBookmark(item.bookId, item.chapterNumber, index)
                 }
                 } 
               />
           
-            </View>
+            </TouchableOpacity>
           }
           ListEmptyComponent={
 

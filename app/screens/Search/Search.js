@@ -34,7 +34,7 @@ export default class Search extends Component {
         headerTitle: (<TextInput
           placeholder="Search"
           underlineColorAndroid = 'transparent'
-          style={{color:'white'}}
+          style={{color:'white',width:Dimensions.get('window').width-90}}
           onChangeText={(text) =>params.onTextChange(text)}
           placeholderTextColor={'#fff'} 
           returnKeyType="search"
@@ -44,7 +44,7 @@ export default class Search extends Component {
           onSubmitEditing={() => params.onSearchText()}
       />),
       headerRight:(
-          <Icon name='cancel' size={28} style={{marginHorizontal:8}}onPress={(text)=>params.clearData()}/>
+          <Icon name='cancel' size={28} style={{marginHorizontal:8}} onPress={(text)=>params.clearData()}/>
         )
       }
     }

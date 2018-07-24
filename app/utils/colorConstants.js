@@ -9,7 +9,9 @@ module.exports = {
         Green:'#26A65B',
         Off_White:'#f4f4f1',
         MODERATE_COLOR: "#3F51B5",
-        Light_Gray:'#A9A9A9'
+        Light_Gray:'#A9A9A9',
+        SEMI_TRANS_BLACK:'rgba(0,0,0,0.5)',
+        SEMI_TRANS_WHITE:'rgba(225,225,225,0.5)'
 }
 
 

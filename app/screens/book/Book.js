@@ -12,7 +12,7 @@ import {
   Share,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import {createResponder} from 'react-native-gesture-responder';
+import {createResponder } from 'react-native-gesture-responder';
 
 import DbQueries from '../../utils/dbQueries'
 import VerseView from './VerseView'
@@ -21,6 +21,7 @@ import AsyncStorageConstants from '../../utils/AsyncStorageConstants';
 const Constants = require('../../utils/constants')
 import { styles } from './styles.js';
 import id_name_map from '../../assets/mappings.json'
+import {NavigationActions} from 'react-navigation'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -79,6 +80,7 @@ export default class Book extends Component {
 
   }
 
+  
   componentWillReceiveProps(props){
     // console.log("will recievr props"+JSON.stringify(props))
     this.setState({
@@ -152,6 +154,7 @@ export default class Book extends Component {
       this.queryBook()
     })
   }
+  
 
   async queryBook() {
     let model = await DbQueries.queryBookWithId(this.props.screenProps.versionCode, 
@@ -176,6 +179,7 @@ export default class Book extends Component {
     this.setState({isBookmark: index > -1 ? false : true}, () => {
         this.props.navigation.setParams({isBookmark: this.state.isBookmark})      
     })
+
   }
 
   getSelectedReferences(vIndex, chapterNum, vNum) {
@@ -237,7 +241,7 @@ export default class Book extends Component {
     }
     return null;
   }
-
+ 
   addToNotes = () => {
     let refList = []
     let id = this.state.bookId
@@ -281,6 +285,10 @@ export default class Book extends Component {
     }
     AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.LastReadReference, lastRead);
     this.props.screenProps.updateLastRead(lastRead);
+    this.props.navigation.state.params.updateBookmark()
+    this.props.navigation.state.params.updateHighlights()
+    
+
   }
 
   updateCurrentChapter(val) {
@@ -292,6 +300,7 @@ export default class Book extends Component {
     })
   }
 
+ 
   render() {
     const thumbSize = this.state.thumbSize;
       return (
@@ -306,8 +315,8 @@ export default class Book extends Component {
                 >
                  {    (this.state.verseInLine) ?
                             <FlatList
+                           
                             data={this.state.modelData[this.state.currentVisibleChapter - 1].verseComponentsModels}
-                            style={this.styles.chapterList}
                             renderItem={({item, index}) => 
                                 <Text letterSpacing={24}
                                     style={this.styles.verseWrapperText}>

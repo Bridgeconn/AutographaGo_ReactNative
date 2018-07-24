@@ -31,28 +31,27 @@ export default class HighLights extends Component {
       modelData: [],
       isLoading:false
     }
-    this.styles = highlightstyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
+    this.styles = highlightstyle(props.screenProps.colorFile, props.screenProps.sizeFile);  
+    this.refreshData = this.refreshData.bind(this) 
     
   }
+
+
 
   componentDidMount() {
-    console.log("value of load..... "+this.state.isLoading)
-    
-    this.setState({isLoading: true}, async () => {
-    this.setState 
-    let modelData = await DbQueries.queryHighlights(this.props.screenProps.versionCode, 
-    this.props.screenProps.languageCode);
-    console.log("routes len =" + modelData)
-    console.log("routes len = done " + modelData.length )
-    this.setState({modelData,isLoading:false})
-    console.log("value of loader......... "+this.state.isLoading)
-      
+   this.refreshData()
   }
-)
-console.log("value of loader......... "+this.state.isLoading)
 
-}
-
+  refreshData(){
+    this.setState({isLoading: true}, async () => {
+      let modelData = await DbQueries.queryHighlights(this.props.screenProps.versionCode, 
+      this.props.screenProps.languageCode);
+      this.setState({modelData,isLoading:false})
+    })
+  }
+  updateHighlights(){
+    this.refreshData()
+  }
   // getItemLayout = (data, index) => {
   //   return { length: height, offset: height * index, index };
   // }
@@ -93,10 +92,17 @@ console.log("value of loader......... "+this.state.isLoading)
         }
       // getItemLayout={this.getItemLayout}
       renderItem={({item, index}) =>
-      <View style={this.styles.highlightsView}>
-         <Text style={this.styles.hightlightsText}>{getBookNameFromMapping(item.bookId)} {item.chapterNumber} {':'} {item.verseNumber}</Text>
-        <Icon name='delete-forever' size={constantFont.iconMedium} style={this.styles.iconCustom}  onPress={() => {this.removeHighlight(index)}} />
-      </View>
+      <TouchableOpacity style={this.styles.highlightsView}
+        onPress={()=>this.props.navigation.navigate('Book', {bookId: item.bookId, 
+          bookName: getBookNameFromMapping(item.bookId), 
+          chapterNumber: item.chapterNumber, verseNumber: item.verseNumber,
+          updateHighlights:this.updateHighlights
+          })}>
+         <Text style={this.styles.hightlightsText}>
+            {getBookNameFromMapping(item.bookId)} {item.chapterNumber} {':'} {item.verseNumber}
+          </Text>
+        <Icon name='delete-forever' style={this.styles.iconCustom}  onPress={() => {this.removeHighlight(index)}} />
+      </TouchableOpacity>
     }
       />
         

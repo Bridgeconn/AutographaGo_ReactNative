@@ -62,7 +62,7 @@ export const styles =(colorFile, sizeFile) =>{
         width: 64, 
         height: 64, 
         // backgroundColor: colorFile.backgroundColor,
-        backgroundColor:'rgba(255,255,255,0.8)',
+        backgroundColor:colorFile.semiTransparentBackground,
         justifyContent:'center'
     },
     bottomBarNextView:{
@@ -73,7 +73,7 @@ export const styles =(colorFile, sizeFile) =>{
         right:0,
         width: 64, 
         height: 64, 
-        backgroundColor:'rgba(255,255,255,0.8)',
+        backgroundColor:colorFile.semiTransparentBackground,
         justifyContent:'center'
     },
     bottomBarChevrontIcon:{ 

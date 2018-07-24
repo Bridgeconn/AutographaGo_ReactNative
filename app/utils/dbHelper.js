@@ -324,6 +324,20 @@ class DbHelper {
 		});
 	}
 
+    async deleteLanguage(langCode,verCode){
+		let realm = await this.getRealm();
+		realm.write(() => {
+			let result = realm.objectForPrimaryKey("LanguageModel", langCode)
+			let resultsA = result.versionModels
+			let resultsB = resultsA.filtered('versionCode ==[c] "' + verCode + '"')
+			realm.delete(resultsB)
+			if (resultsA.length == 0) {
+				realm.delete(result)
+			}
+			console.log("language deleted")
+		})
+	}
+	
 	// async addStyle(index,){
 	// 	console.log("value in db helper "+value)
 	// 	let realm = await this.getRealm();

@@ -50,10 +50,23 @@ export const languageStyle =(colorFile, sizeFile) =>{
         marginVertical:8
     },
     buttonCustom:{
-        borderRadius: 10,            
-        position: 'absolute',                                          
-        bottom: 20,                                                    
-        right: 20, 
-    }
+        borderRadius: 40, 
+        margin:8, 
+        position:'absolute', 
+        bottom:0, 
+        right:0,
+        width: 64, 
+        height: 64, 
+        backgroundColor:colorFile.primaryColor,
+        justifyContent:'center'
+    },
+    buttonContent:{
+        alignItems:'center',
+        zIndex:2, 
+        alignSelf:'center',
+        color:colorFile.backgroundColor,
+        fontSize: sizeFile.settingsIcon
+    },
+
     })
 }

@@ -107,7 +107,6 @@ export default class App extends Component {
         versionCode: AsyncStorageConstants.Values.DefVersionCode,
         languageName:AsyncStorageConstants.Values.DefLanguageName,
         versionName:AsyncStorageConstants.Values.DefVersionName,
-
         colorMode: AsyncStorageConstants.Values.DayMode,
         sizeMode: AsyncStorageConstants.Values.SizeModeNormal,
         colorFile:dayColors,

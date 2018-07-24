@@ -40,7 +40,7 @@ export const highlightstyle=(colorFile, sizeFile) =>{
    
     iconCustom:{
         color:colorFile.textColor,
-        fontSize:sizeFile.emptyIconSize
+        fontSize:sizeFile.iconSize
     },
     centerEmptySet: { justifyContent: 'center', alignItems: 'center', height: '100%' }
 

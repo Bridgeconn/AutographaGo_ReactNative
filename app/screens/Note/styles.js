@@ -34,7 +34,7 @@ export const noteStyle =(colorFile, sizeFile) =>{
         color:colorFile.textColor
     },
     noteFlatlistCustom:{
-        flex:1
+        
     },
     //editNote
 
@@ -103,12 +103,22 @@ export const noteStyle =(colorFile, sizeFile) =>{
     richTextEditor:{
         height:height,
         color:colorFile.textColor,
+        fontSize:sizeFile.contentText,
         backgroundColor:colorFile.backgroundColor
     },
     iconCustom:{
         margin:8, 
         padding:8, 
+    },
+    textStyle:{
+        color:colorFile.textColor,
+        fontSize:sizeFile.contentText
+    },
+    iconReferClose:{
+        color:colorFile.textColor,
+        fontSize:sizeFile.contentText
     }
+
 })
 }
 
