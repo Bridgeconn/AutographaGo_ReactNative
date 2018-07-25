@@ -12,7 +12,7 @@ export const nightColors = {
     primaryDarkColor:colorConstants.Dark_Blue,
     tabColor: colorConstants.White,
     gridBorderColor:colorConstants.White,
-    semiTransparentBackground:colorConstants.SEMI_TRANS_BLACK,
+    semiTransparentBackground:colorConstants.Semi_Trans_Black,
     buttonBackgroundColor:colorConstants.White,
     buttonText:colorConstants.Dark_Gray,
 
@@ -29,7 +29,7 @@ export const dayColors = {
     primaryDarkColor:colorConstants.Navy_Blue,
     tabColor: colorConstants.Dark_Blue,
     gridBorderColor:colorConstants.Dark_Gray,
-    semiTransparentBackground:colorConstants.SEMI_TRANS_WHITE,
+    semiTransparentBackground:colorConstants.Semi_Trans_White,
     buttonBackgroundColor:colorConstants.Dark_Gray,
     buttonText:colorConstants.White
     

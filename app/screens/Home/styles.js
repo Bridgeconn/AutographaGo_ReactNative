@@ -38,12 +38,14 @@ export const homePageStyle =(colorFile, sizeFile) =>{
     segmentButton:{
         padding:4,
         height: 45,
-        width:width*2/5,
         borderLeftWidth:1,
         borderRightWidth:1,
         borderColor:'#3F51B5',
+        justifyContent:'center'
     },
-
+    buttonText:{
+        alignItems:'center'
+    },
     bookList:{
         flexDirection:'row',
         justifyContent:'space-between',

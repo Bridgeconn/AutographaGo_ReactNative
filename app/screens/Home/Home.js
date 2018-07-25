@@ -101,9 +101,9 @@ export default class Home extends Component {
       colorMode: props.screenProps.colorMode,
       sizeFile:props.screenProps.sizeFile,
       lastRead: props.screenProps.lastRead,
-      booksList: this.props.screenProps.booksList,
-      OTSize:this.getOTSize(this.props.screenProps.booksList),
-      NTSize:this.getNTSize(this.props.screenProps.booksList)
+      booksList: props.screenProps.booksList,
+      OTSize:this.getOTSize(props.screenProps.booksList),
+      NTSize:this.getNTSize(props.screenProps.booksList)
       
     })
     console.log("OT SIZE " +this.state.OTSize)
@@ -221,7 +221,8 @@ renderItem = ({item, index})=> {
                 active={this.state.activeTab} 
        
                 style={[{
-                  backgroundColor: this.state.activeTab ? activeBgColor : inactiveBgColor
+                  backgroundColor: this.state.activeTab ? activeBgColor : inactiveBgColor,
+                  width: this.state.NTSize == 0 ? width*4/5 : width*2/5,
                   },this.styles.segmentButton]} 
                 onPress={this.toggleButton.bind(this,true)
                 }
@@ -239,14 +240,17 @@ renderItem = ({item, index})=> {
               ?
               <Button 
                 active={!this.state.activeTab} 
-                style={[{backgroundColor: !this.state.activeTab ? activeBgColor : inactiveBgColor},this.styles.segmentButton]} 
+                style={[{
+                  backgroundColor: !this.state.activeTab ? activeBgColor : inactiveBgColor,
+                  width: this.state.OTSize == 0 ? width*4/5 : width*2/5,                  
+                },this.styles.segmentButton]} 
                 onPress={this.toggleButton.bind(this,false)}>
                 <Text 
                   active={!this.state.activeTab} 
-                  style={
+                  style={[
                     {
                       color:!this.state.activeTab ? inactiveBgColor : activeBgColor
-                  }
+                    },this.styles.buttonText]
                   }>
                   New Testament
                 </Text>

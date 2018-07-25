@@ -78,14 +78,11 @@ export default class Language extends Component{
   _renderHeader = (data, index, isActive) =>{
     console.log("language code "+data.languageCode)
     return (
-      <View style={this.styles.headerContainer}>
         <View style={this.styles.LanguageHeader}>
-         <Text style={this.styles.headerText}>{data.languageName}  </Text>
+         <Text style={this.styles.headerText}>{data.languageName}</Text>
          <Icon name={isActive ? "keyboard-arrow-down" : "keyboard-arrow-up" } 
             style={this.styles.iconCustom} />
         </View>
-      
-      </View> 
     )
   }
   

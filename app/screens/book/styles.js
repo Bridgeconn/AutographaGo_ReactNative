@@ -24,8 +24,8 @@ export const styles =(colorFile, sizeFile) =>{
         position:'absolute', 
         bottom:0,
         width: width, 
-        height: 60, 
-        backgroundColor:"blue",
+        height: 62, 
+        backgroundColor:'#3F51B5',
         flexDirection:'row',
         justifyContent:'center'
 
@@ -34,22 +34,25 @@ export const styles =(colorFile, sizeFile) =>{
         flexDirection:'row',
         width:width/3,
         justifyContent:'center',
-        alignItems:'center'
-        
+        alignItems:'center',
+       
     },
     bottomOptionText:{
-        alignItems:'center'
+        textAlign:'center',
+        color:colorFile.backgroundColor,   
+        fontSize:sizeFile.bottomBarText 
+
     },
     bottomOptionIcon:{
-        alignItems:'center',
+        alignSelf:'center',
         color:colorFile.backgroundColor,   
         fontSize:sizeFile.iconSize 
     },
     bottomOptionSeparator:{
-
-    },
-    touchableView:{
-        alignItems:'center'
+        width: 1,
+        backgroundColor:'white',
+        marginVertical:8,
+        
     },
     VerseText:{
     },

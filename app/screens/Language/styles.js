@@ -8,31 +8,33 @@ export const languageStyle =(colorFile, sizeFile) =>{
         flex:1,
         backgroundColor:colorFile.backgroundColor
     },
-    headerContainer:{
-        margin:8
-    },
+    
     LanguageHeader:{
         flexDirection:"row",
-        justifyContent:"space-between",
-        margin:8
+        marginHorizontal:8,
+        // justifyContent:'space-between'
     },
     headerText:{
+        padding:8,
         fontSize:sizeFile.titleText,
-        color:colorFile.textColor
-    },
-    contentText:{
-        marginHorizontal:16,
-        marginVertical:4,
-        fontSize:sizeFile.contentText,
         color:colorFile.textColor
     },
     iconCustom:{
         fontSize:sizeFile.iconSize,
-        color:colorFile.iconColor
+        color:colorFile.iconColor,
+        // padding:4
+        position:'absolute',
+        right:0,
+        alignSelf:'center'
+    },
+    contentText:{
+        padding:8,
+        fontSize:sizeFile.contentText,
+        color:colorFile.textColor,
     },
     VersionView:{
         flexDirection:"row",
-        // justifyContent:'space-between',
+        // justifyContent:'center',
         marginHorizontal:16,
         
     },
@@ -40,12 +42,13 @@ export const languageStyle =(colorFile, sizeFile) =>{
         fontSize:sizeFile.iconSize,
         color:colorFile.iconColor,
         position:'absolute',
-        right:0
+        right:0,
+        alignSelf:'center'
     },
     divider:{
         height:0.2,
         backgroundColor:colorFile.iconColor,
-        marginLeft:32,
+        marginLeft:24,
         marginRight:16,
         marginVertical:8
     },

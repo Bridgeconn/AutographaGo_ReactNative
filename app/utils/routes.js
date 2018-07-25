@@ -205,10 +205,8 @@ export default class App extends Component {
     console.log("in ROTES update language")
     this.setState({languageCode, languageName,versionCode,versionName})
 
-    let models = await DbQueries.queryBookIdModels(this.state.versionCode, this.state.languageCode);
+    let models = await DbQueries.queryBookIdModels(versionCode, languageCode);
       console.log("routes len =" + models)
-      console.log("VERSE VALUE ++++ " + res[2][1])
-      // this.setState({isDbLoading: false})
       if (models && models.length > 0) {
         this.setState({booksList: models})
       }
