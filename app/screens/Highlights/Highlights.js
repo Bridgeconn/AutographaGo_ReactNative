@@ -49,7 +49,7 @@ export default class HighLights extends Component {
       this.setState({modelData,isLoading:false})
     })
   }
-  updateHighlights(){
+  updateHighlights = ()=>{
     this.refreshData()
   }
   // getItemLayout = (data, index) => {
@@ -96,7 +96,7 @@ export default class HighLights extends Component {
         onPress={()=>this.props.navigation.navigate('Book', {bookId: item.bookId, 
           bookName: getBookNameFromMapping(item.bookId), 
           chapterNumber: item.chapterNumber, verseNumber: item.verseNumber,
-          updateHighlights:this.updateHighlights
+          updateHighlights:this.updateHighlights,prevScreen:'highlights'
           })}>
          <Text style={this.styles.hightlightsText}>
             {getBookNameFromMapping(item.bookId)} {item.chapterNumber} {':'} {item.verseNumber}

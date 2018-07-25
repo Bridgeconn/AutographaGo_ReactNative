@@ -91,7 +91,6 @@ export default class Book extends Component {
   }
 
   componentDidMount() {
-
     this.gestureResponder = createResponder({
       onStartShouldSetResponder: (evt, gestureState) => true,
       onStartShouldSetResponderCapture: (evt, gestureState) => true,
@@ -155,7 +154,6 @@ export default class Book extends Component {
     })
   }
   
-
   async queryBook() {
     let model = await DbQueries.queryBookWithId(this.props.screenProps.versionCode, 
         this.props.screenProps.languageCode, this.state.bookId);
@@ -285,10 +283,16 @@ export default class Book extends Component {
     }
     AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.LastReadReference, lastRead);
     this.props.screenProps.updateLastRead(lastRead);
-    this.props.navigation.state.params.updateBookmark()
-    this.props.navigation.state.params.updateHighlights()
-    
+    console.log("this.props.navigation back book page "+JSON.stringify(this.props))
+    // sceneProps.scene.route.routeName 
 
+    if(this.props.navigation.state.params.prevScreen =='bookmark'){
+      this.props.navigation.state.params.updateBookmark()
+    }
+    else if(this.props.navigation.state.params.prevScreen == 'highlights'){
+      this.props.navigation.state.params.updateHighlights()
+    }
+   
   }
 
   updateCurrentChapter(val) {

@@ -88,7 +88,7 @@ export default class BookMarks extends Component {
   )
   }
 
-  updateBookmark(){
+  updateBookmark = ()=>{
     this.refreshData()
   }
   // componentWillUnmount(){
@@ -110,7 +110,7 @@ export default class BookMarks extends Component {
             <TouchableOpacity style={this.styles.bookmarksView}
               onPress={()=>this.props.navigation.navigate('Book', {bookId: item.bookId, 
                 bookName: item.bookName, chapterNumber: item.chapterNumber,
-                updateBookmark:this.updateBookmark
+                updateBookmark:this.updateBookmark,prevScreen:'bookmark'
               })}>
 
               <Text style={this.styles.bookmarksText}>

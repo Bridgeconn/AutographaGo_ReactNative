@@ -67,6 +67,9 @@ export default class EditNote extends Component {
 
   async getHtml() {
     const body = await this.richtext.getContentHtml();
+    if(body==''){
+    return body
+    }
     return JSON.stringify(body)
   }
 
@@ -80,7 +83,9 @@ export default class EditNote extends Component {
     var time =  new Date()
     console.log("time "+time)
     var contentBody = await this.getHtml()
+    console.log("content body "+contentBody)
     if (contentBody == '' && this.state.referenceList.length == 0) {
+      console.log("INSIDE FIRST IF ... ")
       if(this.state.noteIndex != -1){
         // delete note
         this.props.navigation.state.params.onDelete(this.state.noteIndex, this.state.noteObject.createdTime)
@@ -107,13 +112,16 @@ export default class EditNote extends Component {
   onBack = async () =>{
     var contentBody = await this.getHtml()
       if (this.state.noteIndex == -1) {
-        if (contentBody != '' && this.state.referenceList.length > 0) {
+        console.log("content body on back "+contentBody)
+        if (contentBody != '' || this.state.referenceList.length > 0) {
+          console.log("if content body is not empty ")
           this.showAlert();
           return
         }
       } else {
         if(contentBody !== this.props.navigation.state.params.noteObject.body 
             || !this.checkRefArrayEqual()){
+              console.log("changes to content body changes ")
             this.showAlert();
           return
         }
