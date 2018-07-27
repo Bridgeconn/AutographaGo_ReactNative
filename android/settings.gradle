@@ -9,6 +9,4 @@ include ':react-native-webview-bridge'
 project(':react-native-webview-bridge').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-webview-bridge/android')
 include ':react-native-zip-archive'
 project(':react-native-zip-archive').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-zip-archive/android')
-include ':react-native-cloud-fs'
-project(':react-native-cloud-fs').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-cloud-fs/android')
 include ':app'
