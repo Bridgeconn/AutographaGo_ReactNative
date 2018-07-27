@@ -114,13 +114,13 @@ export default class Notes extends Component {
     return(
     <TouchableOpacity style={this.styles.noteContent}
         onPress={() =>this.openEdit(index,item)}>
-      <Card style={this.styles.noteCardCustom}>
-        <CardItem>
+      <Card>
+      <CardItem style={this.styles.cardItemStyle}>
         <View style={this.styles.notesContentView}> 
           <Text style={this.styles.noteFontCustom} numberOfLines={2}>{bodyText}</Text>
           <View style={this.styles.noteCardItem}>
             <Text style={this.styles.noteFontCustom}>{dateFormate}</Text>
-            <Icon name="delete-forever" size={24} onPress={()=>this.onDelete(index, item.createdTime)}/>
+            <Icon name="delete-forever" style={this.styles.deleteIon} onPress={()=>this.onDelete(index, item.createdTime)}/>
           </View>
         </View>
         </CardItem>

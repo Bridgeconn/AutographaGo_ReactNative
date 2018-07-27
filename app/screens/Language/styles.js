@@ -60,15 +60,15 @@ export const languageStyle =(colorFile, sizeFile) =>{
         right:0,
         width: 64, 
         height: 64, 
-        backgroundColor:colorFile.primaryColor,
+        backgroundColor:colorFile.buttonBackgroundColor,
         justifyContent:'center'
     },
     buttonContent:{
         alignItems:'center',
         zIndex:2, 
         alignSelf:'center',
-        color:colorFile.backgroundColor,
-        fontSize: sizeFile.settingsIcon
+        color:colorFile.buttonColor,
+        fontSize:sizeFile.settingsIcon
     },
 
     })

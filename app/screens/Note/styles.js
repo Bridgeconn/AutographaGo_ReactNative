@@ -14,15 +14,20 @@ export const noteStyle =(colorFile, sizeFile) =>{
         alignItems:'center',
         marginTop:16, 
         flexDirection:'row'
+        
     },
-    noteCardCustom:{
-        margin:8,flex:1
-    },
+    cardItemStyle:{
+        paddingTop:16,
+        paddingBottom:16,
+        backgroundColor:colorFile.backgroundColor
+     },
     notesContentView:{
-        flex:1
+        flex:1,
+        backgroundColor:colorFile.backgroundColor
     },
     noteContent:{
-        flex:1
+        flex:1,
+        backgroundColor:colorFile.backgroundColor,
     },
     centerEmptySet: { 
         justifyContent: 'center', 
@@ -33,8 +38,13 @@ export const noteStyle =(colorFile, sizeFile) =>{
         fontSize:sizeFile.contentText,
         color:colorFile.textColor
     },
+    deleteIon:{
+        fontSize:sizeFile.iconSize,
+        color:colorFile.textColor
+    },
     noteFlatlistCustom:{
-        
+        backgroundColor:colorFile.backgroundColor,
+        margin:8
     },
     //editNote
 

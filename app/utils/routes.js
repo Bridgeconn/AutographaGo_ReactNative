@@ -27,6 +27,8 @@ import { styleFile } from './styles.js'
 import DbQueries from '../utils/dbQueries'
 import Realm from 'realm'
 
+
+
 const StackNavigate = (styles) => StackNavigator(
   {  
     

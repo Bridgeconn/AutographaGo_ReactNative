@@ -15,7 +15,6 @@ import {downloadPageStyle} from './styles.js'
 
 
 export default class DownloadVersion extends Component {
-
     static navigationOptions = ({navigation}) => ({
         headerTitle: 'Versions',
     });
@@ -34,6 +33,7 @@ export default class DownloadVersion extends Component {
         this.downloadZip = this.downloadZip.bind(this)
         this.readDirectory = this.readDirectory.bind(this)
         this.styles = downloadPageStyle(this.props.screenProps.colorFile, this.props.screenProps.sizeFile);
+
         
     }
 

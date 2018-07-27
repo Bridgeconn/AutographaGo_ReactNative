@@ -14,7 +14,8 @@ export const nightColors = {
     gridBorderColor:colorConstants.White,
     semiTransparentBackground:colorConstants.Semi_Trans_Black,
     buttonBackgroundColor:colorConstants.White,
-    buttonText:colorConstants.Dark_Gray,
+    buttonText:colorConstants.White,
+    buttonColor:colorConstants.Navy_Blue
 
 };
 
@@ -31,6 +32,7 @@ export const dayColors = {
     gridBorderColor:colorConstants.Dark_Gray,
     semiTransparentBackground:colorConstants.Semi_Trans_White,
     buttonBackgroundColor:colorConstants.Dark_Gray,
+    buttonColor:colorConstants.White,
     buttonText:colorConstants.White
     
 };
