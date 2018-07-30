@@ -12,6 +12,7 @@ var RNFS = require('react-native-fs');
 import { zip, unzip, unzipAssets, subscribe } from 'react-native-zip-archive'
 import USFMParser from '../../utils/USFMParser'
 import {downloadPageStyle} from './styles.js'
+// import firebase from 'react-native-firebase';
 
 
 export default class DownloadVersion extends Component {
@@ -97,12 +98,25 @@ export default class DownloadVersion extends Component {
             });
             
         })
+        // this.localNotification()
     }
 
     async startParse(path,lcode,lname,vcode,vname,from) {
         await new USFMParser().parseFile(path,lcode,lname,vcode,vname,from);
     }
 
+    // localNotification(){
+    //     const notification = new firebase.notifications.Notification()
+    //         .setNotificationId('notificationId')
+    //         .setTitle('My notification title')
+    //         .setBody('My notification body')
+    //         .setData({
+    //             key1: 'value1',
+    //             key2: 'value2',
+    //         });
+    //         firebase.notifications().displayNotification(notification)
+    // }
+    
     readDirectory() {
         RNFS.readDir(RNFS.DocumentDirectoryPath + '/AutoBibles/')
             .then((result) => {

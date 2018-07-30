@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1038140409946",
+    "firebase_url": "https://autographa-go.firebaseio.com",
+    "project_id": "autographa-go",
+    "storage_bucket": "autographa-go.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038140409946:android:2e465c19b833ab79",
+        "android_client_info": {
+          "package_name": "com.autographago_reactnative"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1038140409946-842ktp083i74svemk97crpmc2u7t7mpu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjFNOrBqewDwKBZ-H2m4Ae0909LEEq4HI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

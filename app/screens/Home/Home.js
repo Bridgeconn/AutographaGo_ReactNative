@@ -6,7 +6,8 @@ import {
   Dimensions,
   ScrollView,
   TouchableOpacity,
-  FlatList
+  FlatList,
+  Alert
 } from 'react-native';
 import DbQueries from '../../utils/dbQueries'
 import USFMParser from '../../utils/USFMParser'
@@ -20,6 +21,7 @@ import {getBookNameFromMapping} from '../../utils/UtilFunctions'
 import {nightColors, dayColors} from '../../utils/colors.js'
 import FixedSidebar from '../../components/FixedSidebar/FixedSidebar'
 import {constantFont} from '../../utils/dimens.js'
+import { Notification } from 'react-native-firebase';
 
 export default class Home extends Component {
 
@@ -115,6 +117,39 @@ export default class Home extends Component {
     { length: 48, offset: 48 * index, index }
   )
 
+  async configureNotifications(){
+    const enabled = await firebase.messaging().hasPermission()
+      if (enabled) {
+        this.listenNotification()
+          // user has permissions
+      } else {
+        try {
+          await firebase.messaging().requestPermission();
+          this.listenNotification();
+          // User has authorised
+        } catch (error) {
+          Alert.alert("error "+error)
+            // User has rejected permissions
+        }
+          // user doesn't have permission
+      }
+  }
+
+  listenNotification() {
+            let newNotification;
+            if (Platform.OS === 'android') {
+                newNotification = new firebase.notifications.Notification()
+                    .setNotificationId(message.messageId)
+                    .setTitle(message.data.title)
+                    .setBody(message.data.body)
+                    .setSound('default')
+                    .android.setPriority(firebase.notifications.Android.Priority.High)
+                    .android.setChannelId('alert');
+            }
+
+            return firebase.notifications().displayNotification(newNotification);
+
+}
   componentDidMount(){
     this.props.navigation.setParams({
       bibleLanguage: this.props.screenProps.languageName, 
@@ -123,7 +158,12 @@ export default class Home extends Component {
       headerRightText:this.styles.headerRightText
 
     })
+    this.configureNotifications()
+
   }
+  // componentWillUnmount(){
+  //   this.messageListener();
+  // }
 
 renderItem = ({item, index})=> {
     return (
@@ -258,13 +298,14 @@ renderItem = ({item, index})=> {
               :null}
             </Segment>
             <FlatList
+
               ref={ref => this.flatlistRef = ref}
               data={this.state.booksList}
               getItemLayout={this.getItemLayout}
               onScroll={this.handleScroll}
               renderItem={this.renderItem}
               extraData={this.styles}
-                  
+              keyExtractor={item => item.bookNumber}
               onViewableItemsChanged={this.onViewableItemsChanged}
               viewabilityConfig={this.viewabilityConfig}
               // onViewableItemsChanged={this.handleViewableItemsChanged}

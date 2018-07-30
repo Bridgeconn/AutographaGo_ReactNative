@@ -31,7 +31,7 @@ export const dayColors = {
     tabColor: colorConstants.Dark_Blue,
     gridBorderColor:colorConstants.Dark_Gray,
     semiTransparentBackground:colorConstants.Semi_Trans_White,
-    buttonBackgroundColor:colorConstants.Dark_Gray,
+    buttonBackgroundColor:colorConstants.Navy_Blue,
     buttonColor:colorConstants.White,
     buttonText:colorConstants.White
     
