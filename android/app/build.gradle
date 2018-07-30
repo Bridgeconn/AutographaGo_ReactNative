@@ -136,15 +136,22 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-fs')
-    compile project(':react-native-vector-icons')
-    compile project(':react-native-webview-bridge')
-    compile project(':react-native-zip-archive')
+    implementation project(':react-native-fs')
+    implementation project(':react-native-vector-icons')
+    implementation project(':react-native-webview-bridge')
+    implementation project(':react-native-zip-archive')
+    implementation project(':react-native-firebase')
     implementation project(':realm')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     api "com.android.support:appcompat-v7:27.1.0"
     api "com.facebook.react:react-native:+"  // From node_modules
-    compile ("com.facebook.react:react-native:0.54.0") { force = true } 
+    implementation ("com.facebook.react:react-native:0.54.0") { force = true }
+
+    implementation "com.google.android.gms:play-services-base:15.0.1"
+    implementation "com.google.firebase:firebase-core:16.0.1"
+    implementation "com.google.firebase:firebase-auth:16.0.1"
+    implementation 'com.google.android.gms:play-services-auth:15.0.1'
+
 }
 
 // Run this once to be able to run the application with BUCK
@@ -159,4 +166,4 @@ project.afterEvaluate {
     copyEditorHtmlToAppAssets(file('../../node_modules/react-native-zss-rich-text-editor'))
 }
 
-
+apply plugin: 'com.google.gms.google-services'

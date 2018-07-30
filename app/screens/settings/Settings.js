@@ -190,7 +190,7 @@ export default class Setting extends Component {
                     thumbTintColor={this.state.colorMode == AsyncStorageConstants.Values.DayMode ? '#F62459': '#26A65B'}
                     minimumTrackTintColor={this.state.colorMode == AsyncStorageConstants.Values.DayMode ? '#F62459': '#26A65B'}
                     onValueChange={this.onChangeSlider.bind(this)}
-                    value={this.state.sizeMode}
+                    value={JSON.parse(this.state.sizeMode)}
                   />
                 </Right>
               </CardItem>
@@ -208,7 +208,7 @@ export default class Setting extends Component {
             </Card>
             
             <Card>
-              <TouchableOpacity onPress={()=>console.log("BACKUP RESTOR")}>              
+              <TouchableOpacity onPress={()=>this.props.navigation.navigate('BackupRestore')}>              
                 <CardItem style={this.styleFile.cardItemStyle}>
                   <Icon name='settings-backup-restore' size={24} style={this.styleFile.cardItemIconCustom} />
                   <Text style={this.styleFile.textStyle}>Backup and Restore</Text>

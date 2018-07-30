@@ -18,6 +18,7 @@ import Language from '../screens/Language/Language'
 import Book from '../screens/book/Book'
 import DownloadLanguage from '../screens/Downloads/DownloadLanguage'
 import DownloadVersion from '../screens/Downloads/DownloadVersion'
+import BackupRestore from '../screens/backup/BackupRestore'
 
 const AsyncStorageConstants = require('./AsyncStorageConstants')
 import AsyncStorageUtil from './AsyncStorageUtil';
@@ -83,6 +84,9 @@ const StackNav = StackNavigator(
       },
       Language:{
         screen:Language
+      },
+      BackupRestore: {
+        screen: BackupRestore
       },
   },
   {
