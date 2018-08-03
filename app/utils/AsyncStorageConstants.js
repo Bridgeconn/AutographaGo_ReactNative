@@ -7,7 +7,8 @@ module.exports = {
         LanguageCode:'language_code',
         VersionCode:'version_code',
         LanguageName:'language_name',
-        VersionName:'version_name'
+        VersionName:'version_name',
+        BackupRestoreEmail:'backup_restore_email'
 
     },
     Values: {

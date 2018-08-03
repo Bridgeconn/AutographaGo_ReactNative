@@ -6,7 +6,9 @@ import {
   Dimensions,
   ScrollView,
   TouchableOpacity,
-  FlatList
+  FlatList,
+  Linking,
+  Platform
 } from 'react-native';
 import DbQueries from '../../utils/dbQueries'
 import USFMParser from '../../utils/USFMParser'
@@ -19,6 +21,7 @@ const AsyncStorageConstants = require('../../utils/AsyncStorageConstants')
 import {getBookNameFromMapping} from '../../utils/UtilFunctions'
 import {nightColors, dayColors} from '../../utils/colors.js'
 import FixedSidebar from '../../components/FixedSidebar/FixedSidebar'
+import AsyncStorageUtil from '../../utils/AsyncStorageUtil';
 
 export default class Home extends Component {
 
@@ -45,7 +48,7 @@ export default class Home extends Component {
       iconPress: [],
       booksList: this.props.screenProps.booksList,
     }
-    console.log("IN HOME, bok len"  + this.props.screenProps.booksList.length)
+    // console.log("IN HOME, bok len"  + this.props.screenProps.booksList.length)
 
     this.styles = homePageStyle(this.state.colorFile, this.state.sizeFile);
     
@@ -59,7 +62,7 @@ export default class Home extends Component {
   toggleButton(value){
     this.setState({activeTab:value})
     if(value == false){
-      console.log("pressed")
+      // console.log("pressed")
       this.flatlistRef.scrollToIndex({index:39,viewPosition:0,animated: false,viewOffset:0})
     }
     else{
@@ -68,7 +71,7 @@ export default class Home extends Component {
   }
  
   componentWillReceiveProps(props){
-    console.log("WILLLLL recievr props"+props.screenProps.languageCode+"  version "+props.screenProps.versionCode)
+    // console.log("WILLLLL recievr props"+props.screenProps.languageCode+"  version "+props.screenProps.versionCode)
     this.setState({
       colorFile:props.screenProps.colorFile,
       sizeFile:props.screenProps.sizeFile,
@@ -87,25 +90,53 @@ export default class Home extends Component {
   )
 
   handleScroll = (event)=>{
-     console.log(event.nativeEvent.contentOffset.y+ "  index value")  
+    //  console.log(event.nativeEvent.contentOffset.y+ "  index value")  
   }
 
   _onViewableItemsChanged = (info) => {
-    console.log("viewable item : " + JSON.stringify(info.viewableItems))
-    console.log("changed item : " + JSON.stringify(info.changed))
+    // console.log("viewable item : " + JSON.stringify(info.viewableItems))
+    // console.log("changed item : " + JSON.stringify(info.changed))
   }
 
   handleViewableItemsChanged = ({viewableItems }) => {
-    console.log("handleViewableItemsChanged.. "+viewableItems)
+    // console.log("handleViewableItemsChanged.. "+viewableItems)
     // console.log("handleViewableItemsChanged changes.. "+changed)
   }
 
-componentDidMount(){
-  // this.props.navigation.setParams({styles:this.styles})
-  console.log("data from router language props "+this.props.screenProps.data)
-  this.props.navigation.setParams({goToLanguage:this.goToLanguage,bibleLanguage: this.props.screenProps.languageCode, 
-    bibleVersion: this.props.screenProps.versionCode})
-}
+  componentDidMount(){
+    // this.props.navigation.setParams({styles:this.styles})
+    // console.log("data from router language props "+this.props.screenProps.data)
+    this.props.navigation.setParams({goToLanguage:this.goToLanguage,bibleLanguage: this.props.screenProps.languageCode, 
+      bibleVersion: this.props.screenProps.versionCode})
+    
+    // if (Platform.OS === 'android') {
+      Linking.getInitialURL().then(url => {
+        console.log("HOME linking initial = " + url);
+        this.navigate(url);
+      });
+    // } else {
+      Linking.addEventListener('url', this.handleOpenURL);
+    // } 
+  }
+
+  componentWillUnmount() {
+    Linking.removeEventListener('url', this.handleOpenURL);
+  }
+
+  handleOpenURL = (event) => {
+    this.navigate(event.url);
+  }
+
+  navigate = (url) => { // E
+    console.log("IN LINKING : " + url)
+    AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.BackupRestoreEmail, null).then((mail) => {
+        console.log("EMAIL FROSYNC = " + mail)
+    })
+    if (url == null) {
+      return
+    }
+    this.props.navigation.navigate('BackupRestore', {url: url})
+  }
 
 renderItem = ({item, index})=> {
     return (
