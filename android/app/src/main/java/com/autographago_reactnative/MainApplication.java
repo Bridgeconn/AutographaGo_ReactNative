@@ -14,6 +14,8 @@ import com.github.alinz.reactnativewebviewbridge.WebViewBridgePackage;
 import com.rnziparchive.RNZipArchivePackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
+import io.invertase.firebase.storage.RNFirebaseStoragePackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,7 +38,9 @@ public class MainApplication extends Application implements ReactApplication {
             new WebViewBridgePackage(),
             new RNZipArchivePackage(),
             new RNFirebasePackage(),
-            new RNFirebaseAuthPackage()
+            new RNFirebaseAuthPackage(),
+            new RNFirebaseStoragePackage(),
+            new RNFetchBlobPackage()
       );
     }
 

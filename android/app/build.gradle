@@ -142,6 +142,7 @@ dependencies {
     implementation project(':react-native-zip-archive')
     implementation project(':react-native-firebase')
     implementation project(':realm')
+    implementation project(':rn-fetch-blob')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     api "com.android.support:appcompat-v7:27.1.0"
     api "com.facebook.react:react-native:+"  // From node_modules
@@ -149,10 +150,11 @@ dependencies {
 
     implementation "com.google.firebase:firebase-core:16.0.1"
     implementation "com.google.firebase:firebase-auth:16.0.1"
-    implementation 'com.google.firebase:firebase-dynamic-links:16.0.1'
+    implementation "com.google.firebase:firebase-dynamic-links:16.0.1"
+    implementation "com.google.firebase:firebase-storage:16.0.1"
 
     implementation "com.google.android.gms:play-services-base:15.0.1"
-    implementation 'com.google.android.gms:play-services-auth:15.0.1'
+    implementation "com.google.android.gms:play-services-auth:15.0.1"
     
 }
 
