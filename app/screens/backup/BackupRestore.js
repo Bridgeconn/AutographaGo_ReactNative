@@ -13,9 +13,6 @@ import Login from './Login';
 import AsyncStorageUtil from '../../utils/AsyncStorageUtil';
 const AsyncStorageConstants = require('../../utils/AsyncStorageConstants')
 var RNFS = require('react-native-fs');
-import RNFetchBlob from 'rn-fetch-blob'
-const Blob = RNFetchBlob.polyfill.Blob
-const fs = RNFetchBlob.fs
 
 export default class BackupRestore extends Component {
 
@@ -106,7 +103,7 @@ export default class BackupRestore extends Component {
         const file1 = '/storage/emulated/0/DCIM/Camera/IMG_20170506_113514857.jpg'
         var uploadTask = spaceRef.putFile(fileURI)
 
-        console.log("START UPLOAD + " + file)
+        console.log("START UPLOAD ...")
         // Register three observers:
         // 1. 'state_changed' observer, called any time the state changes
         // 2. Error observer, called on failure
@@ -116,12 +113,16 @@ export default class BackupRestore extends Component {
             // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log('Upload is ' + progress + '% done');
+            console.log("SNAPSHOT STATAE = " + snapshot.state)
             switch (snapshot.state) {
                 case firebase.storage.TaskState.PAUSED: // or 'paused'
                     console.log('Upload is paused');
                     break;
                 case firebase.storage.TaskState.RUNNING: // or 'running'
                     console.log('Upload is running');
+                    break;
+                case 'progress': 
+                    console.log('in progress')
                     break;
             }
         }, function(error) {
