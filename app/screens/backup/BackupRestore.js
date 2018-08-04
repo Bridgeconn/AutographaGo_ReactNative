@@ -93,16 +93,6 @@ export default class BackupRestore extends Component {
     }
 
     doBackup = () => {
-        // Set the configuration for your app
-        // TODO: Replace with your project's config object
-        // var config = {
-        //     apiKey: 'AIzaSyAcjK4bnL3m852J8x1j9cJVCkHwESsp_aE',
-        //     authDomain: '',
-        //     databaseURL: '',
-        //     storageBucket: 'autographagoreactnative.appspot.com'
-        // };
-        // firebase.initializeApp(config);
-
         // Points to the root reference
         var storageRef = firebase.app().storage().ref();
         // Points to 'databases'
@@ -111,52 +101,12 @@ export default class BackupRestore extends Component {
         // Note that you can use variables to create child values
         var fileName = 'autographa.realm';
         var spaceRef = dbRef.child(fileName);
-        // // File path is 'databases/autographa.realm'
-        // var path = spaceRef.fullPath
-        // // File name is 'autographa.realm'
-        // var name = spaceRef.name
-        // // Points to 'databases'
-        // var imagesRef = spaceRef.parent;
 
-        // RNFS.readFile(path)
-        //         .then((result)=>{
-        //             this.parseFileContents(result);
-        //         });
-
-        // get a list of files and directories in the main bundle
-        // RNFS.readDir(RNFS.DocumentDirectoryPath) // On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
-        //     .then((result) => {
-        //         console.log('GOT RESULT', result);
-        //         // stat the first file
-        //         return Promise.all([RNFS.stat(result[0].path), result[0].path]);
-        //     })
-        //     .then((statResult) => {
-        //         if (statResult[0].isFile()) {
-        //             // if we have a file, read it
-        //             return RNFS.readFile(statResult[1], 'utf8');
-        //         }
-        //         return 'no file';
-        //     })
-        //     .then((contents) => {
-        //         // log the file contents
-        //         console.log(contents);
-        //     })
-        //     .catch((err) => {
-        //         console.log(err.message, err.code);
-        //     });
-        // return;
-
-
-
-
-        var file = RNFetchBlob.wrap(RNFS.DocumentDirectoryPath+'/autographa.realm'); // use the Blob or File API
         const fileURI = RNFS.DocumentDirectoryPath+'/autographa.realm';
-        RNFS.readFile(fileURI, 'base64')
-            .then((data) => {
+        const file1 = '/storage/emulated/0/DCIM/Camera/IMG_20170506_113514857.jpg'
+        var uploadTask = spaceRef.putFile(fileURI)
 
-            })
-        var uploadTask = spaceRef.put(file);
-        // console.log("START UPLOAD + " + file)
+        console.log("START UPLOAD + " + file)
         // Register three observers:
         // 1. 'state_changed' observer, called any time the state changes
         // 2. Error observer, called on failure
@@ -189,13 +139,15 @@ export default class BackupRestore extends Component {
                     console.log("error : Unknown error occurred, inspect error.serverResponse")
                     break;
             }
-        }, function() {
-            // Handle successful uploads on complete
-            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                console.log('File available at', downloadURL);
-            });
-        });
+        }
+        // , function() {
+        //     // Handle successful uploads on complete
+        //     // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+        //     uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+        //         console.log('File available at', downloadURL);
+        //     });
+        // }
+        );
     }
 
     doRestore = () => {
