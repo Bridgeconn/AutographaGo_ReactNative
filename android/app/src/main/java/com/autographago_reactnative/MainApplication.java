@@ -15,6 +15,7 @@ import com.rnziparchive.RNZipArchivePackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+import io.invertase.firebase.config.RNFirebaseRemoteConfigPackage;
 
 
 
@@ -40,7 +41,8 @@ public class MainApplication extends Application implements ReactApplication {
             new RNZipArchivePackage(),
             new RNFirebasePackage(),
             new RNFirebaseNotificationsPackage(),
-            new RNFirebaseMessagingPackage() 
+            new RNFirebaseMessagingPackage(),
+            new RNFirebaseRemoteConfigPackage()
       );
     }
 

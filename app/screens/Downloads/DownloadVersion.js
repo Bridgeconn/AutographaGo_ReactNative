@@ -4,6 +4,7 @@ import {
   View,
   TouchableOpacity,
   FlatList,
+  Button,
   ActivityIndicator,
 } from 'react-native';
 import DownloadUtil from '../../utils/DownloadUtil'
@@ -12,7 +13,8 @@ var RNFS = require('react-native-fs');
 import { zip, unzip, unzipAssets, subscribe } from 'react-native-zip-archive'
 import USFMParser from '../../utils/USFMParser'
 import {downloadPageStyle} from './styles.js'
-// import firebase from 'react-native-firebase';
+import firebase from 'react-native-firebase';
+import { Platform } from 'react-native';
 
 
 export default class DownloadVersion extends Component {
@@ -51,6 +53,7 @@ export default class DownloadVersion extends Component {
                 this.setState({isLoading: false, refreshing: false})
             });
         })
+         this.notif()
     }
 
     downloadMetadata(language, version) {
@@ -98,24 +101,46 @@ export default class DownloadVersion extends Component {
             });
             
         })
-        // this.localNotification()
+       
     }
 
     async startParse(path,lcode,lname,vcode,vname,from) {
         await new USFMParser().parseFile(path,lcode,lname,vcode,vname,from);
     }
 
-    // localNotification(){
-    //     const notification = new firebase.notifications.Notification()
-    //         .setNotificationId('notificationId')
-    //         .setTitle('My notification title')
-    //         .setBody('My notification body')
-    //         .setData({
-    //             key1: 'value1',
-    //             key2: 'value2',
-    //         });
-    //         firebase.notifications().displayNotification(notification)
-    // }
+     notif(){
+        console.log("notification is coming ")
+        firebase.messaging().hasPermission()
+        .then(enabled => {
+          if (enabled) {
+            this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((Notification) => {
+                // Process your notification as required
+                console.log("notification display"+Notification)
+            });
+            this.notificationListener = firebase.notifications().onNotification((Notification) => {
+                // Process your notification as required
+                console.log("notification listner"+Notification)
+            });
+          } else {
+            try {
+                // await firebase.messaging().requestPermission();
+            } catch (error) {
+            }
+            // user doesn't have permission
+          } 
+        });
+        // const notification = new firebase.notifications.Notification()
+        //     .setNotificationId('notificationId')
+        //     .setTitle('My notification title')
+        //     .setBody('My notification body')
+        //     .setData({
+        //         key1: 'value1',
+        //         key2: 'value2',
+        //     })
+        //     .android.setChannelId('channelId')
+        //     .android.setSmallIcon('ic_launcher');
+        // firebase.notifications().displayNotification(notification)          
+    }
     
     readDirectory() {
         RNFS.readDir(RNFS.DocumentDirectoryPath + '/AutoBibles/')
@@ -165,6 +190,9 @@ export default class DownloadVersion extends Component {
     render() {
         return (
             <View style={this.styles.container}>
+            <Button onPress={this.notif}
+                title="Show Notification"
+                color="#841584"/>
             <View style={this.styles.containerMargin}>
             {this.state.isLoading ? 
                 <ActivityIndicator

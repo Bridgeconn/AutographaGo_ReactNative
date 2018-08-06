@@ -146,9 +146,10 @@ dependencies {
 
     implementation project(':react-native-firebase')
     implementation "com.google.android.gms:play-services-base:15.0.1"
+    implementation "com.google.firebase:firebase-messaging:17.1.0"
     implementation "com.google.firebase:firebase-core:16.0.1"
     implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
-
+     implementation "com.google.firebase:firebase-config:15.0.2"
 
     api "com.android.support:appcompat-v7:27.1.0"
     api "com.facebook.react:react-native:+"  // From node_modules

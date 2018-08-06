@@ -21,7 +21,7 @@ import {getBookNameFromMapping} from '../../utils/UtilFunctions'
 import {nightColors, dayColors} from '../../utils/colors.js'
 import FixedSidebar from '../../components/FixedSidebar/FixedSidebar'
 import {constantFont} from '../../utils/dimens.js'
-import { Notification } from 'react-native-firebase';
+import firebase, {Notification} from 'react-native-firebase'
 
 export default class Home extends Component {
 
@@ -117,39 +117,9 @@ export default class Home extends Component {
     { length: 48, offset: 48 * index, index }
   )
 
-  async configureNotifications(){
-    const enabled = await firebase.messaging().hasPermission()
-      if (enabled) {
-        this.listenNotification()
-          // user has permissions
-      } else {
-        try {
-          await firebase.messaging().requestPermission();
-          this.listenNotification();
-          // User has authorised
-        } catch (error) {
-          Alert.alert("error "+error)
-            // User has rejected permissions
-        }
-          // user doesn't have permission
-      }
-  }
+  
 
-  listenNotification() {
-            let newNotification;
-            if (Platform.OS === 'android') {
-                newNotification = new firebase.notifications.Notification()
-                    .setNotificationId(message.messageId)
-                    .setTitle(message.data.title)
-                    .setBody(message.data.body)
-                    .setSound('default')
-                    .android.setPriority(firebase.notifications.Android.Priority.High)
-                    .android.setChannelId('alert');
-            }
-
-            return firebase.notifications().displayNotification(newNotification);
-
-}
+  
   componentDidMount(){
     this.props.navigation.setParams({
       bibleLanguage: this.props.screenProps.languageName, 
@@ -158,13 +128,65 @@ export default class Home extends Component {
       headerRightText:this.styles.headerRightText
 
     })
-    this.configureNotifications()
-
+    this.notif()
   }
   // componentWillUnmount(){
   //   this.messageListener();
   // }
 
+  notif(){
+    console.log("notification is coming ")
+    firebase.messaging().hasPermission()
+    .then(enabled => {
+      if (enabled) {
+        this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification) => {
+            // Process your notification as required
+            console.log("notification display"+notification)
+        });
+        this.notificationListener = firebase.notifications().onNotification((notification) => {
+            // Process your notification as required
+            console.log("notification listner"+notification)
+        });
+        this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
+          console.log("notification opened in forground"+notification)
+          
+          // Get the action triggered by the notification being opened
+          // const action = notificationOpen.action;
+          // Get information about the notification that was opened
+          // const  Notification = notificationOpen.notification;
+      });
+      
+      firebase.notifications().getInitialNotification()
+      .then((notificationOpen) => {
+        console.log("app closed "+notificationOpen)
+        // if (notificationOpen) {
+        //   // App was opened by a notification
+        //   // Get the action triggered by the notification being opened
+        //   const action = notificationOpen.action;
+        //   // Get information about the notification that was opened
+        //   const notification = notificationOpen.notification;  
+        // }
+      });
+      } else {
+        try {
+            // await firebase.messaging().requestPermission();
+        } catch (error) {
+        }
+        // user doesn't have permission
+      } 
+    });
+    // const notification = new firebase.notifications.Notification()
+    //     .setNotificationId('notificationId')
+    //     .setTitle('My notification title')
+    //     .setBody('My notification body')
+    //     .setData({
+    //         key1: 'value1',
+    //         key2: 'value2',
+    //     })
+    //     .android.setChannelId('channelId')
+    //     .android.setSmallIcon('ic_launcher');
+    // firebase.notifications().displayNotification(notification)          
+  }
 renderItem = ({item, index})=> {
     return (
       <TouchableOpacity 
