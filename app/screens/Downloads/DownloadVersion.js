@@ -159,7 +159,15 @@ export default class DownloadVersion extends Component {
                 console.log("download complete : " + notifId)
                 firebase.notifications().removeDeliveredNotification(notifId)
                     .then(()=> console.log("Will never be logged"))
-                
+                const notification = new firebase.notifications.Notification()
+                    .setNotificationId(Date.now().toString() + "_1")
+                    .setTitle('downloaded')
+                    .setBody('Tap to start reading '+this.state.languageName +" Bible" )
+                    .android.setChannelId('channelId')
+                    .android.setSmallIcon('ic_launcher')
+        
+                firebase.notifications().displayNotification(notification)
+            
                 // stat the first file
                 // return Promise.all([RNFS.stat(result[0].path), result[0].path]);
             })
