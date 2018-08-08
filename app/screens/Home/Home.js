@@ -21,7 +21,7 @@ import {getBookNameFromMapping} from '../../utils/UtilFunctions'
 import {nightColors, dayColors} from '../../utils/colors.js'
 import FixedSidebar from '../../components/FixedSidebar/FixedSidebar'
 import {constantFont} from '../../utils/dimens.js'
-import firebase, {Notification} from 'react-native-firebase'
+import firebase from 'react-native-firebase'
 
 export default class Home extends Component {
 
@@ -55,7 +55,8 @@ export default class Home extends Component {
       iconPress: [],
       booksList: this.props.screenProps.booksList,
       OTSize:0,
-      NTSize:0
+      NTSize:0,
+      token:null
     }
     console.log("IN HOME, bok len"  + this.props.screenProps.booksList.length)
     console.log("IN HOME, ACTIVE TAB"  + this.state.activeTab)
@@ -126,67 +127,57 @@ export default class Home extends Component {
       bibleVersion: this.props.screenProps.versionCode,
       openLanguages: this.openLanguages,
       headerRightText:this.styles.headerRightText
-
     })
-    this.notif()
+   
+      // firebase.messaging().requestPermission().then(function() {
+      //   console.log('Notification permission granted.');
+      //   firebase.messaging().getToken().then(function(currentToken) {
+      //     if (currentToken) {
+      //       console.log("token notification "+currentToken)
+      //       this.setState({token:currentToken})
+      //       sendTokenToServer(currentToken);
+      //       updateUIForPushEnabled(currentToken);
+      //     } else {
+      //       console.log('No Instance ID token available. Request permission to generate one.');
+      //       updateUIForPushPermissionRequired();
+      //       setTokenSentToServer(false);
+      //     }
+      //   }).catch(function(err) {
+      //     showToken('Error retrieving Instance ID token. ', err);
+      //     setTokenSentToServer(false);
+      //   });
+      //   firebase.messaging().onTokenRefresh(function() {
+      //     firebase.messaging().getToken().then(function(refreshedToken) {
+      //       console.log('Token refreshed.');
+      //       setState({token:refreshedToken})
+      //       setTokenSentToServer(false);
+      //       sendTokenToServer(refreshedToken);
+      //     }).catch(function(err) {
+      //       showToken('Unable to retrieve refreshed token ', err);
+      //     });
+      //   });
+      //   // TODO(developer): Retrieve an Instance ID token for use with FCM.
+      //   // ...
+      // }).catch(function(err) {
+      //   console.log('Unable to get permission to notify.', err);
+      // })
   }
-  // componentWillUnmount(){
-  //   this.messageListener();
+ 
+  // subscribeTokenToTopic() {
+  //   const global = 'global'
+  //   fetch('https://iid.googleapis.com/iid/v1/'+this.state.token+'/rel/topics/'+global, {
+  //     method: 'POST',
+  //     headers: new Headers({
+  //       'Authorization': AIzaSyCNEote_sBqM-caTdT4udwvrdqo9YEMbS4
+  //     })
+  //   }).then(response => {
+  //     console.log("res "+JOSN.stringify() );
+  //   }).catch(error => {
+  //     console.error(error);
+  //   })
   // }
 
-  notif(){
-    console.log("notification is coming ")
-    firebase.messaging().hasPermission()
-    .then(enabled => {
-      if (enabled) {
-        this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification) => {
-            // Process your notification as required
-            console.log("notification display"+notification)
-        });
-        this.notificationListener = firebase.notifications().onNotification((notification) => {
-            // Process your notification as required
-            console.log("notification listner"+notification)
-        });
-        this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
-          console.log("notification opened in forground"+notification)
-          
-          // Get the action triggered by the notification being opened
-          // const action = notificationOpen.action;
-          // Get information about the notification that was opened
-          // const  Notification = notificationOpen.notification;
-      });
-      
-      firebase.notifications().getInitialNotification()
-      .then((notificationOpen) => {
-        console.log("app closed "+notificationOpen)
-        // if (notificationOpen) {
-        //   // App was opened by a notification
-        //   // Get the action triggered by the notification being opened
-        //   const action = notificationOpen.action;
-        //   // Get information about the notification that was opened
-        //   const notification = notificationOpen.notification;  
-        // }
-      });
-      } else {
-        try {
-            // await firebase.messaging().requestPermission();
-        } catch (error) {
-        }
-        // user doesn't have permission
-      } 
-    });
-    // const notification = new firebase.notifications.Notification()
-    //     .setNotificationId('notificationId')
-    //     .setTitle('My notification title')
-    //     .setBody('My notification body')
-    //     .setData({
-    //         key1: 'value1',
-    //         key2: 'value2',
-    //     })
-    //     .android.setChannelId('channelId')
-    //     .android.setSmallIcon('ic_launcher');
-    // firebase.notifications().displayNotification(notification)          
-  }
+  
 renderItem = ({item, index})=> {
     return (
       <TouchableOpacity 

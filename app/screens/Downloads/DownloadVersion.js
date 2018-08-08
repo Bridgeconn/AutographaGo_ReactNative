@@ -4,7 +4,7 @@ import {
   View,
   TouchableOpacity,
   FlatList,
-  Button,
+  ToastAndroid,
   ActivityIndicator,
 } from 'react-native';
 import DownloadUtil from '../../utils/DownloadUtil'
@@ -33,6 +33,7 @@ export default class DownloadVersion extends Component {
             downloadMetadata: {},
             isLoadingText: '',
         }
+        
         this.downloadZip = this.downloadZip.bind(this)
         this.readDirectory = this.readDirectory.bind(this)
         this.styles = downloadPageStyle(this.props.screenProps.colorFile, this.props.screenProps.sizeFile);
@@ -53,7 +54,6 @@ export default class DownloadVersion extends Component {
                 this.setState({isLoading: false, refreshing: false})
             });
         })
-         this.notif()
     }
 
     downloadMetadata(language, version) {
@@ -71,20 +71,38 @@ export default class DownloadVersion extends Component {
     }
 
     downloadZip(version) {
-        this.downloadMetadata(this.state.languageName, version)
+        const curTime = Date.now().toString() + "_1"
+        console.log("notification "+curTime)
+        console.log("ntoification id download zip "+this.downloadZip)
+        notification = new firebase.notifications.Notification()
+        .setNotificationId(curTime)
+        .setTitle('Downloading')
+        .setBody(this.state.languageName +" Bible downloading" )
+        .android.setChannelId('channelId')
+        .android.setSmallIcon('ic_launcher')
+        .android.ongoing(true)
 
+        firebase.notifications().displayNotification(notification)
+
+        this.downloadMetadata(this.state.languageName, version)
         this.setState({isDownloading:true,isLoading:false, isLoadingText: 'GET ZIP'}, () => {
             RNFS.mkdir(RNFS.DocumentDirectoryPath+'/AutoBibles').then(result => {
                 RNFS.downloadFile({
                     fromUrl: 
                         'https://raw.githubusercontent.com/friendsofagape/Autographa_Repo/master/Bibles/'
                         +this.state.languageName+'/'+version+'/Archive.zip', 
-                    toFile: RNFS.DocumentDirectoryPath+'/AutoBibles/Archive.zip'})
+                    toFile: RNFS.DocumentDirectoryPath+'/AutoBibles/Archive.zip',
+                    begin: this._downloadFileBegin,
+                })
+
                     .promise.then(result => {
+                        
                         this.setState({isDownloading:false})
-                        console.log("result jobid = " + result.jobId);
-                        console.log("result statuscode = " + result.statusCode);
-                        console.log("result byteswritten = " + result.bytesWritten);
+                        ToastAndroid.show(version+' Downloaded', ToastAndroid.CENTER);
+                        console.log("result "+JSON.stringify(result))
+                        console.log("result jobid = " + result.jobId)
+                        console.log("result statuscode = " + result.statusCode)
+                        console.log("result byteswritten = " + result.bytesWritten)
 
                         const sourcePath = RNFS.DocumentDirectoryPath +'/AutoBibles/Archive.zip';
                         const targetPath = RNFS.DocumentDirectoryPath + '/AutoBibles/';
@@ -92,61 +110,41 @@ export default class DownloadVersion extends Component {
                         unzip(sourcePath, targetPath)
                             .then((path) => {
                                 console.log('unzip completed at ' + path)
-                                this.readDirectory();
+                                this.readDirectory(curTime);
                             })
                             .catch((error) => {
                                 console.log(error)
                             })
                 });
             });
-            
+           
         })
-       
+
     }
 
-    async startParse(path,lcode,lname,vcode,vname,from) {
+    _downloadFileBegin = () =>{
+        console.log("Download Begin");
+      }
+      
+      _downloadFileProgress = (data) =>{
+        console.log("data byte "+data.bytesWritten +"content length "+data.contentLength) 
+        const percentage = ((100 * data.bytesWritten) / data.contentLength) | 0;
+        console.log("progress bar "+percentage)
+        this.notif(percentage)
+        if(data.contentLength == data.bytesWritten){
+        console.log("progress bar full "+percentage)
+        }
+      }
+      
+
+        async startParse(path,lcode,lname,vcode,vname,from) {
         await new USFMParser().parseFile(path,lcode,lname,vcode,vname,from);
     }
-
-     notif(){
-        console.log("notification is coming ")
-        firebase.messaging().hasPermission()
-        .then(enabled => {
-          if (enabled) {
-            this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((Notification) => {
-                // Process your notification as required
-                console.log("notification display"+Notification)
-            });
-            this.notificationListener = firebase.notifications().onNotification((Notification) => {
-                // Process your notification as required
-                console.log("notification listner"+Notification)
-            });
-          } else {
-            try {
-                // await firebase.messaging().requestPermission();
-            } catch (error) {
-            }
-            // user doesn't have permission
-          } 
-        });
-        // const notification = new firebase.notifications.Notification()
-        //     .setNotificationId('notificationId')
-        //     .setTitle('My notification title')
-        //     .setBody('My notification body')
-        //     .setData({
-        //         key1: 'value1',
-        //         key2: 'value2',
-        //     })
-        //     .android.setChannelId('channelId')
-        //     .android.setSmallIcon('ic_launcher');
-        // firebase.notifications().displayNotification(notification)          
-    }
-    
-    readDirectory() {
+       
+    readDirectory(notifId) {
+        console.log("notification id read directory"+notifId)
         RNFS.readDir(RNFS.DocumentDirectoryPath + '/AutoBibles/')
             .then((result) => {
-                // console.log('GOT RESULT', result);
-
                 for (var i=0; i<result.length; i++) {
                     if (result[i].isFile() && result[i].path.endsWith('.usfm')) {
                         this.setState({isLoadingText: 'USM PARSE ' + result[i].path})
@@ -158,6 +156,10 @@ export default class DownloadVersion extends Component {
                             false)
                     }
                 }
+                console.log("download complete : " + notifId)
+                firebase.notifications().removeDeliveredNotification(notifId)
+                    .then(()=> console.log("Will never be logged"))
+                
                 // stat the first file
                 // return Promise.all([RNFS.stat(result[0].path), result[0].path]);
             })
@@ -190,9 +192,6 @@ export default class DownloadVersion extends Component {
     render() {
         return (
             <View style={this.styles.container}>
-            <Button onPress={this.notif}
-                title="Show Notification"
-                color="#841584"/>
             <View style={this.styles.containerMargin}>
             {this.state.isLoading ? 
                 <ActivityIndicator
