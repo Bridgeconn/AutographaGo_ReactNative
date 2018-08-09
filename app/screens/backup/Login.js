@@ -51,6 +51,7 @@ export default class Login extends Component {
             }
         };
 
+        console.log("SENDING")
         firebase.auth().sendSignInLinkToEmail(this.state.email, actionCodeSettings)
             .then(() => {
                 // The link was successfully sent. Inform the user.

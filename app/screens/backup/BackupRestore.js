@@ -6,7 +6,8 @@ import {
   ActivityIndicator,
   Linking,
   Alert,
-  Button
+  Button,
+  FlatList,
 } from 'react-native';
 import firebase from 'react-native-firebase';
 import Login from './Login';
@@ -28,14 +29,16 @@ export default class BackupRestore extends Component {
             isLoading: true,
             user: null,
             url: props.navigation.getParam('url', null),
+            dataSource: [],
         }
     }
 
     async componentDidMount() {
         this.unsubscriber = firebase.auth().onAuthStateChanged((user) => {
             this.setState({ user });
-
         });
+
+        this.doList();
 
         const url = this.state.url;
         if (url == null ) { 
@@ -114,6 +117,9 @@ export default class BackupRestore extends Component {
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log('Upload is ' + progress + '% done');
             console.log("SNAPSHOT STATAE = " + snapshot.state)
+            if (progress == 100) {
+
+            }
             switch (snapshot.state) {
                 case firebase.storage.TaskState.PAUSED: // or 'paused'
                     console.log('Upload is paused');
@@ -140,32 +146,56 @@ export default class BackupRestore extends Component {
                     console.log("error : Unknown error occurred, inspect error.serverResponse")
                     break;
             }
+        }, function() {
+            // Handle successful uploads on complete
+            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                console.log('File available at', downloadURL);
+            });
         }
-        // , function() {
-        //     // Handle successful uploads on complete
-        //     // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-        //     uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-        //         console.log('File available at', downloadURL);
-        //     });
-        // }
         );
     }
 
     doRestore = () => {
+        console.log("DO WRITE")
+        firebase.app().firestore().collection("users/prerna11082@iiitd.ac.in/backups")
+            .add({
+                size: "1234",
+                timestamp: "213454687980",
+                url: "dafrg.rhtwr"
+            })
+            .then(function(docRef) {
+                console.log("Document written with ID: ", docRef.id);
+            })
+            .catch(function(error) {
+                console.error("Error adding document: ", error);
+            });
+    }
 
+    doList = () => {
+        console.log("DO READ")
+        let dataSource = []
+        firebase.app().firestore().collection("users/prerna11082@iiitd.ac.in/backups")
+            .get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    dataSource.push(doc.data())
+                    console.log(`${doc.id} => ${doc.data().url}`);
+                })
+                this.setState({dataSource})
+            })
     }
 
     render() {
-        if (!this.state.user) {
-            return <Login />;
-        }
+        // if (!this.state.user) {
+        //     return <Login />;
+        // }
         return (
             <View style={{flex:1,margin:8}}>
                 <ActivityIndicator
                     animating={this.state.isLoading} 
                     size="large" 
                     color="#0000ff" /> 
-                <Text>Welcome to AutographaGo app {this.state.user.email}!</Text>
+                <Text>Welcome to AutographaGo app !</Text>
                 <Button 
                     onPress={this.doBackup}
                     title="BACKUP NOW"
@@ -174,6 +204,14 @@ export default class BackupRestore extends Component {
                     onPress={this.doRestore}
                     title="RESTORE"
                     color="#841584" />
+                <Button 
+                    onPress={this.doList}
+                    title="LIST"
+                    color="#841584" />
+                <FlatList
+                    data={this.state.dataSource}
+                    renderItem={({item}) => <Text>{item.url}</Text>}
+                    />
             </View>
         );
     }
