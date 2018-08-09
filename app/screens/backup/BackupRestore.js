@@ -26,7 +26,7 @@ export default class BackupRestore extends Component {
         this.unsubscriber = null;
         this.state = {
             downloadData:[],
-            isLoading: true,
+            isLoading: false,
             user: null,
             url: props.navigation.getParam('url', null),
             dataSource: [],
@@ -92,18 +92,28 @@ export default class BackupRestore extends Component {
         }
     }
 
-    doBackup = () => {
+    getUniqueId() {
+        return this.s4() + this.s4() + '-' + this.s4() + '-' + this.s4() + '-' 
+            + this.s4() + '-' + this.s4() + this.s4() + this.s4();
+    }
+
+    s4() {
+        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    }
+
+    startBackup = (uid) => {
+        var self = this;
+        
         // Points to the root reference
         var storageRef = firebase.app().storage().ref();
         // Points to 'databases'
-        var dbRef = storageRef.child('databases');
+        var dbRef = storageRef.child('databases/' + 'prerna11082@iiitd.ac.in/' + uid);
         // Points to 'databases/autographa.realm'
         // Note that you can use variables to create child values
         var fileName = 'autographa.realm';
         var spaceRef = dbRef.child(fileName);
 
         const fileURI = RNFS.DocumentDirectoryPath+'/autographa.realm';
-        const file1 = '/storage/emulated/0/DCIM/Camera/IMG_20170506_113514857.jpg'
         var uploadTask = spaceRef.putFile(fileURI)
 
         console.log("START UPLOAD ...")
@@ -116,10 +126,6 @@ export default class BackupRestore extends Component {
             // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log('Upload is ' + progress + '% done');
-            console.log("SNAPSHOT STATAE = " + snapshot.state)
-            if (progress == 100) {
-
-            }
             switch (snapshot.state) {
                 case firebase.storage.TaskState.PAUSED: // or 'paused'
                     console.log('Upload is paused');
@@ -127,8 +133,38 @@ export default class BackupRestore extends Component {
                 case firebase.storage.TaskState.RUNNING: // or 'running'
                     console.log('Upload is running');
                     break;
-                case 'progress': 
-                    console.log('in progress')
+                case firebase.storage.TaskState.SUCCESS: 
+                    console.log("in success uid = " + uid);
+                    console.log("DO WRITE")
+                    var fdate = new Date(snapshot.metadata.timeCreated);
+                    console.log(" date = "+ fdate)
+                    var a = snapshot.metadata.size;
+                    var sizeFormat = a;
+                    if(0==a) {
+                        sizeFormat = "0 Bytes";
+                    } else {
+                        var c=1024,
+                            d=2,
+                            e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],
+                            f=Math.floor(Math.log(a)/Math.log(c));
+                        sizeFormat = parseFloat((a/Math.pow(c,f)).toFixed(d))+" "+e[f]
+                    }
+                    
+                    firebase.app().firestore().collection("users/" + "prerna11082@iiitd.ac.in" 
+                        + "/backups").doc(uid)
+                        .set({
+                            size: sizeFormat,
+                            timestamp: fdate,
+                            url: snapshot.downloadURL
+                        })
+                    self.setState({isLoading: false})
+                    self.doList();
+                    break;
+                case firebase.storage.TaskState.CANCELLED: 
+                    console.log('in cancelled')
+                    break;
+                case firebase.storage.TaskState.ERROR: 
+                    console.log('in error')
                     break;
             }
         }, function(error) {
@@ -146,30 +182,15 @@ export default class BackupRestore extends Component {
                     console.log("error : Unknown error occurred, inspect error.serverResponse")
                     break;
             }
-        }, function() {
-            // Handle successful uploads on complete
-            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                console.log('File available at', downloadURL);
-            });
-        }
-        );
+        });
     }
 
-    doRestore = () => {
-        console.log("DO WRITE")
-        firebase.app().firestore().collection("users/prerna11082@iiitd.ac.in/backups")
-            .add({
-                size: "1234",
-                timestamp: "213454687980",
-                url: "dafrg.rhtwr"
-            })
-            .then(function(docRef) {
-                console.log("Document written with ID: ", docRef.id);
-            })
-            .catch(function(error) {
-                console.error("Error adding document: ", error);
-            });
+    doBackup = () => {
+        var uid = this.getUniqueId();
+        this.setState({isLoading: true}, () => {
+            this.startBackup(uid)
+        })
+        
     }
 
     doList = () => {
@@ -201,16 +222,12 @@ export default class BackupRestore extends Component {
                     title="BACKUP NOW"
                     color="#841584" />
                 <Button 
-                    onPress={this.doRestore}
-                    title="RESTORE"
-                    color="#841584" />
-                <Button 
                     onPress={this.doList}
                     title="LIST"
                     color="#841584" />
                 <FlatList
                     data={this.state.dataSource}
-                    renderItem={({item}) => <Text>{item.url}</Text>}
+                    renderItem={({item}) => <Text style={{margin:8, fontSize:20}}>{item.timestamp.toString()}    Size: {item.size}</Text>}
                     />
             </View>
         );
