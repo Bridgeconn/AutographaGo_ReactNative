@@ -8,9 +8,12 @@ import {
   Alert,
   Button,
   FlatList,
+  Alert
 } from 'react-native';
+import {Card} from 'native-base'
 import firebase from 'react-native-firebase';
 import Login from './Login';
+import Icon from 'react-native-vector-icons/MaterialIcons'
 import AsyncStorageUtil from '../../utils/AsyncStorageUtil';
 const AsyncStorageConstants = require('../../utils/AsyncStorageConstants')
 var RNFS = require('react-native-fs');
@@ -103,7 +106,7 @@ export default class BackupRestore extends Component {
 
     startBackup = (uid) => {
         var self = this;
-        
+
         // Points to the root reference
         var storageRef = firebase.app().storage().ref();
         // Points to 'databases'
@@ -190,7 +193,6 @@ export default class BackupRestore extends Component {
         this.setState({isLoading: true}, () => {
             this.startBackup(uid)
         })
-        
     }
 
     doList = () => {
@@ -204,6 +206,44 @@ export default class BackupRestore extends Component {
                 })
                 this.setState({dataSource})
             })
+    }
+
+    startRestore = (item) => {
+        console.log('OK Pressed .. ' + item.url)
+
+        RNFS.downloadFile({
+                fromUrl: item.url, 
+                toFile: RNFS.DocumentDirectoryPath + '/autographa.realm'
+            })
+            .promise.then(result => {
+                console.log("RESTOR DONE, nOW RESTATTS")
+                console.log("result byteswritten = " + result.bytesWritten);
+                // restart app
+            });
+    }
+
+    doRestore = (item) => {
+        console.log("DO RESTORE , show dialog")
+        Alert.alert("Restore", 
+            "This backup will be restored, and current saved data, if any, will be deleted. Are you sure you want to proceed?", 
+            [
+                {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                {text: 'YES', onPress: () => this.startRestore(item)},
+            ],
+            { cancelable: true }
+        )
+    }
+
+    renderItem = ({item,index})=>{
+        return(
+            <Card style={{padding:8}}>
+                <TouchableOpacity onPress={()=> this.doRestore(item)} >
+                    <Text style={{margin:8, fontSize:20}}>
+                        {item.timestamp.toString()}    Size: {item.size}
+                    </Text>
+                </TouchableOpacity>
+            </Card>
+        )
     }
 
     render() {
@@ -221,13 +261,16 @@ export default class BackupRestore extends Component {
                     onPress={this.doBackup}
                     title="BACKUP NOW"
                     color="#841584" />
-                <Button 
-                    onPress={this.doList}
-                    title="LIST"
-                    color="#841584" />
+                <Icon 
+                    onPress={() => {this.doList()}}
+                    name={"autorenew"}
+                    color={"red"} 
+                    size={24} 
+                    style={{margin:8}} 
+                />
                 <FlatList
                     data={this.state.dataSource}
-                    renderItem={({item}) => <Text style={{margin:8, fontSize:20}}>{item.timestamp.toString()}    Size: {item.size}</Text>}
+                    renderItem={this.renderItem}
                     />
             </View>
         );

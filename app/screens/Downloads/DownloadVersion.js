@@ -71,7 +71,8 @@ export default class DownloadVersion extends Component {
                     fromUrl: 
                         'https://raw.githubusercontent.com/friendsofagape/Autographa_Repo/master/Bibles/'
                         +this.state.languageName+'/'+version+'/Archive.zip', 
-                    toFile: RNFS.DocumentDirectoryPath+'/AutoBibles/Archive.zip'})
+                    toFile: RNFS.DocumentDirectoryPath+'/AutoBibles/Archive.zip'
+                    })
                     .promise.then(result => {
                         this.setState({isDownloading:false})
                         console.log("result jobid = " + result.jobId);
