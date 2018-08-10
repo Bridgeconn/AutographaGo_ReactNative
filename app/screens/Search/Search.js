@@ -15,9 +15,10 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import DbQueries from '../../utils/dbQueries.js'
 import {getBookNameFromMapping, getBookNumberFromMapping} from '../../utils/UtilFunctions'
 const width = Dimensions.get('window').width-20;
-import SearchTab from '../../components/SearchTab'
+import SearchTab from '../../components/SearchTab/SearchTab'
 import { Segment } from 'native-base';
-
+import {searchStyle} from './styles'
+ 
 const SearchResultTypes = {
   ALL: 0,
   OT: 1,
@@ -26,91 +27,109 @@ const SearchResultTypes = {
 
 export default class Search extends Component {
   
-  static navigationOptions = ({navigation}) =>({
-    headerTitle: (<TextInput
-        placeholder="Search"
-        ref={ref => clear = ref}
-        style={{width:width}}
-        onChangeText={(text) => navigation.state.params.onTextChange(text)}
-        returnKeyType="search"
-        onSubmitEditing={() => navigation.state.params.onSearchText()}
-    />),
-   
-    headerRight:(
-        <Icon name="search" size={36} onPress={()=>navigation.state.params.onSearchText()}/>
-      )
-  })
+  static navigationOptions = ({navigation}) =>{
+      const { params = {} } = navigation.state;
+      console.log("props navigation iportion "+JSON.stringify(navigation))
+      return {
+        headerTitle: (<TextInput
+          placeholder="Search"
+          underlineColorAndroid = 'transparent'
+          style={{color:'white',width:Dimensions.get('window').width-90}}
+          onChangeText={(text) =>params.onTextChange(text)}
+          placeholderTextColor={'#fff'} 
+          returnKeyType="search"
+          multiline={false}
+          numberOfLines={1}
+          value={params.text}
+          onSubmitEditing={() => params.onSearchText()}
+      />),
+      headerRight:(
+          <Icon name='cancel' size={28} style={{marginHorizontal:8}} onPress={(text)=>params.clearData()}/>
+        )
+      }
+    }
+  
 
 
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
+    console.log("props value "+JSON.stringify(this.props))
     this.state = {
       searchedResult:[],
       activeTab:SearchResultTypes.ALL,
       isLoading:false,
+      text:'',
       tabsData:[]
     }
     this.onSearchText = this.onSearchText.bind(this)
-    this.clearData = this.clearData.bind(this)
     this.toggleButton = this.toggleButton.bind(this)
+    this.clearData = this.clearData.bind(this)
+    this.styles = searchStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
   }
 
   
-  async onSearchText(){
-       this.setState({isLoading:true,searchedResult:[], tabsData:[] })
-        let searchResultByBookName = await DbQueries.querySearchBookWithName("ULB", "ENG",this.state.text);
-        if(searchResultByBookName && searchResultByBookName.length >0 ){
-          for(var i = 0; i < searchResultByBookName.length ;i++ ){
-            let reference = { bookId:searchResultByBookName[i].bookId,
-              bookName:getBookNameFromMapping(searchResultByBookName[i].bookId),
-              bookNumber: getBookNumberFromMapping(searchResultByBookName[i].bookId),
-              chapterNumber:1,
-              verseNumber:"1",
-              versionCode:'ULB',
-              languageCode:'ENG',
-              type: 'v',
-              text: 'ASDXFCGVBHNM',
-              highlighted: 'false' }
-              this.setState(
-                {searchedResult:[...this.state.searchedResult, reference]
-              }
-            )
-    
-              this.addReferenceToTab(reference)
-            
-          }
-         }
-         let searchResultByVerseText = await DbQueries.querySearchVerse("ULB","ENG",this.state.text)
-         if (searchResultByVerseText &&  searchResultByVerseText.length >0) {
-           for(var i = 0; i < searchResultByVerseText.length ;i++ ){
-             let reference = {bookId:searchResultByVerseText[i].bookId,
-               bookName:getBookNameFromMapping(searchResultByVerseText[i].bookId),
-               bookNumber:getBookNumberFromMapping(searchResultByVerseText[i].bookId),
-               chapterNumber:searchResultByVerseText[i].chapterNumber,
-               verseNumber:searchResultByVerseText[i].verseNumber,
-               versionCode:searchResultByVerseText[i].versionCode,
-               languageCode:searchResultByVerseText[i].languageCode,
-               type: searchResultByVerseText[i].type,
-               text: searchResultByVerseText[i].text,
-               highlighted: searchResultByVerseText[i].highlighted}
-     
-               this.setState(
-                 // prevState =>({
-                 {searchedResult:[...this.state.searchedResult, reference]
-               })
-             // )
-     
-               this.addReferenceToTab(reference)
-           }
-          }
+ onSearchText(){
+    this.setState({isLoading: true}, async () => {
+      this.setState({isLoading:true,searchedResult:[], tabsData:[] })
+      let searchResultByBookName = await DbQueries.querySearchBookWithName("ULB", "ENG",this.state.text);
+      if(searchResultByBookName && searchResultByBookName.length >0 ){
+        for(var i = 0; i < searchResultByBookName.length ;i++ ){
+          let reference = { bookId:searchResultByBookName[i].bookId,
+            bookName:getBookNameFromMapping(searchResultByBookName[i].bookId),
+            bookNumber: getBookNumberFromMapping(searchResultByBookName[i].bookId),
+            chapterNumber:1,
+            verseNumber:"1",
+            versionCode:'ULB',
+            languageCode:'ENG',
+            type: 'v',
+            text: '',
+            highlighted: 'false' }
+            this.setState(
+              {searchedResult:[...this.state.searchedResult, reference]
+            }
+          )
+  
+            this.addReferenceToTab(reference)
+          
+        }
+       }
+       let searchResultByVerseText = await DbQueries.querySearchVerse("ULB","ENG",this.state.text)
+       if (searchResultByVerseText &&  searchResultByVerseText.length >0) {
+         for(var i = 0; i < searchResultByVerseText.length ;i++ ){
+           let reference = {bookId:searchResultByVerseText[i].bookId,
+             bookName:getBookNameFromMapping(searchResultByVerseText[i].bookId),
+             bookNumber:getBookNumberFromMapping(searchResultByVerseText[i].bookId),
+             chapterNumber:searchResultByVerseText[i].chapterNumber,
+             verseNumber:searchResultByVerseText[i].verseNumber,
+             versionCode:searchResultByVerseText[i].versionCode,
+             languageCode:searchResultByVerseText[i].languageCode,
+             type: searchResultByVerseText[i].type,
+             text: searchResultByVerseText[i].text,
+             highlighted: searchResultByVerseText[i].highlighted}
    
-     // todo fix loading true when all references added
-     this.setState({isLoading:false})
+             this.setState(
+               // prevState =>({
+               {searchedResult:[...this.state.searchedResult, reference]
+             })
+           // )
+   
+             this.addReferenceToTab(reference)
+         }
+        }
+ 
+   this.setState({isLoading:false})
+    })
+      
 
   }
   clearData(){
-    console.log("params value "+JSON.stringify(navigation.state))
-
+    console.log("hi ")
+    this.props.navigation.setParams({
+      text: ''
+    })
+    if(this.state.text){
+      this.setState({text:""})
+    }
   }
   addReferenceToTab(reference) {
     console.log("reference " +reference)
@@ -172,16 +191,23 @@ export default class Search extends Component {
   }
 
   onTextChange = (text) =>{
+    console.log("text value "+text)
+    this.props.navigation.setParams({
+      text: text
+    })
     this.setState({text})
   }
   
   componentDidMount(){
-    this.props.navigation.setParams({onTextChange: this.onTextChange,
+    this.props.navigation.setParams({
+      onTextChange: this.onTextChange,
       onSearchText: this.onSearchText,
-      text:this.state.text,
       onChangeText:this.onChangeText,
-      clearData:this.clearData
+      clearData:this.clearData,
+      headerStyle:this.styles.headerText,
     })
+    console.log("props of navigation option"+JSON.stringify(this.props.navigation))
+    // console.log("value of navigationOprion "+this.props.navigation.getParams())
   }
 
   toggleButton(activeTab){
@@ -197,7 +223,7 @@ export default class Search extends Component {
 
   ListEmptyComponent = () =>{
     return (
-      <View style={{alignSelf:'center'}}>
+      <View style={this.styles.ListEmptyContainer}>
       {this.state.isLoading == false && this.state.tabsData == null ? 
       <Text>No Result Found</Text>:null
       } 
@@ -212,50 +238,43 @@ export default class Search extends Component {
         :null
       }
     </View>
-      // animating={this.state.isLoading == true ? true : false} 
-      // size="large" 
-      // color="#0000ff"/> 
     )
   }
   searchedData = ({item,index}) => {
     return (
-      <View style={{margin:8,backgroundColor:"white"}}>
+      <View style={this.styles.searchedDataContainer}>
         <Text
-          style={{
-            padding:4,
-            borderBottomColor: 'silver',
-            borderBottomWidth: 0.5,
-            margin:4,
-            fontSize:18
-          }}
+          style={this.styles.searchedData}
         > 
           {item.bookName} {item.chapterNumber} : {item.verseNumber} 
         </Text>
-        <Text style={{margin:8,fontSize:16}}>{item.text}</Text>
+        <Text style={this.styles.textStyle}>{item.text}</Text>
       </View>
   )
 }
   render() {
-    console.log("isloadoing"+this.state.isLoading+ "DATA LENGTH" +this.state.searchedResult.length)
-    console.log("tabs data "+JSON.stringify(this.state.tabsData))
     return (
-      <View style={{backgroundColor:"white"}}>
+      <View style={this.styles.container}>
         <SearchTab
          toggleFunction={this.toggleButton}
          activeTab={this.state.activeTab}
         />
-        <Text style={{alignSelf:"center"}}>{this.state.tabsData.length} searched result found</Text>
-        <ActivityIndicator
-          animating={this.state.isLoading == true ? true : false} 
+        <Text style={this.styles.textLength}>{this.state.tabsData.length} search results found</Text>
+        {
+          this.state.isLoading ? <ActivityIndicator
+          animating={true} 
           size="large" 
-          color="#0000ff" /> 
-        <FlatList
+          color="#0000ff" /> :
+          <FlatList
           ref={ref => this.elementIndex = ref}
           data={this.state.tabsData}
           renderItem={this.searchedData}
           ListEmptyComponent={this.ListEmptyComponent}
           ListFooterComponent={this.ListFooterComponent}
           />
+        }
+        
+        
       </View>
       
     )

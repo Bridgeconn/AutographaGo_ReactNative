@@ -18,6 +18,10 @@ var {
 
 class FlowView extends Component {
 
+	constructor(props) {
+		super(props);
+	}
+	
 	render() {
 		return (
 			<View>
@@ -25,9 +29,9 @@ class FlowView extends Component {
 					this.props.onTextClick();
 				}}>
 					<View style={[styles.corner,{backgroundColor:'transparent'}]}>
-						<Text style={[styles.text,{color:'#000000'}]}>{this.props.text.bookName} {this.props.text.chapterNumber}:{this.props.text.verseNumber}</Text>
-                        <Icon name="clear" style={{}} size={24} 
-                        color="gray" onPress={()=> {this.props.onDeleteClick()}} />
+						<Text style={this.props.styles.textStyle}>{this.props.text.bookName} {this.props.text.chapterNumber}:{this.props.text.verseNumber}</Text>
+                        <Icon name="clear" style={this.props.styles.iconReferClose}
+                        	onPress={()=> {this.props.onDeleteClick()}} />
 					</View>
                 </TouchableOpacity>
             
@@ -52,7 +56,8 @@ export default class FlowLayout extends Component {
                         }}
                         onTextClick={()=>{
                             this.props.openReference(position);
-                        }}
+						}}
+						styles={this.props.styles}
                     />
 				</View>
 			);

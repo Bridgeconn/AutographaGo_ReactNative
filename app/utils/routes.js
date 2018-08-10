@@ -22,15 +22,17 @@ import BackupRestore from '../screens/backup/BackupRestore'
 
 const AsyncStorageConstants = require('./AsyncStorageConstants')
 import AsyncStorageUtil from './AsyncStorageUtil';
-import {nightColors, dayColors} from './colors.js'
+import {nightColors, dayColors, constColors} from './colors.js'
 import {extraSmallFont,smallFont,mediumFont,largeFont,extraLargeFont} from './dimens.js'
 import { styleFile } from './styles.js'
 import DbQueries from '../utils/dbQueries'
 import Realm from 'realm'
 
-const StackNav = StackNavigator(
+
+
+const StackNavigate = (styles) => StackNavigator(
   {  
-  
+    
       Splash: {
         screen: Splash,
       },
@@ -73,8 +75,8 @@ const StackNav = StackNavigator(
       Book: {
         screen: Book,
       },
-      Search: {
-        screen: Search,
+      Language:{
+        screen:Language
       },
       DownloadLanguage: {
         screen: DownloadLanguage
@@ -82,8 +84,9 @@ const StackNav = StackNavigator(
       DownloadVersion: {
         screen: DownloadVersion
       },
-      Language:{
-        screen:Language
+     
+      Search: {
+        screen: Search,
       },
       BackupRestore: {
         screen: BackupRestore
@@ -92,9 +95,7 @@ const StackNav = StackNavigator(
   {
     navigationOptions: {
       headerTintColor: '#fff',
-      headerStyle: {
-        backgroundColor: '#3F51B5'
-      },
+      headerStyle: styles.headerStyle
     }
   }
 )
@@ -103,8 +104,6 @@ export default class App extends Component {
 
   constructor(props){
     super(props)
-      // console.log('in routes'+this.props)
-
     Realm.copyBundledRealmFiles();
       
     this.state = {
@@ -114,7 +113,6 @@ export default class App extends Component {
         versionCode: AsyncStorageConstants.Values.DefVersionCode,
         languageName:AsyncStorageConstants.Values.DefLanguageName,
         versionName:AsyncStorageConstants.Values.DefVersionName,
-
         colorMode: AsyncStorageConstants.Values.DayMode,
         sizeMode: AsyncStorageConstants.Values.SizeModeNormal,
         colorFile:dayColors,
@@ -130,6 +128,10 @@ export default class App extends Component {
     this.changeSizeByOne = this.changeSizeByOne.bind(this)
     this.updateLastRead = this.updateLastRead.bind(this)
     this.updateLanguage  = this.updateLanguage.bind(this)
+
+    this.styles = styleFile(this.state.colorFile,this.state.sizeFile)
+    this.StackNav = StackNavigate(this.styles)
+    console.log("ALL HEADER COLOR /////// "+JSON.stringify(this.styles))
   }
 
   updateBooks = (booksList) => {
@@ -205,17 +207,25 @@ export default class App extends Component {
     }
   }
 
-  updateLanguage = (languageCode,languageName,versionCode,versionName) =>{
-    // console.log("in ROTES update language")
+  updateLanguage = async(languageCode,languageName,versionCode,versionName) =>{
+    console.log("in ROTES update language")
     this.setState({languageCode, languageName,versionCode,versionName})
+
+    let models = await DbQueries.queryBookIdModels(versionCode, languageCode);
+      console.log("routes len =" + models)
+      if (models && models.length > 0) {
+        this.setState({booksList: models})
+      }
+
   }
 
   render(){
+    let  StackNav = this.StackNav
     return(
       <StackNav 
         screenProps={{
           colorMode: this.state.colorMode, 
-          sizeMode: this.state.sizeMode, 
+          sizeMode: parseInt(this.state.sizeMode), 
           colorFile:this.state.colorFile,
           sizeFile:this.state.sizeFile,
           booksList: this.state.booksList, 
@@ -251,11 +261,12 @@ export default class App extends Component {
       AsyncStorageConstants.Keys.LanguageName,
       AsyncStorageConstants.Keys.VersionName
     ])
+    
     if (res == null) {
       return
     }
-
-    this.setState({sizeMode: res[1][1] == null ? AsyncStorageConstants.Values.SizeModeNormal : res[1][1]}, ()=> {
+    console.log("ROUTES.... color mode "+res[0][1])
+    this.setState({sizeMode: res[1][1] == null ? AsyncStorageConstants.Values.SizeModeNormal : parseInt(res[1][1])}, ()=> {
       switch (this.state.sizeMode) {
         case  AsyncStorageConstants.Values.SizeModeXSmall : {
           this.setState({sizeFile:extraSmallFont})
@@ -274,6 +285,7 @@ export default class App extends Component {
           break;
         }
         case AsyncStorageConstants.Values.SizeModeXLarge : {
+          console.log("SIZEFILEIS XLLLL...")
           this.setState({sizeFile:extraLargeFont})
           break;
         }
@@ -281,15 +293,16 @@ export default class App extends Component {
     })
 
     this.setState({
-      colorMode: res[0][1]== null ? AsyncStorageConstants.Values.DayMode : res[0][1],
+      colorMode: res[0][1]== null ? AsyncStorageConstants.Values.DayMode : parseInt(res[0][1]),
       colorFile: res[0][1] == null ? dayColors : 
-      (res[0][1] == AsyncStorageConstants.Values.DayMode ? dayColors : nightColors),
+      (parseInt(res[0][1]) == AsyncStorageConstants.Values.DayMode ? dayColors : nightColors),
       verseInLine:  res[2][1] == null ? AsyncStorageConstants.Values.VerseInLine : res[2][1],
       languageCode: res[3][1] == null ? AsyncStorageConstants.Values.DefLanguageCode : res[3][1],
       versionCode:  res[4][1] == null ? AsyncStorageConstants.Values.DefVersionCode : res[4][1],
       languageName: res[5][1] == null ? AsyncStorageConstants.Values.DefLanguageName : res[5][1],
       versionName:  res[6][1] == null ? AsyncStorageConstants.Values.DefVersionName : res[6][1],
     }, async ()=> {
+
       let models = await DbQueries.queryBookIdModels(this.state.versionCode, this.state.languageCode);
       // console.log("routes len =" + models)
       // console.log("VERSE VALUE ++++ " + res[2][1])
@@ -303,6 +316,7 @@ export default class App extends Component {
       ).then((lastRead) => {
           this.setState({lastRead})
     })
+  console.log("DSIDI mount value "+typeof this.state.sizeMode)
   }
 
 }

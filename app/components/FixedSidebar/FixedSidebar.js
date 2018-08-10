@@ -6,7 +6,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { sidebarStyle } from './styles.js';
-
+import {constantFont} from '../../utils/dimens.js'
+ 
 export default class FixedSidebar extends Component {
   constructor(props){
     super(props)
@@ -60,7 +61,7 @@ export default class FixedSidebar extends Component {
           onPressOut={()=>this.handlePressOut()}
           >
           <Animated.View style={[sidebarStyle.AnimatedViewCustom, this.props.doAnimate == true && index == this.state.index ? animatedStyle : null]}>
-            <Icon name={iconName.icon} size={32} 
+            <Icon name={iconName.icon} size={constantFont.iconLarge} 
             style={sidebarStyle.iconColor}
               />
           </Animated.View>

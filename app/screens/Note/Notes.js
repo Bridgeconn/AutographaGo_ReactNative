@@ -19,6 +19,16 @@ import { noteStyle } from './styles.js';
 var moment = require('moment');
 
 export default class Notes extends Component {
+
+  static navigationOptions = ({navigation}) => ({
+    headerTitle: 'Notes',
+    headerRight:(
+      <TouchableOpacity style={{margin:8}} onPress={() => navigation.state.params.newNote(-1)}>
+         <Icon name="note-add" size={24} color="#fff"/>
+     </TouchableOpacity>
+    )
+  });
+
   constructor(props){
     super(props);
     this.state = {
@@ -34,14 +44,7 @@ export default class Notes extends Component {
     this.onRefresh = this.onRefresh.bind(this)
   }
 
-  static navigationOptions = ({navigation}) => ({
-    headerTitle: 'Notes',
-    headerRight:(
-      <TouchableOpacity style={{margin:8}} onPress={() => navigation.state.params.newNote(-1)}>
-         <Icon name="note-add" size={24} color="#fff"/>
-     </TouchableOpacity>
-    )
-  });
+ 
   
   createNewNote = (index) => {
     this.openEdit(index, null)
@@ -66,24 +69,33 @@ export default class Notes extends Component {
 
   async queryDb() {
     let res = await DbQueries.queryNotes();
+    console.log("NOTES RESULTS ............"+res)
     if(res==null){
       return
     }
-    this.setState({ notesData: res})
+    this.setState({notesData: res})
   }
 
+  
+
   componentDidMount(){
-    this.props.navigation.setParams({ newNote: this.createNewNote})
+    this.props.navigation.setParams({ 
+      newNote: this.createNewNote,
+      updateNote:this.updateNote
+    })
+   
     this.queryDb()
   }
 
   openEdit(index, noteObject) {
-    this.props.navigation.navigate('EditNote',{index:index, noteObject: noteObject, 
-      onDelete: this.onDelete, onRefresh: this.onRefresh, 
+    this.props.navigation.navigate('EditNote',{index:index, 
+      noteObject: noteObject, 
+      onDelete: this.onDelete, 
+      onRefresh: this.onRefresh, 
       referenceList: this.state.referenceList,
       bookId: this.state.bookId,
       versionCode: this.state.versionCode,
-      languageCode: this.state.languageCode
+      languageCode: this.state.languageCode,
     })
   }
   
@@ -96,18 +108,19 @@ export default class Notes extends Component {
 
     var jparse = item.body == '' ? '' : JSON.parse(item.body)
     var strParse = jparse.replace(/<(?:.|\n)*?>/gm, '');
-
-    var bodyText = strParse == '' ? 'No additional text' : strParse
+    var strParse1 = strParse.replace('&nbsp', ' ')
+    var bodyText = strParse1 == '' ? 'No additional text' : strParse1
+    
     return(
     <TouchableOpacity style={this.styles.noteContent}
         onPress={() =>this.openEdit(index,item)}>
-      <Card style={this.styles.noteCardCustom}>
-        <CardItem>
+      <Card>
+      <CardItem style={this.styles.cardItemStyle}>
         <View style={this.styles.notesContentView}> 
           <Text style={this.styles.noteFontCustom} numberOfLines={2}>{bodyText}</Text>
           <View style={this.styles.noteCardItem}>
             <Text style={this.styles.noteFontCustom}>{dateFormate}</Text>
-            <Icon name="delete-forever" size={24} onPress={()=>this.onDelete(index, item.createdTime)}/>
+            <Icon name="delete-forever" style={this.styles.deleteIon} onPress={()=>this.onDelete(index, item.createdTime)}/>
           </View>
         </View>
         </CardItem>
@@ -119,12 +132,21 @@ export default class Notes extends Component {
 
   render() {
     return (
-      <View style={this.styles.notesView}>
+      <View style={this.styles.container}>
       <FlatList
-        style={this.styles.noteFlatlistCustom}
+        contentContainerStyle={this.state.notesData.length === 0 
+          ? this.styles.centerEmptySet: this.styles.noteFlatlistCustom}
         data={this.state.notesData}
         renderItem={this.renderItem}
+        ListEmptyComponent={
+          <TouchableOpacity onPress={()=>this.createNewNote(-1)} 
+            style={this.styles.emptyMessageContainer}>
+            <Icon name="note-add"  style={this.styles.emptyMessageIcon} />
+            <Text style={this.styles.messageEmpty}>Tap to create a new note</Text>
+          </TouchableOpacity>
+        }
       />
+      
       </View>
 
     );

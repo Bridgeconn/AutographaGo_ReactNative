@@ -79,7 +79,8 @@ export default class VerseView extends Component {
         if (this.props.verseData.verseNumber == "1" || 
             this.props.verseData.verseNumber.startsWith("1-")) {
               return (
-                <Text onPress={() => {this.onPress()}}>
+                <Text onPress={() => {this.onPress()}}
+                >
                   <Text style={this.props.styles.verseChapterNumber}> 
                     {"\n"}{this.props.verseData.chapterNumber}{' '}
                   </Text>

@@ -1,5 +1,6 @@
 import id_name_map from '../assets/mappings.json'
 
+
 export function getBookNameFromMapping(bookId) {
         var obj = id_name_map.id_name_map;
         for (var key in obj) {
@@ -13,6 +14,7 @@ export function getBookNameFromMapping(bookId) {
         return null;
   }
   
+
   export function getBookNumberFromMapping(bookId) {
     var obj = id_name_map.id_name_map;
     for (var key in obj) {

@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   FlatList,
   Linking,
-  Platform
+  Platform,
+  Alert
 } from 'react-native';
 import DbQueries from '../../utils/dbQueries'
 import USFMParser from '../../utils/USFMParser'
@@ -22,34 +23,46 @@ import {getBookNameFromMapping} from '../../utils/UtilFunctions'
 import {nightColors, dayColors} from '../../utils/colors.js'
 import FixedSidebar from '../../components/FixedSidebar/FixedSidebar'
 import AsyncStorageUtil from '../../utils/AsyncStorageUtil';
+import {constantFont} from '../../utils/dimens.js'
+import firebase from 'react-native-firebase'
 
 export default class Home extends Component {
 
-  static navigationOptions = ({navigation}) =>({
-    headerTitle: 'Autographa Go',
-    headerRight:(
-        <TouchableOpacity onPress={()=>navigation.state.params.goToLanguage()} >
-          <Text style={{color:"#fff",margin:8}}>{navigation.state.params.bibleLanguage} {navigation.state.params.bibleVersion}</Text>
-        </TouchableOpacity>
-      )
-  })
+  static navigationOptions = ({navigation}) =>{
+    const { params = {} } = navigation.state;
+    console.log("props navigation VALUE "+JSON.stringify(navigation.state.params))
+    return{
+      headerTitle: (
+              <TouchableOpacity onPress={() =>{navigation.navigate("About")}} >
+                <Text style={{color:'white',fontSize:20,marginHorizontal:16,fontWeight:'500'}}>Autographa Go</Text>
+              </TouchableOpacity>),
+      headerRight:(
+          <TouchableOpacity onPress={() =>{navigation.state.params.openLanguages()}} >
+            <Text style={params.headerRightText}>{params.bibleLanguage} {params.bibleVersion}</Text>
+          </TouchableOpacity>
+        )
+      }
+  }
 
   constructor(props){
     super(props)
-    this.handleViewableItemsChanged = this.handleViewableItemsChanged.bind(this)
 
     this.state = {
       colorFile:this.props.screenProps.colorFile,
       sizeFile:this.props.screenProps.sizeFile,
+      colorMode:this.props.screenProps.colorMode,
       lastRead:this.props.screenProps.lastRead,
-      // bibleLanguage:this.props.screenProps.languageCode,
-      // bibleVersion:this.props.screenProps.versionCode,
+      bibleLanguage:this.props.screenProps.languageName,
+      bibleVersion:this.props.screenProps.versionCode,
       activeTab:true,
       iconPress: [],
       booksList: this.props.screenProps.booksList,
+      OTSize:0,
+      NTSize:0,
+      token:null
     }
-    // console.log("IN HOME, bok len"  + this.props.screenProps.booksList.length)
-
+    console.log("IN HOME, bok len"  + this.props.screenProps.booksList.length)
+    console.log("IN HOME, ACTIVE TAB"  + this.state.activeTab)
     this.styles = homePageStyle(this.state.colorFile, this.state.sizeFile);
     
     this.viewabilityConfig = {
@@ -57,67 +70,118 @@ export default class Home extends Component {
         waitForInteraction: true
     }
 
+    this.setState({OTSize:this.getOTSize(this.props.screenProps.booksList),
+      NTSize:this.getNTSize(this.props.screenProps.booksList)})
+
+      this.viewabilityConfig = {
+        itemVisiblePercentThreshold: 100
+      }
   }
- 
+
   toggleButton(value){
     this.setState({activeTab:value})
     if(value == false){
-      // console.log("pressed")
-      this.flatlistRef.scrollToIndex({index:39,viewPosition:0,animated: false,viewOffset:0})
+      console.log("pressed")
+      this.flatlistRef.scrollToIndex({index:this.state.OTSize,viewPosition:0,animated: false,viewOffset:0})
     }
     else{
       this.flatlistRef.scrollToIndex({index:0,viewPosition:0,animated: false,viewOffset:0})
     }
   }
- 
-  componentWillReceiveProps(props){
-    // console.log("WILLLLL recievr props"+props.screenProps.languageCode+"  version "+props.screenProps.versionCode)
-    this.setState({
-      colorFile:props.screenProps.colorFile,
-      sizeFile:props.screenProps.sizeFile,
-      lastRead: props.screenProps.lastRead
-    }, () => {
-      // this.props.navigation.setParams({bibleLanguage:props.screenProps.languageCode, 
-      //   bibleVersion: props.screenProps.versionCode})
+  
+  updateLanguage = (language,version) =>{
+    this.props.navigation.setParams({
+      bibleLanguage: language,
+      bibleVersion: version
     })
+  }
+
+  openLanguages = ()=>{
+    this.props.navigation.navigate("Language", {updateLanguage:this.updateLanguage})
+  } 
+
+   componentWillReceiveProps(props){
+    console.log("WILLLLL recievr props  version "+JSON.stringify(props))
+     this.setState({
+      colorFile:props.screenProps.colorFile,
+      colorMode: props.screenProps.colorMode,
+      sizeFile:props.screenProps.sizeFile,
+      lastRead: props.screenProps.lastRead,
+      booksList: props.screenProps.booksList,
+      OTSize:this.getOTSize(props.screenProps.booksList),
+      NTSize:this.getNTSize(props.screenProps.booksList)
+      
+    })
+    console.log("OT SIZE " +this.state.OTSize)
+   
     this.styles = homePageStyle(props.screenProps.colorFile, props.screenProps.sizeFile);   
   }
-  goToLanguage = ()=>{
-    this.props.navigation.navigate("Language")
-  }
+ 
   getItemLayout = (data, index) => (
     { length: 48, offset: 48 * index, index }
   )
-
-  handleScroll = (event)=>{
-    //  console.log(event.nativeEvent.contentOffset.y+ "  index value")  
-  }
-
-  _onViewableItemsChanged = (info) => {
-    // console.log("viewable item : " + JSON.stringify(info.viewableItems))
-    // console.log("changed item : " + JSON.stringify(info.changed))
-  }
-
-  handleViewableItemsChanged = ({viewableItems }) => {
-    // console.log("handleViewableItemsChanged.. "+viewableItems)
-    // console.log("handleViewableItemsChanged changes.. "+changed)
-  }
-
+  
   componentDidMount(){
-    // this.props.navigation.setParams({styles:this.styles})
-    // console.log("data from router language props "+this.props.screenProps.data)
-    this.props.navigation.setParams({goToLanguage:this.goToLanguage,bibleLanguage: this.props.screenProps.languageCode, 
-      bibleVersion: this.props.screenProps.versionCode})
-    
-    // if (Platform.OS === 'android') {
-      Linking.getInitialURL().then(url => {
-        console.log("HOME linking initial = " + url);
-        this.navigate(url);
-      });
-    // } else {
-      Linking.addEventListener('url', this.handleOpenURL);
-    // } 
+    this.props.navigation.setParams({
+      bibleLanguage: this.props.screenProps.languageName, 
+      bibleVersion: this.props.screenProps.versionCode,
+      openLanguages: this.openLanguages,
+      headerRightText:this.styles.headerRightText
+    })
+
+    Linking.getInitialURL().then(url => {
+      console.log("HOME linking initial = " + url);
+      this.navigate(url);
+    });
+    Linking.addEventListener('url', this.handleOpenURL);
+   
+      // firebase.messaging().requestPermission().then(function() {
+      //   console.log('Notification permission granted.');
+      //   firebase.messaging().getToken().then(function(currentToken) {
+      //     if (currentToken) {
+      //       console.log("token notification "+currentToken)
+      //       this.setState({token:currentToken})
+      //       sendTokenToServer(currentToken);
+      //       updateUIForPushEnabled(currentToken);
+      //     } else {
+      //       console.log('No Instance ID token available. Request permission to generate one.');
+      //       updateUIForPushPermissionRequired();
+      //       setTokenSentToServer(false);
+      //     }
+      //   }).catch(function(err) {
+      //     showToken('Error retrieving Instance ID token. ', err);
+      //     setTokenSentToServer(false);
+      //   });
+      //   firebase.messaging().onTokenRefresh(function() {
+      //     firebase.messaging().getToken().then(function(refreshedToken) {
+      //       console.log('Token refreshed.');
+      //       setState({token:refreshedToken})
+      //       setTokenSentToServer(false);
+      //       sendTokenToServer(refreshedToken);
+      //     }).catch(function(err) {
+      //       showToken('Unable to retrieve refreshed token ', err);
+      //     });
+      //   });
+      //   // TODO(developer): Retrieve an Instance ID token for use with FCM.
+      //   // ...
+      // }).catch(function(err) {
+      //   console.log('Unable to get permission to notify.', err);
+      // })
   }
+ 
+  // subscribeTokenToTopic() {
+  //   const global = 'global'
+  //   fetch('https://iid.googleapis.com/iid/v1/'+this.state.token+'/rel/topics/'+global, {
+  //     method: 'POST',
+  //     headers: new Headers({
+  //       'Authorization': AIzaSyCNEote_sBqM-caTdT4udwvrdqo9YEMbS4
+  //     })
+  //   }).then(response => {
+  //     console.log("res "+JOSN.stringify() );
+  //   }).catch(error => {
+  //     console.error(error);
+  //   })
+  // }
 
   componentWillUnmount() {
     Linking.removeEventListener('url', this.handleOpenURL);
@@ -157,22 +221,60 @@ renderItem = ({item, index})=> {
               name='chevron-right' 
               color="gray" 
               style={this.styles.iconCustom}
-              size={24} />
+              />
           </View>
         </TouchableOpacity>
     );
   }
 
-  handlePressIn() {
+  getOTSize(bookList){
+    var count = 0;
+    for(var i=0 ; i<bookList.length ; i++){
+      if(bookList[i].bookNumber <= 39){
+        count ++;
+      }
+      else{
+        break;
+      }
 
+    }
+    return count 
   }
 
-  handlePressOut(){
-    
+  getNTSize(bookList){
+    var count = 0;
+    for(var i=bookList.length-1 ; i>=0 ; i--){
+      if(bookList[i].bookNumber >= 41){
+        count++
+      }
+      else{
+        break;
+      }
+    }
+    return count 
   }
-  
+
+  onViewableItemsChanged = ({ viewableItems, changed }) => {
+      console.log("Visible items are", viewableItems);
+      if (viewableItems.length > 0) {
+        if (viewableItems[0].index < this.state.OTSize) {
+          // toggel to OT
+          this.setState({activeTab:true})
+        } else {
+          // toggle to NT
+          this.setState({activeTab:false})
+        }
+      }
+  }
+
 
   render(){
+    let activeBgColor = 
+      this.state.colorMode == AsyncStorageConstants.Values.DayMode ? '#3F51B5' : '#fff'
+    let inactiveBgColor = 
+      this.state.colorMode == AsyncStorageConstants.Values.DayMode ? '#fff' : '#3F51B5'
+   
+   
     return (
       <View style={this.styles.container}>
         <FixedSidebar 
@@ -188,52 +290,66 @@ renderItem = ({item, index})=> {
           doAnimate = {false}
         />
         <View style={this.styles.bookNameContainer}>
-            <Segment style={this.styles.segmentCustom}>
-            {/* {this.state.booksList.length <40 } */}
+            <Segment>
+              {
+                this.state.OTSize > 0 
+              ?
               <Button 
                 active={this.state.activeTab} 
-                style={[
-                  {backgroundColor:this.state.activeTab ?  "#3F51B5":"#fff"},
-                  this.styles.segmentButton
-                ]} 
+       
+                style={[{
+                  backgroundColor: this.state.activeTab ? activeBgColor : inactiveBgColor,
+                  width: this.state.NTSize == 0 ? width*4/5 : width*2/5,
+                  },this.styles.segmentButton]} 
                 onPress={this.toggleButton.bind(this,true)
                 }
               >
                 <Text 
-                  style={{color:this.state.activeTab? "#fff" : "#000"
+                  style={{color:this.state.activeTab ? inactiveBgColor : activeBgColor
                   }}>
                   Old Testament
                 </Text>
               </Button>
+              : null}
+              {
+                this.state.NTSize > 0 
+
+              ?
               <Button 
                 active={!this.state.activeTab} 
-                style={[
-                  {backgroundColor:this.state.activeTab ?  "#fff" : "#3F51B5"},  
-                  this.styles.segmentButton
-                ]} 
+                style={[{
+                  backgroundColor: !this.state.activeTab ? activeBgColor : inactiveBgColor,
+                  width: this.state.OTSize == 0 ? width*4/5 : width*2/5,                  
+                },this.styles.segmentButton]} 
                 onPress={this.toggleButton.bind(this,false)}>
                 <Text 
                   active={!this.state.activeTab} 
-                  style={{
-                    color:!this.state.activeTab ? "#fff":"#000" 
-                  }}>
+                  style={[
+                    {
+                      color:!this.state.activeTab ? inactiveBgColor : activeBgColor
+                    },this.styles.buttonText]
+                  }>
                   New Testament
                 </Text>
               </Button>
+              :null}
             </Segment>
             <FlatList
+
               ref={ref => this.flatlistRef = ref}
               data={this.state.booksList}
               getItemLayout={this.getItemLayout}
-              // onScroll={this.handleScroll}
+              onScroll={this.handleScroll}
               renderItem={this.renderItem}
               extraData={this.styles}
+              keyExtractor={item => item.bookNumber}
+              onViewableItemsChanged={this.onViewableItemsChanged}
+              viewabilityConfig={this.viewabilityConfig}
               // onViewableItemsChanged={this.handleViewableItemsChanged}
-              // viewabilityConfig={this.viewabilityConfig}
             />
         </View> 
       </View>
     );
   }
-};
+}
 

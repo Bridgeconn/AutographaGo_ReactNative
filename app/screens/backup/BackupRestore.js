@@ -8,7 +8,6 @@ import {
   Alert,
   Button,
   FlatList,
-  Alert
 } from 'react-native';
 import {Card} from 'native-base'
 import firebase from 'react-native-firebase';
