@@ -4,7 +4,10 @@ const width = Dimensions.get('window').width;
 
 export const splashStyle = StyleSheet.create({
     splashScreen:{
-        flex:1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' 
+        flex:1, 
+        backgroundColor: 'white', 
+        justifyContent: 'center', 
+        alignItems: 'center' 
     }
 
     })

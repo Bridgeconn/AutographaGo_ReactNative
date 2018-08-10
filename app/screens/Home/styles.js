@@ -11,9 +11,13 @@ export const homePageStyle =(colorFile, sizeFile) =>{
     flexDirection:'row'
    },
     textStyle: {
-        fontSize:sizeFile.fontSize,
+        fontSize:sizeFile.titleText,
         color:colorFile.textColor,
         justifyContent:'center'
+   },
+   headerRightText:{
+    color:"#fff",
+    margin:16
    },
     sideBarContainer:{
         flexDirection:'column',
@@ -30,15 +34,17 @@ export const homePageStyle =(colorFile, sizeFile) =>{
         width:width*4/5,
         backgroundColor:colorFile.backgroundColor
     },
-    segmentCustom:{
-        borderColor:'#3F51B5',
-        borderBottomWidth:1
-    },
+  
     segmentButton:{
-        padding: 0,
+        padding:4,
         height: 45,
-        width:width*2/5,
-        
+        borderLeftWidth:1,
+        borderRightWidth:1,
+        borderColor:'#3F51B5',
+        justifyContent:'center'
+    },
+    buttonText:{
+        alignItems:'center'
     },
     bookList:{
         flexDirection:'row',
@@ -48,11 +54,10 @@ export const homePageStyle =(colorFile, sizeFile) =>{
         height:48
       },
     iconCustom:{
-        color:colorFile.iconColor
+        color:colorFile.iconColor,
+        fontSize:sizeFile.iconSize
     },
    cardItemStyle:{paddingTop:16,paddingBottom:16},
-   
-
 })
 }
 

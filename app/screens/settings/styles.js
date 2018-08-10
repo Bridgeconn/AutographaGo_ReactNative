@@ -14,12 +14,11 @@ export const settingsPageStyle =(colorFile, sizeFile) =>{
     },
     textStyle: {
             color: colorFile.textColor,   
-            fontSize:sizeFile.fontSize,
-            marginLeft:4
+            fontSize:sizeFile.titleText,
+            marginLeft:4,
+            alignSelf:'center'
     },
-    // IconCustom:{
-        // color:colorFile.iconColor
-    // },
+    
     cardItemStyle:{
        paddingTop:16,
        paddingBottom:16,
@@ -27,23 +26,24 @@ export const settingsPageStyle =(colorFile, sizeFile) =>{
     },
     switchButtonCard:{
         paddingTop:16,
-       paddingBottom:16,
-       backgroundColor:colorFile.backgroundColor,
-       justifyContent:'space-between',
-       marginLeft:4
+        paddingBottom:16,
+        backgroundColor:colorFile.backgroundColor,
+        justifyContent:'space-between',
+    },
+    cardItemColumn:{
+        flexDirection:'column',
     },
     cardItemRow:{
-        flexDirection:'row'
+        flexDirection:'row',
+        marginVertical:4
     },
-    nightModeCustom:{
-        marginRight:8,
-        marginBottom:20,
-        color:colorFile.textColor
+    modeTextCustom:{
+        color:colorFile.textColor,
+        fontSize:sizeFile.contentText,
+        position: 'absolute', 
+        right: 50,
     },
-    dayModeCustom:{
-        marginRight:8,
-        color:colorFile.textColor
-    },
+
     cardItemAlignRight:{
         alignItems:'flex-start'
     },
@@ -55,7 +55,16 @@ export const settingsPageStyle =(colorFile, sizeFile) =>{
     cardItemIconCustom:{
         marginHorizontal:4,
         marginVertical:8,
-        color:colorFile.settingsIconColor   
+        color:colorFile.settingsIconColor,
+        fontSize:sizeFile.settingsIcon   
+    },
+    
+    modeIconCustom:{
+        fontSize:sizeFile.settingsIcon,
+        textAlign:'center'  
+    },
+    switchIcon:{
+        color:colorFile.iconColor,
     }
 })
 }

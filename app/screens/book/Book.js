@@ -12,7 +12,7 @@ import {
   Share,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import {createResponder} from 'react-native-gesture-responder';
+import {createResponder } from 'react-native-gesture-responder';
 
 import DbQueries from '../../utils/dbQueries'
 import VerseView from './VerseView'
@@ -21,6 +21,7 @@ import AsyncStorageConstants from '../../utils/AsyncStorageConstants';
 const Constants = require('../../utils/constants')
 import { styles } from './styles.js';
 import id_name_map from '../../assets/mappings.json'
+import {NavigationActions} from 'react-navigation'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -79,6 +80,7 @@ export default class Book extends Component {
 
   }
 
+  
   componentWillReceiveProps(props){
     // console.log("will recievr props"+JSON.stringify(props))
     this.setState({
@@ -89,7 +91,6 @@ export default class Book extends Component {
   }
 
   componentDidMount() {
-
     this.gestureResponder = createResponder({
       onStartShouldSetResponder: (evt, gestureState) => true,
       onStartShouldSetResponderCapture: (evt, gestureState) => true,
@@ -152,7 +153,7 @@ export default class Book extends Component {
       this.queryBook()
     })
   }
-
+  
   async queryBook() {
     let model = await DbQueries.queryBookWithId(this.props.screenProps.versionCode, 
         this.props.screenProps.languageCode, this.state.bookId);
@@ -176,6 +177,7 @@ export default class Book extends Component {
     this.setState({isBookmark: index > -1 ? false : true}, () => {
         this.props.navigation.setParams({isBookmark: this.state.isBookmark})      
     })
+
   }
 
   getSelectedReferences(vIndex, chapterNum, vNum) {
@@ -237,7 +239,7 @@ export default class Book extends Component {
     }
     return null;
   }
-
+ 
   addToNotes = () => {
     let refList = []
     let id = this.state.bookId
@@ -281,6 +283,16 @@ export default class Book extends Component {
     }
     AsyncStorageUtil.setItem(AsyncStorageConstants.Keys.LastReadReference, lastRead);
     this.props.screenProps.updateLastRead(lastRead);
+    console.log("this.props.navigation back book page "+JSON.stringify(this.props))
+    // sceneProps.scene.route.routeName 
+
+    if(this.props.navigation.state.params.prevScreen =='bookmark'){
+      this.props.navigation.state.params.updateBookmark()
+    }
+    else if(this.props.navigation.state.params.prevScreen == 'highlights'){
+      this.props.navigation.state.params.updateHighlights()
+    }
+   
   }
 
   updateCurrentChapter(val) {
@@ -292,6 +304,7 @@ export default class Book extends Component {
     })
   }
 
+ 
   render() {
     const thumbSize = this.state.thumbSize;
       return (
@@ -306,8 +319,8 @@ export default class Book extends Component {
                 >
                  {    (this.state.verseInLine) ?
                             <FlatList
+                           
                             data={this.state.modelData[this.state.currentVisibleChapter - 1].verseComponentsModels}
-                            style={this.styles.chapterList}
                             renderItem={({item, index}) => 
                                 <Text letterSpacing={24}
                                     style={this.styles.verseWrapperText}>
@@ -315,7 +328,7 @@ export default class Book extends Component {
                                             ref={child => (this[`child_${item.chapterNumber}_${index}`] = child)}
                                             verseData = {item}
                                             index = {index}
-                                            styles = {this.styles}
+                                            styles = {this.styles.VerseText}
                                             selectedReferences = {this.state.selectedReferenceSet}
                                             getSelection = {(verseIndex, chapterNumber, verseNumber) => {
                                             this.getSelectedReferences(verseIndex, chapterNumber, verseNumber)
@@ -323,7 +336,7 @@ export default class Book extends Component {
                                         />
                                 </Text>
                             }
-                            ListFooterComponent={<View style={{height:64, marginBottom:4}} />}
+                            ListFooterComponent={<View style={styles.addToSharefooterComponent} />}
                             />
                         :
                             <View style={this.styles.chapterList}>
@@ -356,20 +369,18 @@ export default class Book extends Component {
                 
                 {this.state.showBottomBar || this.state.currentVisibleChapter == 1
                 ? null :
-                <View style={{borderRadius: 40, margin:8, position:'absolute', bottom:0, left:0,
-                    width: 64, height: 64, backgroundColor: 'white', justifyContent:'center'}}>
+                <View style={this.styles.bottomBarPrevView}>
                     <Icon name={'chevron-left'} color="black" size={36} 
-                        style={{ alignItems:'center', zIndex:2, alignSelf:'center'}} 
+                        style={this.styles.bottomBarChevrontIcon} 
                         onPress={()=> this.updateCurrentChapter(-1)}
                         />
                 </View>
                 }
                 {this.state.showBottomBar || this.state.currentVisibleChapter == this.state.modelData.length 
                 ? null :
-                <View style={{borderRadius: 40, margin:8, position:'absolute', bottom:0, right:0,
-                    width: 64, height: 64, backgroundColor: 'white', justifyContent:'center'}}>
-                    <Icon name={'chevron-right'} color="black" size={36} 
-                        style={{ alignItems:'center', zIndex:2, alignSelf:'center'}} 
+                <View style={this.styles.bottomBarNextView}>
+                    <Icon name={'chevron-right'} 
+                        style={this.styles.bottomBarChevrontIcon} 
                         onPress={()=> this.updateCurrentChapter(1)}
                         />
                 </View>
@@ -388,7 +399,8 @@ export default class Book extends Component {
           <View style={this.styles.bottomBar}>
   
             <View style={this.styles.bottomOption}>
-            <TouchableOpacity onPress={this.doHighlight}>
+            <TouchableOpacity onPress={this.doHighlight}  
+            >
               <Text style={this.styles.bottomOptionText}>
                 {this.state.bottomHighlightText == true ? 'HIGHLIGHT' : 'REMOVE HIGHLIGHT' }
               </Text>
@@ -399,18 +411,22 @@ export default class Book extends Component {
             <View style={this.styles.bottomOptionSeparator} />
             
             <View style={this.styles.bottomOption}>  
-              <TouchableOpacity onPress={this.addToNotes}>        
+              <TouchableOpacity onPress={this.addToNotes} 
+              >        
                 <Text style={this.styles.bottomOptionText}>
                   NOTES
                 </Text>
-                <Icon name={'note'} color="white" size={24} style={this.styles.bottomOptionIcon} />
+                <Icon name={'note'} color="white" size={24} 
+                style={this.styles.bottomOptionIcon} 
+                />
               </TouchableOpacity>
             </View>
             
             <View style={this.styles.bottomOptionSeparator} />          
   
             <View style={this.styles.bottomOption}>   
-              <TouchableOpacity onPress={this.addToShare}>       
+              <TouchableOpacity onPress={this.addToShare}  
+              >       
                 <Text style={this.styles.bottomOptionText}>
                   SHARE
                 </Text>

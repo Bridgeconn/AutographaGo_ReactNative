@@ -12,6 +12,12 @@ import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.github.alinz.reactnativewebviewbridge.WebViewBridgePackage;
 import com.rnziparchive.RNZipArchivePackage;
+import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+import io.invertase.firebase.config.RNFirebaseRemoteConfigPackage;
+
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +38,11 @@ public class MainApplication extends Application implements ReactApplication {
             new RealmReactPackage(),
             new VectorIconsPackage(),
             new WebViewBridgePackage(),
-            new RNZipArchivePackage()
+            new RNZipArchivePackage(),
+            new RNFirebasePackage(),
+            new RNFirebaseNotificationsPackage(),
+            new RNFirebaseMessagingPackage(),
+            new RNFirebaseRemoteConfigPackage()
       );
     }
 

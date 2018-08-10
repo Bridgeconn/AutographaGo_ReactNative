@@ -25,17 +25,18 @@ import { noteStyle } from './styles.js';
 export default class EditNote extends Component {
   static navigationOptions = ({navigation}) =>({
     headerTitle: 'Edit Note',
-    headerLeft:(<HeaderBackButton style={{color:"#fff"}} onPress={()=>navigation.state.params.handleBack()}/>),
+    headerLeft:(<HeaderBackButton tintColor='white' onPress={()=>navigation.state.params.handleBack()}/>),
     headerRight:(
       <TouchableOpacity style={{margin:8}} onPress={()=>navigation.state.params.handleAdd()}>
-        <Text style={{fontSize:12,color:'#fff'}} >DONE</Text>
-      </TouchableOpacity>)
+        <Text style={{fontSize:12,color:'#fff'}}>DONE</Text>
+      </TouchableOpacity>
+      ),
+    
   });
 
   constructor(props){
     super(props);
     this.state = {
-
         noteIndex: this.props.navigation.state.params.index,
         noteObject: this.props.navigation.state.params.noteObject,
         noteBody: this.props.navigation.state.params.index == -1 
@@ -66,6 +67,9 @@ export default class EditNote extends Component {
 
   async getHtml() {
     const body = await this.richtext.getContentHtml();
+    if(body==''){
+    return body
+    }
     return JSON.stringify(body)
   }
 
@@ -79,7 +83,9 @@ export default class EditNote extends Component {
     var time =  new Date()
     console.log("time "+time)
     var contentBody = await this.getHtml()
+    console.log("content body "+contentBody)
     if (contentBody == '' && this.state.referenceList.length == 0) {
+      console.log("INSIDE FIRST IF ... ")
       if(this.state.noteIndex != -1){
         // delete note
         this.props.navigation.state.params.onDelete(this.state.noteIndex, this.state.noteObject.createdTime)
@@ -106,14 +112,17 @@ export default class EditNote extends Component {
   onBack = async () =>{
     var contentBody = await this.getHtml()
       if (this.state.noteIndex == -1) {
+        console.log("content body on back "+contentBody)
         if (contentBody != '' || this.state.referenceList.length > 0) {
+          console.log("if content body is not empty ")
           this.showAlert();
-          return;
+          return
         }
       } else {
-        if(contentBody !== this.props.navigation.state.params.noteObject.body
+        if(contentBody !== this.props.navigation.state.params.noteObject.body 
             || !this.checkRefArrayEqual()){
-          this.showAlert();
+              console.log("changes to content body changes ")
+            this.showAlert();
           return
         }
       }
@@ -204,24 +213,26 @@ export default class EditNote extends Component {
 
   render() {
     return (
-     <ScrollView style={{flex:1, flexDirection:'column', backgroundColor:'#ffffff'}}>
-      <View style={{justifyContent:'space-between', flexDirection:'row', alignItems:'center', margin:8}}>
+     <ScrollView style={this.styles.containerEditNote}>
+      <View style={this.styles.subContainer}>
         {this.state.referenceList.length == 0 
           ? 
-          <Text style={{flex:8}}>Tap button to add references</Text> 
+          <Text style={this.styles.tapButton}>Tap button to add references</Text> 
           : 
-          <FlowLayout style={{flex:8}} ref="flow" dataValue={this.state.referenceList} 
+          <FlowLayout style={this.styles.tapButton} ref="flow" 
+            dataValue={this.state.referenceList} 
             openReference={(index) => {this.openReference(index)}} 
             deleteReference={(index) => {this.deleteReference(index)}}
+            styles={this.styles}
           />
         }
         <Icon name="add-circle" style={this.styles.addIconCustom} size={28} color="gray" onPress={()=> {this.onAddVersePress()}} />
       </View>
       
-      <View style={{flexDirection: 'column-reverse'}}>
+      <View style={this.styles.textEditorView}>
 
         <RichTextEditor
-          style={{flex:1, height:height}}
+          style={this.styles.richTextEditor}
           ref={(r)=>this.richtext = r}
           hiddenTitle={true}
           contentPlaceholder="New Note"
@@ -278,7 +289,14 @@ export default class EditNote extends Component {
     }
 
     return(
-      <Icon name={iconName} size={28} color={selected ? 'black' : 'white'} style={{margin:8, padding:8, backgroundColor: selected ? 'white': 'transparent'}}
+      <Icon name={iconName} 
+      size={28} 
+      color={selected ? 'black' : 'white'} 
+      style={[
+        // this.styles.iconCustom,
+        {backgroundColor: selected ? 'white': 'transparent', margin:8, 
+        padding:8, }
+      ]}
         onPress={method} 
       />
     );
