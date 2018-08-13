@@ -57,25 +57,17 @@ export default class Home extends Component {
       activeTab:true,
       iconPress: [],
       booksList: this.props.screenProps.booksList,
-      OTSize:0,
-      NTSize:0,
+      OTSize:this.getOTSize(this.props.screenProps.booksList),
+      NTSize:this.getNTSize(this.props.screenProps.booksList),
       token:null
     }
     console.log("IN HOME, bok len"  + this.props.screenProps.booksList.length)
-    console.log("IN HOME, ACTIVE TAB"  + this.state.activeTab)
     this.styles = homePageStyle(this.state.colorFile, this.state.sizeFile);
     
     this.viewabilityConfig = {
-        itemVisiblePercentThreshold: 50,
+        itemVisiblePercentThreshold: 100,
         waitForInteraction: true
     }
-
-    this.setState({OTSize:this.getOTSize(this.props.screenProps.booksList),
-      NTSize:this.getNTSize(this.props.screenProps.booksList)})
-
-      this.viewabilityConfig = {
-        itemVisiblePercentThreshold: 100
-      }
   }
 
   toggleButton(value){
@@ -129,59 +121,15 @@ export default class Home extends Component {
       headerRightText:this.styles.headerRightText
     })
 
-    Linking.getInitialURL().then(url => {
-      console.log("HOME linking initial = " + url);
-      this.navigate(url);
-    });
-    Linking.addEventListener('url', this.handleOpenURL);
-   
-      // firebase.messaging().requestPermission().then(function() {
-      //   console.log('Notification permission granted.');
-      //   firebase.messaging().getToken().then(function(currentToken) {
-      //     if (currentToken) {
-      //       console.log("token notification "+currentToken)
-      //       this.setState({token:currentToken})
-      //       sendTokenToServer(currentToken);
-      //       updateUIForPushEnabled(currentToken);
-      //     } else {
-      //       console.log('No Instance ID token available. Request permission to generate one.');
-      //       updateUIForPushPermissionRequired();
-      //       setTokenSentToServer(false);
-      //     }
-      //   }).catch(function(err) {
-      //     showToken('Error retrieving Instance ID token. ', err);
-      //     setTokenSentToServer(false);
-      //   });
-      //   firebase.messaging().onTokenRefresh(function() {
-      //     firebase.messaging().getToken().then(function(refreshedToken) {
-      //       console.log('Token refreshed.');
-      //       setState({token:refreshedToken})
-      //       setTokenSentToServer(false);
-      //       sendTokenToServer(refreshedToken);
-      //     }).catch(function(err) {
-      //       showToken('Unable to retrieve refreshed token ', err);
-      //     });
-      //   });
-      //   // TODO(developer): Retrieve an Instance ID token for use with FCM.
-      //   // ...
-      // }).catch(function(err) {
-      //   console.log('Unable to get permission to notify.', err);
-      // })
+    if (Platform.OS == "android") {
+      Linking.getInitialURL().then(url => {
+        console.log("HOME linking initial = " + url);
+        this.navigate(url);
+      });
+    } else {
+      Linking.addEventListener('url', this.handleOpenURL);
+    }
   }
- 
-  // subscribeTokenToTopic() {
-  //   const global = 'global'
-  //   fetch('https://iid.googleapis.com/iid/v1/'+this.state.token+'/rel/topics/'+global, {
-  //     method: 'POST',
-  //     headers: new Headers({
-  //       'Authorization': AIzaSyCNEote_sBqM-caTdT4udwvrdqo9YEMbS4
-  //     })
-  //   }).then(response => {
-  //     console.log("res "+JOSN.stringify() );
-  //   }).catch(error => {
-  //     console.error(error);
-  //   })
-  // }
 
   componentWillUnmount() {
     Linking.removeEventListener('url', this.handleOpenURL);
@@ -193,9 +141,6 @@ export default class Home extends Component {
 
   navigate = (url) => { // E
     console.log("IN LINKING : " + url)
-    AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.BackupRestoreEmail, null).then((mail) => {
-        console.log("EMAIL FROSYNC = " + mail)
-    })
     if (url == null) {
       return
     }

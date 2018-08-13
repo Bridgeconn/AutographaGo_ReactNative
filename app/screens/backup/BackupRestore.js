@@ -26,10 +26,11 @@ export default class BackupRestore extends Component {
     constructor(props){
         super(props);
         this.unsubscriber = null;
+
         this.state = {
             downloadData:[],
             isLoading: false,
-            user: null,
+            user: firebase.auth().currentUser,
             url: props.navigation.getParam('url', null),
             dataSource: [],
         }
@@ -39,8 +40,8 @@ export default class BackupRestore extends Component {
         this.unsubscriber = firebase.auth().onAuthStateChanged((user) => {
             this.setState({ user });
         });
-
-        this.doList();
+        
+        this.doList()
 
         const url = this.state.url;
         if (url == null ) { 
@@ -50,38 +51,35 @@ export default class BackupRestore extends Component {
         const id = route.match(/\/([^\/]+)\/?$/)[1];
         const routeName = route.split('/')[0];
 
-        // if (routeName === 'autographagoreactnative.page.link') {
-            // Confirm the link is a sign-in with email link.
-            if (firebase.auth().isSignInWithEmailLink(url)) {
-                console.log("it is sign in link : " + url)
-                // Get the email if available. This should be available if the user completes
-                // the flow on the same device where they started it.
-                var email = await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.BackupRestoreEmail, null)
-                console.log("email from async : " + email)
-                if (!email) {
-                // User opened the link on a different device. To prevent session fixation
-                // attacks, ask the user to provide the associated email again. For example:
-                    Alert.alert("Please enter email");
-                } else {
-                    // this.setState({})
-                // The client SDK will parse the code from the link for you.
-                firebase.auth().signInWithEmailLink(email, url)
-                    .then(function(result) {
-                        // Clear email from storage.
-                        window.localStorage.removeItem('emailForSignIn');
-                        // You can access the new user via result.user
-                        // Additional user info profile not available via:
-                        // result.additionalUserInfo.profile == null
-                        // You can check if the user is new or existing:
-                        // result.additionalUserInfo.isNewUser
-                    })
-                    .catch(function(error) {
-                        // Some error occurred, you can inspect the code: error.code
-                        // Common errors could be invalid email and invalid or expired OTPs.
-                    });
-                }
+        // Confirm the link is a sign-in with email link.
+        if (firebase.auth().isSignInWithEmailLink(url)) {
+            console.log("it is sign in link : " + url)
+            // Get the email if available. This should be available if the user completes
+            // the flow on the same device where they started it.
+            var email = await AsyncStorageUtil.getItem(AsyncStorageConstants.Keys.BackupRestoreEmail, null)
+            console.log("email from async : " + email)
+            if (email == null) {
+            // User opened the link on a different device. To prevent session fixation
+            // attacks, ask the user to provide the associated email again. For example:
+                Alert.alert("Email", "Please enter email");
+            } else {
+                this.continueSignIn(email, url)
             }
-        // };
+        }
+    }
+
+    continueSignIn = (email, url) => {
+        firebase.auth().signInWithEmailLink(email, url)
+            .then(function(result) {
+                AsyncStorageUtil.removeItem(AsyncStorageConstants.Keys.BackupRestoreEmail)
+                // You can access the new user via result.user
+                this.setState({user: result.user})
+            })
+            .catch(function(error) {
+                // Alert.alert("Error", "There is some error " + error.code)
+                // Some error occurred, you can inspect the code: error.code
+                // Common errors could be invalid email and invalid or expired OTPs.
+            });
     }
 
     componentWillReceiveProps(props) {
@@ -103,13 +101,13 @@ export default class BackupRestore extends Component {
         return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
     }
 
-    startBackup = (uid) => {
+    startBackup = (uid, emailId) => {
         var self = this;
 
         // Points to the root reference
         var storageRef = firebase.app().storage().ref();
         // Points to 'databases'
-        var dbRef = storageRef.child('databases/' + 'prerna11082@iiitd.ac.in/' + uid);
+        var dbRef = storageRef.child('databases/' + emailId + '/' + uid);
         // Points to 'databases/autographa.realm'
         // Note that you can use variables to create child values
         var fileName = 'autographa.realm';
@@ -152,7 +150,7 @@ export default class BackupRestore extends Component {
                         sizeFormat = parseFloat((a/Math.pow(c,f)).toFixed(d))+" "+e[f]
                     }
                     
-                    firebase.app().firestore().collection("users/" + "prerna11082@iiitd.ac.in" 
+                    firebase.app().firestore().collection("users/" + emailId 
                         + "/backups").doc(uid)
                         .set({
                             size: sizeFormat,
@@ -188,23 +186,32 @@ export default class BackupRestore extends Component {
     }
 
     doBackup = () => {
+        var emailId = this.state.user == null ? null : this.state.user.email;
+        if (emailId == null) {
+            Alert.alert("User not found")
+            return
+        }
         var uid = this.getUniqueId();
         this.setState({isLoading: true}, () => {
-            this.startBackup(uid)
+            this.startBackup(uid, emailId)
         })
     }
 
     doList = () => {
-        console.log("DO READ")
-        let dataSource = []
-        firebase.app().firestore().collection("users/prerna11082@iiitd.ac.in/backups")
-            .get().then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    dataSource.push(doc.data())
-                    console.log(`${doc.id} => ${doc.data().url}`);
+        var emailId = this.state.user == null ? null : this.state.user.email;
+        if (emailId == null) {
+        } else {
+            console.log("DO READ.. " + emailId)
+            let dataSource = []
+            firebase.app().firestore().collection("users/" + emailId + "/backups")
+                .get().then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        dataSource.push(doc.data())
+                        console.log(`${doc.id} => ${doc.data().url}`);
+                    })
+                    this.setState({dataSource})
                 })
-                this.setState({dataSource})
-            })
+        }
     }
 
     startRestore = (item) => {
@@ -217,7 +224,7 @@ export default class BackupRestore extends Component {
             .promise.then(result => {
                 console.log("RESTOR DONE, nOW RESTATTS")
                 console.log("result byteswritten = " + result.bytesWritten);
-                // restart app
+                // todo restart app
             });
     }
 
@@ -246,16 +253,16 @@ export default class BackupRestore extends Component {
     }
 
     render() {
-        // if (!this.state.user) {
-        //     return <Login />;
-        // }
+        if (!this.state.user) {
+            return <Login />;
+        }
         return (
             <View style={{flex:1,margin:8}}>
                 <ActivityIndicator
                     animating={this.state.isLoading} 
                     size="large" 
                     color="#0000ff" /> 
-                <Text>Welcome to AutographaGo app !</Text>
+                <Text>Welcome to Autographa Go !</Text>
                 <Button 
                     onPress={this.doBackup}
                     title="BACKUP NOW"
@@ -264,8 +271,8 @@ export default class BackupRestore extends Component {
                     onPress={() => {this.doList()}}
                     name={"autorenew"}
                     color={"red"} 
-                    size={24} 
-                    style={{margin:8}} 
+                    size={32} 
+                    style={{margin:8, padding:8}}
                 />
                 <FlatList
                     data={this.state.dataSource}

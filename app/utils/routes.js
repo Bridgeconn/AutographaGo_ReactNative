@@ -265,13 +265,14 @@ export default class App extends Component {
     if (res == null) {
       return
     }
+
     console.log("ROUTES.... color mode "+res[0][1])
     this.setState({sizeMode: res[1][1] == null ? AsyncStorageConstants.Values.SizeModeNormal : parseInt(res[1][1])}, ()=> {
       switch (this.state.sizeMode) {
         case  AsyncStorageConstants.Values.SizeModeXSmall : {
           this.setState({sizeFile:extraSmallFont})
           break;
-        } 
+        }
         case  AsyncStorageConstants.Values.SizeModeSmall : {
           this.setState({sizeFile:smallFont})
           break;
@@ -295,14 +296,13 @@ export default class App extends Component {
     this.setState({
       colorMode: res[0][1]== null ? AsyncStorageConstants.Values.DayMode : parseInt(res[0][1]),
       colorFile: res[0][1] == null ? dayColors : 
-      (parseInt(res[0][1]) == AsyncStorageConstants.Values.DayMode ? dayColors : nightColors),
+        (parseInt(res[0][1]) == AsyncStorageConstants.Values.DayMode ? dayColors : nightColors),
       verseInLine:  res[2][1] == null ? AsyncStorageConstants.Values.VerseInLine : res[2][1],
       languageCode: res[3][1] == null ? AsyncStorageConstants.Values.DefLanguageCode : res[3][1],
       versionCode:  res[4][1] == null ? AsyncStorageConstants.Values.DefVersionCode : res[4][1],
       languageName: res[5][1] == null ? AsyncStorageConstants.Values.DefLanguageName : res[5][1],
       versionName:  res[6][1] == null ? AsyncStorageConstants.Values.DefVersionName : res[6][1],
     }, async ()=> {
-
       let models = await DbQueries.queryBookIdModels(this.state.versionCode, this.state.languageCode);
       // console.log("routes len =" + models)
       // console.log("VERSE VALUE ++++ " + res[2][1])
@@ -316,7 +316,7 @@ export default class App extends Component {
       ).then((lastRead) => {
           this.setState({lastRead})
     })
-  console.log("DSIDI mount value "+typeof this.state.sizeMode)
+    console.log("DSIDI mount value "+typeof this.state.sizeMode)
   }
 
 }

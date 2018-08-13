@@ -38,9 +38,17 @@ export default class AsyncStorageUtil {
 		try {
             AsyncStorage.setItem(key, JSON.stringify(value));
             // console.log("value"+value)
-          } catch (error) {
+        } catch (error) {
             console.error('AsyncStorage error: ' + error);
-          }
+        }
+    }
+
+    static removeItem(key){
+		try {
+            AsyncStorage.removeItem(key);
+        } catch (error) {
+            console.error('AsyncStorage error: ' + error);
+        }
     }
 
 }
