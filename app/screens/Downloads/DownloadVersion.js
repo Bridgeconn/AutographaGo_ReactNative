@@ -4,7 +4,7 @@ import {
   View,
   TouchableOpacity,
   FlatList,
-  ToastAndroid,
+  Alert,
   ActivityIndicator,
 } from 'react-native';
 import DownloadUtil from '../../utils/DownloadUtil'
@@ -85,7 +85,7 @@ export default class DownloadVersion extends Component {
         firebase.notifications().displayNotification(notification)
 
         this.downloadMetadata(this.state.languageName, version)
-        this.setState({isDownloading:true,isLoading:false, isLoadingText: 'GET ZIP'}, () => {
+        this.setState({isDownloading:true,isLoading:false, isLoadingText: 'DOWNLOAD BIBLE'}, () => {
             RNFS.mkdir(RNFS.DocumentDirectoryPath+'/AutoBibles').then(result => {
                 RNFS.downloadFile({
                     fromUrl: 
@@ -106,7 +106,6 @@ export default class DownloadVersion extends Component {
 
                         const sourcePath = RNFS.DocumentDirectoryPath +'/AutoBibles/Archive.zip';
                         const targetPath = RNFS.DocumentDirectoryPath + '/AutoBibles/';
-                        this.setState({isLoadingText: 'UNZIP ARCHIVE'})
                         unzip(sourcePath, targetPath)
                             .then((path) => {
                                 console.log('unzip completed at ' + path)
@@ -142,13 +141,12 @@ export default class DownloadVersion extends Component {
         await new USFMParser().parseFile(path,lcode,lname,vcode,vname,src,lic,year,from);
     }
        
-    readDirectory(notifId) {
+    async readDirectory(notifId) {
         console.log("notification id read directory"+notifId)
         RNFS.readDir(RNFS.DocumentDirectoryPath + '/AutoBibles/')
             .then( async (result) => {
                 for (var i=0; i<result.length; i++) {
                     if (result[i].isFile() && result[i].path.endsWith('.usfm')) {
-                        this.setState({isLoadingText: 'USM PARSE ' + result[i].path})
                         await this.startParse(result[i].path, 
                             this.state.downloadMetadata.languageCode,
                             this.state.downloadMetadata.languageName,
@@ -161,7 +159,10 @@ export default class DownloadVersion extends Component {
                     }
                 }
                 RNFS.unlink(RNFS.DocumentDirectoryPath + '/AutoBibles/')
-                console.log("download complete : " + notifId)
+
+                Alert.alert("DOWNLOADS", this.state.downloadMetadata.languageName + " " + this.state.downloadMetadata.versionName +" Bible download finished.")
+
+                this.setState({isLoading: false, isDownloading:false, isLoadingText:''})
                 firebase.notifications().removeDeliveredNotification(notifId)
                     .then(()=> console.log("Will never be logged"))
                 const notification = new firebase.notifications.Notification()
@@ -172,21 +173,7 @@ export default class DownloadVersion extends Component {
                     .android.setSmallIcon('ic_launcher')
         
                 firebase.notifications().displayNotification(notification)
-            
-                // stat the first file
-                // return Promise.all([RNFS.stat(result[0].path), result[0].path]);
             })
-            // .then((statResult) => {
-            //     if (statResult[0].isFile()) {
-            //         // if we have a file, read it
-            //         return RNFS.readFile(statResult[1], 'utf8');
-            //     }
-            //     return 'no file';
-            // })
-            // .then((contents) => {
-            //     // log the file contents
-            //     console.log(contents);
-            // })
             .catch((err) => {
                 console.log(err.message, err.code);
             });
@@ -220,7 +207,7 @@ export default class DownloadVersion extends Component {
             {this.state.isDownloading ? 
                 <View style={this.styles.loaderStyle}>
                 <Text style={this.styles.textLoader}>
-                    Downloading
+                    {this.state.isLoadingText}
                 </Text>
                 <ActivityIndicator
                     animating={this.state.isDownloading} 
@@ -229,9 +216,6 @@ export default class DownloadVersion extends Component {
 
                 </View>
              : null}
-             <Text style={this.styles.textLoader}>
-                 {this.state.isLoadingText}
-             </Text>
             </View>
             </View>
         );

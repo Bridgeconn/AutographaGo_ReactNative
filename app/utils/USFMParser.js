@@ -40,7 +40,6 @@ export default class USFMParser {
                     this.parseFileContents(result);
                 });
         } else {
-            console.log("START PARSE : " + path)
             RNFS.readFile(path)
                 .then((result)=>{
                     this.parseFileContents(result);
@@ -65,7 +64,7 @@ export default class USFMParser {
     }
 
     processLine(line) {
-        var splitString = line.split(" ");
+        var splitString = line.split(/\s+/);
         if (splitString.length == 0) {
             return true;
         }
@@ -130,21 +129,18 @@ export default class USFMParser {
     }
 
     addBook(value) {
-        this.bookId = value;
+        this.bookId = value.toString().trim();
         return true;
     }
 
     addChapter(num) {
         this.addComponentsToChapter();
-        var number = parseInt(num , 10);
+        var number = parseInt(num.toString().trim() , 10);
         var chapterModel = {chapterNumber: number, numberOfVerses: 0, verseComponentsModels: []};
         this.chapterList.push(chapterModel);
     }
 
     addChunk() {
-        // if (this.chapterList.length == 0) {
-        //     return;
-        // }
         var verseComponentsModel = {type: Constants.MarkerTypes.CHUNK, verseNumber: "", 
             text: "", highlighted: false, added: true, 
             languageCode: this.languageCode, versionCode: this.versionCode, bookId: this.bookId, 

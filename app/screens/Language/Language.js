@@ -116,7 +116,12 @@ export default class Language extends Component{
               </Text>
               <Icon 
                 name= {(data.languageCode == 'ENG') && (item.versionCode == 'ULT' || 
-                    item.versionCode=='UST') ? null : 'delete'} 
+                    item.versionCode=='UST') 
+                    ? null 
+                    : this.props.screenProps.versionCode == item.versionCode && 
+                    this.props.screenProps.languageCode == data.languageCode
+                    ? null
+                    : 'delete'} 
                 style={this.styles.checkIcon} 
                 onPress={()=>this.onDeleteVersion(data.languageCode, index, 
                   item.versionCode, versionIndex)}

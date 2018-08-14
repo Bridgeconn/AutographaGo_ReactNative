@@ -21,6 +21,7 @@ import {RichTextEditor, actions} from 'react-native-zss-rich-text-editor';
 import RichTextToolbar from '../../utils/RichTextToolbar'
 const height = Dimensions.get('window').height;
 import { noteStyle } from './styles.js';
+import {getBookNameFromMapping} from '../../utils/UtilFunctions';
 
 export default class EditNote extends Component {
   static navigationOptions = ({navigation}) =>({
@@ -203,6 +204,10 @@ export default class EditNote extends Component {
 
   openReference(index) {
     // todo open reference in RV page
+    var list = this.state.referenceList
+    var item = list[index]
+    this.props.navigation.navigate('Book', {bookId: item.bookId, bookName: item.bookName, 
+      chapterNumber: item.chapterNumber, verseNumber: item.verseNumber})
   }
 
   deleteReference(index) {
