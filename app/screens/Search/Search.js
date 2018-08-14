@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import DbQueries from '../../utils/dbQueries.js'
-import {getBookNameFromMapping, getBookNumberFromMapping} from '../../utils/UtilFunctions'
+import {getBookNameFromMapping, getBookNumberFromMapping, getResultText} from '../../utils/UtilFunctions'
 const width = Dimensions.get('window').width-20;
 import SearchTab from '../../components/SearchTab/SearchTab'
 import { Segment } from 'native-base';
@@ -71,7 +71,7 @@ export default class Search extends Component {
  onSearchText(){
     this.setState({isLoading: true}, async () => {
       this.setState({isLoading:true,searchedResult:[], tabsData:[] })
-      let searchResultByBookName = await DbQueries.querySearchBookWithName("ULB", "ENG",this.state.text);
+      let searchResultByBookName = await DbQueries.querySearchBookWithName("ULT", "ENG",this.state.text);
       if(searchResultByBookName && searchResultByBookName.length >0 ){
         for(var i = 0; i < searchResultByBookName.length ;i++ ){
           let reference = { bookId:searchResultByBookName[i].bookId,
@@ -79,7 +79,7 @@ export default class Search extends Component {
             bookNumber: getBookNumberFromMapping(searchResultByBookName[i].bookId),
             chapterNumber:1,
             verseNumber:"1",
-            versionCode:'ULB',
+            versionCode:'ULT',
             languageCode:'ENG',
             type: 'v',
             text: '',
@@ -93,7 +93,7 @@ export default class Search extends Component {
           
         }
        }
-       let searchResultByVerseText = await DbQueries.querySearchVerse("ULB","ENG",this.state.text)
+       let searchResultByVerseText = await DbQueries.querySearchVerse("ULT","ENG",this.state.text)
        if (searchResultByVerseText &&  searchResultByVerseText.length >0) {
          for(var i = 0; i < searchResultByVerseText.length ;i++ ){
            let reference = {bookId:searchResultByVerseText[i].bookId,
@@ -242,14 +242,17 @@ export default class Search extends Component {
   }
   searchedData = ({item,index}) => {
     return (
-      <View style={this.styles.searchedDataContainer}>
+      <TouchableOpacity style={this.styles.searchedDataContainer} 
+        onPress={()=>this.props.navigation.navigate('Book', {bookId: item.bookId, 
+          bookName: item.bookName, 
+          chapterNumber: item.chapterNumber, verseNumber: item.verseNumber})}>
         <Text
           style={this.styles.searchedData}
         > 
           {item.bookName} {item.chapterNumber} : {item.verseNumber} 
         </Text>
-        <Text style={this.styles.textStyle}>{item.text}</Text>
-      </View>
+        <Text style={this.styles.textStyle}>{getResultText(item.text)}</Text>
+      </TouchableOpacity>
   )
 }
   render() {

@@ -25,15 +25,15 @@ module.exports = {
 
         LastReadReference: {
             languageCode:'ENG',
-            versionCode:'ULB',
+            versionCode:'ULT',
             bookId:'GEN',
             chapterNumber:1,
         },
 
         DefLanguageCode:'ENG',
         DefLanguageName:'English',
-        DefVersionCode:'ULB',
-        DefVersionName:'Unlocked Literal Bible'
+        DefVersionCode:'ULT',
+        DefVersionName:'unfoldingWord Literal Text'
        
     }
 }

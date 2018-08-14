@@ -25,11 +25,14 @@ export default class USFMParser {
         this.license = "CCSA";
     }
 
-    parseFile(path, lCode, lName, vCode, vName, fromAssets) {
+    parseFile(path, lCode, lName, vCode, vName, source, license, year, fromAssets) {
         this.languageCode = lCode;
         this.languageName = lName;
         this.versionCode = vCode;
         this.versionName = vName;
+        this.source = source;
+        this.license = license;
+        this.year = year;
 
         if (fromAssets) {
             RNFS.readFileAssets(path)
@@ -37,6 +40,7 @@ export default class USFMParser {
                     this.parseFileContents(result);
                 });
         } else {
+            console.log("START PARSE : " + path)
             RNFS.readFile(path)
                 .then((result)=>{
                     this.parseFileContents(result);
@@ -267,7 +271,7 @@ export default class USFMParser {
         versionModel.bookModels.push(bookModel);
         var languageModel = {languageCode: this.languageCode, languageName: this.languageName, versionModels: []}
         languageModel.versionModels.push(versionModel);
-        
+        console.log("ADD BOOK : " + this.bookId + " :: " + this.versionCode + " :: " + this.languageCode)
         DbQueries.addNewBook(bookModel, versionModel, languageModel);
     }
 

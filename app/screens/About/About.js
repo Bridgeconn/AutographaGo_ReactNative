@@ -43,7 +43,7 @@ export default class About extends Component {
             Now for the first time ever, we have added over forty (and counting) Indian languages that can be freely downloaded.{"\n\n"}
           </Text>
           <Text>
-            This Bible App is by default bundled with the English Unlocked Literal Bible (ULB) and the Unlocked Dynamic (UDB) Versions from {" "}
+            This Bible App is by default bundled with the English unfoldingWord Literal Text (ULT) and the unfoldingWord Simplified Text (UST) Versions from {" "}
           </Text>
           <Text
             style={this.styles.linkText}

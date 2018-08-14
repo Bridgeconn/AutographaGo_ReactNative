@@ -22,6 +22,7 @@ class DbHelper {
     async getRealm() {
     	try {
     		return await Realm.open({
+				schemaVersion: 1,
 				// deleteRealmIfMigrationNeeded: true, 
 				path:
 					Platform.OS === 'ios'
@@ -337,19 +338,6 @@ class DbHelper {
 			console.log("language deleted")
 		})
 	}
-	
-	// async addStyle(index,){
-	// 	console.log("value in db helper "+value)
-	// 	let realm = await this.getRealm();
-	// 		if (realm) {
-	// 			console.log("value in db help "+value)
-	// 			realm.write(() => {
-	// 				realm.create('StylingModel',{characterIndex:index, format:})
-	// 				console.log("write.. new notes..")
-	// 	  	});
-		 
-	// 	}
-	// }
 	
 }
 

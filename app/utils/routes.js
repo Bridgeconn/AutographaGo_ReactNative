@@ -303,6 +303,7 @@ export default class App extends Component {
       languageName: res[5][1] == null ? AsyncStorageConstants.Values.DefLanguageName : res[5][1],
       versionName:  res[6][1] == null ? AsyncStorageConstants.Values.DefVersionName : res[6][1],
     }, async ()=> {
+      console.log("QUERY : " + this.state.versionCode + " ::  " + this.state.languageCode)
       let models = await DbQueries.queryBookIdModels(this.state.versionCode, this.state.languageCode);
       // console.log("routes len =" + models)
       // console.log("VERSE VALUE ++++ " + res[2][1])

@@ -16,7 +16,8 @@ export const downloadPageStyle = (colorFile, sizeFile) =>{
             backgroundColor:colorFile.backgroundColor
         },
         cardStyle:{
-             margin:16
+             margin:16,
+             padding:8
         },
         textStyle:{
             color: colorFile.textColor,   

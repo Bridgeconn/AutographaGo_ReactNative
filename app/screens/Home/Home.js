@@ -296,5 +296,6 @@ renderItem = ({item, index})=> {
       </View>
     );
   }
+
 }
 

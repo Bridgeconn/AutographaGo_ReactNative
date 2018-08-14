@@ -38,7 +38,7 @@ export default class Language extends Component{
   componentDidMount(){
     this.setState({isLoading: true}, async () => {
       var res = await DbQueries.queryLanguages()
-      // console.log("result in history page"+(res.length))
+      console.log("result page"+(res.length))
         let languageData = [];
         for (var i=0; i<res.length;i++) {
           let verList = [];
@@ -115,8 +115,8 @@ export default class Language extends Component{
                {item.versionName}
               </Text>
               <Icon 
-                name= {(data.languageCode == 'ENG') && (item.versionCode == 'ULB' || 
-                    item.versionCode=='UDB') ? null : 'delete'} 
+                name= {(data.languageCode == 'ENG') && (item.versionCode == 'ULT' || 
+                    item.versionCode=='UST') ? null : 'delete'} 
                 style={this.styles.checkIcon} 
                 onPress={()=>this.onDeleteVersion(data.languageCode, index, 
                   item.versionCode, versionIndex)}

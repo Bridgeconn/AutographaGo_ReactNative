@@ -19,6 +19,9 @@ import VerseView from './VerseView'
 import AsyncStorageUtil from '../../utils/AsyncStorageUtil';
 import AsyncStorageConstants from '../../utils/AsyncStorageConstants';
 const Constants = require('../../utils/constants')
+
+import {getResultText} from '../../utils/UtilFunctions';
+
 import { styles } from './styles.js';
 import id_name_map from '../../assets/mappings.json'
 import {NavigationActions} from 'react-navigation'
@@ -255,7 +258,7 @@ export default class Book extends Component {
   }
 
   getVerseText(cNum, vIndex) {
-    return this.state.modelData[cNum - 1].verseComponentsModels[vIndex].text
+    return getResultText(this.state.modelData[cNum - 1].verseComponentsModels[vIndex].text)
   }
 
   addToShare = () => {

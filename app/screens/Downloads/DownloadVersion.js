@@ -42,7 +42,7 @@ export default class DownloadVersion extends Component {
     }
 
     componentDidMount() {
-        this.setState({isLoading:true, isLoadingText: 'GET VERSIONS'}, () => {
+        this.setState({isLoading:true}, () => {
             DownloadUtil.getVersions(this.state.languageName)
             .then(res => {
                 console.log("res = " + JSON.stringify(res))
@@ -57,7 +57,7 @@ export default class DownloadVersion extends Component {
     }
 
     downloadMetadata(language, version) {
-        this.setState({isLoading:true, isLoadingText: 'GET METADATA'}, () => {
+        this.setState({isLoading:true}, () => {
             DownloadUtil.getMetadata(language, version)
             .then(res => {
                 console.log("res = " + JSON.stringify(res))
@@ -75,12 +75,12 @@ export default class DownloadVersion extends Component {
         console.log("notification "+curTime)
         console.log("ntoification id download zip "+this.downloadZip)
         notification = new firebase.notifications.Notification()
-        .setNotificationId(curTime)
-        .setTitle('Downloading')
-        .setBody(this.state.languageName +" Bible downloading" )
-        .android.setChannelId('channelId')
-        .android.setSmallIcon('ic_launcher')
-        .android.ongoing(true)
+            .setNotificationId(curTime)
+            .setTitle('Downloading')
+            .setBody(this.state.languageName +" Bible downloading" )
+            .android.setChannelId('download_channel')
+            .android.setSmallIcon('ic_launcher')
+            .android.setOngoing(true)
 
         firebase.notifications().displayNotification(notification)
 
@@ -93,11 +93,12 @@ export default class DownloadVersion extends Component {
                         +this.state.languageName+'/'+version+'/Archive.zip', 
                     toFile: RNFS.DocumentDirectoryPath+'/AutoBibles/Archive.zip',
                     begin: this._downloadFileBegin,
+                    progress: this._downloadFileProgress,
                 })
                     .promise.then(result => {
                         
-                        this.setState({isDownloading:false})
-                        ToastAndroid.show(version+' Downloaded', ToastAndroid.CENTER);
+                        // this.setState({isDownloading:false})
+                        // ToastAndroid.show(version+' Downloaded', ToastAndroid.CENTER);
                         console.log("result "+JSON.stringify(result))
                         console.log("result jobid = " + result.jobId)
                         console.log("result statuscode = " + result.statusCode)
@@ -129,40 +130,45 @@ export default class DownloadVersion extends Component {
         console.log("data byte "+data.bytesWritten +"content length "+data.contentLength) 
         const percentage = ((100 * data.bytesWritten) / data.contentLength) | 0;
         console.log("progress bar "+percentage)
-        this.notif(percentage)
+        this.setState({isLoadingText: 'Downloading ' + percentage + '%'})
+        // this.notif(percentage)
         if(data.contentLength == data.bytesWritten){
         console.log("progress bar full "+percentage)
         }
       }
       
 
-        async startParse(path,lcode,lname,vcode,vname,from) {
-        await new USFMParser().parseFile(path,lcode,lname,vcode,vname,from);
+    async startParse(path,lcode,lname,vcode,vname, src,lic,year, from) {
+        await new USFMParser().parseFile(path,lcode,lname,vcode,vname,src,lic,year,from);
     }
        
     readDirectory(notifId) {
         console.log("notification id read directory"+notifId)
         RNFS.readDir(RNFS.DocumentDirectoryPath + '/AutoBibles/')
-            .then((result) => {
+            .then( async (result) => {
                 for (var i=0; i<result.length; i++) {
                     if (result[i].isFile() && result[i].path.endsWith('.usfm')) {
                         this.setState({isLoadingText: 'USM PARSE ' + result[i].path})
-                        this.startParse(result[i].path, 
+                        await this.startParse(result[i].path, 
                             this.state.downloadMetadata.languageCode,
                             this.state.downloadMetadata.languageName,
                             this.state.downloadMetadata.versionCode,
                             this.state.downloadMetadata.versionName,
+                            this.state.downloadMetadata.source,
+                            this.state.downloadMetadata.license,
+                            this.state.downloadMetadata.year,
                             false)
                     }
                 }
+                RNFS.unlink(RNFS.DocumentDirectoryPath + '/AutoBibles/')
                 console.log("download complete : " + notifId)
                 firebase.notifications().removeDeliveredNotification(notifId)
                     .then(()=> console.log("Will never be logged"))
                 const notification = new firebase.notifications.Notification()
                     .setNotificationId(Date.now().toString() + "_1")
-                    .setTitle('downloaded')
+                    .setTitle('Download finished')
                     .setBody('Tap to start reading '+this.state.languageName +" Bible" )
-                    .android.setChannelId('channelId')
+                    .android.setChannelId('download_channel')
                     .android.setSmallIcon('ic_launcher')
         
                 firebase.notifications().displayNotification(notification)
