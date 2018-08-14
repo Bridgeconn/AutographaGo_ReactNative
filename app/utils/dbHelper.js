@@ -23,12 +23,12 @@ class DbHelper {
     	try {
     		return await Realm.open({
 				schemaVersion: 1,
-				// deleteRealmIfMigrationNeeded: true, 
+				deleteRealmIfMigrationNeeded: true, 
 				path:
 					Platform.OS === 'ios'
 					? RNFS.MainBundlePath + '/autographa.realm'
 					: RNFS.DocumentDirectoryPath + '/autographa.realm',
-				schema: [LanguageModel, VersionModel, BookModel, ChapterModel, VerseComponentsModel,NoteModel, StylingModel, ReferenceModel,HistoryModel] });
+				schema: [LanguageModel, VersionModel, BookModel, ChapterModel, VerseComponentsModel, NoteModel, StylingModel, ReferenceModel, HistoryModel] });
     	} catch (err) {
     		return null;
     	}

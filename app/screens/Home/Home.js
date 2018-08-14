@@ -144,7 +144,7 @@ export default class Home extends Component {
     if (url == null) {
       return
     }
-    this.props.navigation.navigate('BackupRestore', {url: url})
+    this.props.navigation.navigate({routeName:'BackupRestore',params:{url:url},key:'BackupRestore'})
   }
 
 renderItem = ({item, index})=> {
