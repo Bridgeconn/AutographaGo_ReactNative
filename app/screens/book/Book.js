@@ -321,6 +321,7 @@ export default class Book extends Component {
                     ref={(ref) => { this.scrollViewRef = ref; }}                    
                 >
                  {    (this.state.verseInLine) ?
+                  <View style={this.styles.chapterList}>
                             <FlatList
                            
                             data={this.state.modelData[this.state.currentVisibleChapter - 1].verseComponentsModels}
@@ -331,7 +332,7 @@ export default class Book extends Component {
                                             ref={child => (this[`child_${item.chapterNumber}_${index}`] = child)}
                                             verseData = {item}
                                             index = {index}
-                                            styles = {this.styles.VerseText}
+                                            styles = {this.styles}
                                             selectedReferences = {this.state.selectedReferenceSet}
                                             getSelection = {(verseIndex, chapterNumber, verseNumber) => {
                                             this.getSelectedReferences(verseIndex, chapterNumber, verseNumber)
@@ -341,6 +342,7 @@ export default class Book extends Component {
                             }
                             ListFooterComponent={<View style={styles.addToSharefooterComponent} />}
                             />
+                            </View>
                         :
                             <View style={this.styles.chapterList}>
                                 

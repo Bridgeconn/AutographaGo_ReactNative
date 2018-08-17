@@ -38,28 +38,65 @@ export default class Language extends Component{
   componentDidMount(){
     this.setState({isLoading: true}, async () => {
       var res = await DbQueries.queryLanguages()
-      console.log("result page"+(res.length))
-        let languageData = [];
-        for (var i=0; i<res.length;i++) {
-          let verList = [];
-          for (var j=0;j<res[i].versionModels.length;j++) {
-            let verModel = {versionName: res[i].versionModels[j].versionName,
-              versionCode: res[i].versionModels[j].versionCode}
-            verList.push(verModel);
-          }
-          let langModel = {languageCode : res[i].languageCode, 
-            languageName: res[i].languageName,
-            versionModels: verList}
+      
+      var tempRes = await DbQueries.queryVersions()
+      tempRes.addListener((versions, changes) => {
+        // Update UI in response to inserted objects
+        changes.insertions.forEach((index) => {
+          let insertedDog = versions[index];
+          console.log("INSERT = " + index)
+          console.log("INSERT VER = " + versions[index].versionCode)
+          console.log("INSERT LAN = " + versions[index].versionOwner[0].languageCode)
 
-          if (res[i].languageCode == this.props.screenProps.languageCode){
-            languageData.splice(0, 0, langModel)
-          } else {
-            languageData.push(langModel)
+          let verModel = {versionName: versions[index].versionName,
+            versionCode: versions[index].versionCode}
+
+          // check if lngauge already exists
+          var isPresent = false;
+          for (var i=0; i<this.state.languageData.length;i++) {
+            if (this.state.languageData[i].languageCode == versions[index].versionOwner[0].languageCode) {
+              isPresent = true;
+              let languageData = [...this.state.languageData]
+              languageData[i].versionModels.push(verModel);
+              this.setState({languageData})
+              break;
+            }
           }
+
+          if (!isPresent) {
+            let languageData = [...this.state.languageData]
+            let verList = [];
+            verList.push(verModel)
+            let langModel = {languageCode : versions[index].versionOwner[0].languageCode, 
+              languageName: versions[index].versionOwner[0].languageName, versionModels: verList}
+            languageData.push(langModel)
+            this.setState({languageData})
+          }
+
+        });
+      });
+      console.log("result page"+(res.length))
+      let languageData = [];
+      for (var i=0; i<res.length;i++) {
+        let verList = [];
+        for (var j=0;j<res[i].versionModels.length;j++) {
+          let verModel = {versionName: res[i].versionModels[j].versionName,
+            versionCode: res[i].versionModels[j].versionCode}
+          verList.push(verModel);
         }
+        let langModel = {languageCode : res[i].languageCode, 
+          languageName: res[i].languageName,
+          versionModels: verList}
+
+        if (res[i].languageCode == this.props.screenProps.languageCode){
+          languageData.splice(0, 0, langModel)
+        } else {
+          languageData.push(langModel)
+        }
+      }
 
       this.setState({languageData, isLoading: false})
-      })
+    })
   }
 
   onDeleteVersion(lanCode, lanIndex, verCode, verIndex){
@@ -76,7 +113,6 @@ export default class Language extends Component{
   }
   
   _renderHeader = (data, index, isActive) =>{
-    console.log("language code "+data.languageCode)
     return (
         <View style={this.styles.LanguageHeader}>
          <Text style={this.styles.headerText}>{data.languageName}</Text>

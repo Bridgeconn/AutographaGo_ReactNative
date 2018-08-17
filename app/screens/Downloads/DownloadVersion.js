@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import DownloadUtil from '../../utils/DownloadUtil'
-import {Card} from 'native-base'
+import {Card, CardItem} from 'native-base'
 var RNFS = require('react-native-fs');
 import { zip, unzip, unzipAssets, subscribe } from 'react-native-zip-archive'
 import USFMParser from '../../utils/USFMParser'
@@ -73,7 +73,6 @@ export default class DownloadVersion extends Component {
     downloadZip(version) {
         const curTime = Date.now().toString() + "_1"
         console.log("notification "+curTime)
-        console.log("ntoification id download zip "+this.downloadZip)
         notification = new firebase.notifications.Notification()
             .setNotificationId(curTime)
             .setTitle('Downloading')
@@ -113,6 +112,9 @@ export default class DownloadVersion extends Component {
                             })
                             .catch((error) => {
                                 console.log(error)
+                                // show alert
+                                // delete floder
+                                // remove notification
                             })
                 });
             });
@@ -145,34 +147,46 @@ export default class DownloadVersion extends Component {
         console.log("notification id read directory"+notifId)
         RNFS.readDir(RNFS.DocumentDirectoryPath + '/AutoBibles/')
             .then( async (result) => {
-                for (var i=0; i<result.length; i++) {
-                    if (result[i].isFile() && result[i].path.endsWith('.usfm')) {
-                        await this.startParse(result[i].path, 
-                            this.state.downloadMetadata.languageCode,
-                            this.state.downloadMetadata.languageName,
-                            this.state.downloadMetadata.versionCode,
-                            this.state.downloadMetadata.versionName,
-                            this.state.downloadMetadata.source,
-                            this.state.downloadMetadata.license,
-                            this.state.downloadMetadata.year,
-                            false)
+                var messageTitle = "";
+                var messageBody = "";
+                if (this.state.downloadMetadata.languageCode == null || 
+                        this.state.downloadMetadata.languageName == null || 
+                        this.state.downloadMetadata.versionCode == null || 
+                        this.state.downloadMetadata.versionName == null) {
+                    messageTitle = "Error";
+                    messageBody = "There is some error in downloading, please try again.";
+                } else {
+                    for (var i=0; i<result.length; i++) {
+                        if (result[i].isFile() && result[i].path.endsWith('.usfm')) {
+                            await this.startParse(result[i].path, 
+                                this.state.downloadMetadata.languageCode,
+                                this.state.downloadMetadata.languageName,
+                                this.state.downloadMetadata.versionCode,
+                                this.state.downloadMetadata.versionName,
+                                this.state.downloadMetadata.source,
+                                this.state.downloadMetadata.license,
+                                this.state.downloadMetadata.year,
+                                false)
+                        }
                     }
+                    messageTitle = "DOWNLOADS";
+                    messageBody = this.state.downloadMetadata.languageName + " " + this.state.downloadMetadata.versionName +" Bible download finished.";
+
+                    const notification = new firebase.notifications.Notification()
+                        .setNotificationId(Date.now().toString() + "_1")
+                        .setTitle('Download finished')
+                        .setBody('Tap to start reading '+this.state.languageName +" Bible" )
+                        .android.setChannelId('download_channel')
+                        .android.setSmallIcon('ic_launcher')
+            
+                    firebase.notifications().displayNotification(notification)
                 }
                 RNFS.unlink(RNFS.DocumentDirectoryPath + '/AutoBibles/')
 
-                Alert.alert("DOWNLOADS", this.state.downloadMetadata.languageName + " " + this.state.downloadMetadata.versionName +" Bible download finished.")
+                Alert.alert(messageTitle, messageBody)
 
                 this.setState({isLoading: false, isDownloading:false, isLoadingText:''})
                 firebase.notifications().removeDeliveredNotification(notifId)
-                    .then(()=> console.log("Will never be logged"))
-                const notification = new firebase.notifications.Notification()
-                    .setNotificationId(Date.now().toString() + "_1")
-                    .setTitle('Download finished')
-                    .setBody('Tap to start reading '+this.state.languageName +" Bible" )
-                    .android.setChannelId('download_channel')
-                    .android.setSmallIcon('ic_launcher')
-        
-                firebase.notifications().displayNotification(notification)
             })
             .catch((err) => {
                 console.log(err.message, err.code);
@@ -182,9 +196,11 @@ export default class DownloadVersion extends Component {
     renderItem = ({item,index})=>{
         return(
             <Card style={this.styles.cardStyle}>
-            <TouchableOpacity onPress={() => this.downloadZip(item)} style={this.styles.cardItemStyle}>
-                <Text style={this.styles.textStyle}>{item}</Text>
-            </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.downloadZip(item)} >
+                    <CardItem style={this.styles.cardItemStyle}>
+                        <Text style={this.styles.textStyle}>{item}</Text>
+                    </CardItem>
+                </TouchableOpacity>
             </Card>
         )
     }

@@ -13,11 +13,11 @@ export const downloadPageStyle = (colorFile, sizeFile) =>{
             margin:8
         },
         cardItemStyle:{
-            backgroundColor:colorFile.backgroundColor
+            backgroundColor:colorFile.backgroundColor,
+            padding:8            
         },
         cardStyle:{
              margin:16,
-             padding:8
         },
         textStyle:{
             color: colorFile.textColor,   

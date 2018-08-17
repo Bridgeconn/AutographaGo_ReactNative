@@ -45,34 +45,6 @@ class DbQueries {
         return DbHelper.updateHighlightsInBook(model, chapterIndex, verseIndex, isHighlight)
     }
 
-    
-    // queryNotes(verCode: string, langCode: string) {
-    //     RealmQuery<NotesModel> query = realm.where(NotesModel.class);
-    //     query = query.equalTo("languageCode", language, Case.INSENSITIVE);
-    //     return query.findAll().sort("timestamp", Sort.DESCENDING);
-    // }
-
-    // querySearchHistoryWithText(text: string) {
-    //     RealmQuery<SearchHistoryModel> query = realm.where(SearchHistoryModel.class);
-    //     query = query.equalTo("searchText", text, Case.INSENSITIVE);
-    //     return query.findAllSorted("searchCount", Sort.DESCENDING);
-    // }
-
-    // queryNotesWithId(id: Date, verCode: string, langCode: string) {
-    //     RealmQuery<NotesModel> query = realm.where(NotesModel.class);
-    //     query = query.equalTo("timestamp", id);
-    //     query = query.equalTo("languageCode", language, Case.INSENSITIVE);
-    //     query = query.equalTo("versionCode", version, Case.INSENSITIVE);
-    //     return query.findAll();
-    // }
-
-    // queryHistory(verCode: string, langCode: string) {
-    //     RealmQuery<SearchModel> query = realm.where(SearchModel.class);
-    //     query = query.equalTo("languageCode", language, Case.INSENSITIVE);
-    //     query = query.equalTo("versionCode", version, Case.INSENSITIVE);
-    //     return query.findAll().sort("timeStamp", Sort.DESCENDING);
-    // }
-
     insert(model, value) {
         DbHelper.insert(model, value);
     }
@@ -126,6 +98,10 @@ class DbQueries {
 
     deleteLanguage(lanCode, verCode){
         DbHelper.deleteLanguage(lanCode, verCode)
+    }
+
+    queryVersions() {
+        return DbHelper.query('VersionModel');
     }
 }
 

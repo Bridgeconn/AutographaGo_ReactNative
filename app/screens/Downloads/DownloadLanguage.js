@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import DownloadUtil from '../../utils/DownloadUtil'
-import {Card} from 'native-base'
+import {Card, CardItem} from 'native-base'
 import {downloadPageStyle} from './styles.js'
 
 export default class DownloadLanguage extends Component {
@@ -45,8 +45,10 @@ export default class DownloadLanguage extends Component {
     renderItem = ({item,index})=>{
         return(
             <Card style={this.styles.cardStyle}>
-                <TouchableOpacity onPress={()=> this.props.navigation.navigate('DownloadVersion', {languageName: item})} style={this.styles.cardItemStyle}>
-                    <Text style={this.styles.textStyle}>{item}</Text>
+                <TouchableOpacity onPress={()=> this.props.navigation.navigate('DownloadVersion', {languageName: item})} >
+                    <CardItem style={this.styles.cardItemStyle}> 
+                        <Text style={this.styles.textStyle}>{item}</Text>
+                    </CardItem>
                 </TouchableOpacity>
             </Card>
         )
