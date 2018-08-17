@@ -30,6 +30,9 @@ export function getBookNumberFromMapping(bookId) {
 }
 
 export function getResultText(text) {
+    if (text == null) {
+        return "";
+    }
     var initString = text;
     var temp = initString.split(' ');
     var footNote = false;
