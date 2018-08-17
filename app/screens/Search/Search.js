@@ -59,7 +59,9 @@ export default class Search extends Component {
       activeTab:SearchResultTypes.ALL,
       isLoading:false,
       text:'',
-      tabsData:[]
+      tabsData:[],
+      languageCode:this.props.screenProps.languageCode,
+      versionCode:this.props.screenProps.versionCode,
     }
     this.onSearchText = this.onSearchText.bind(this)
     this.toggleButton = this.toggleButton.bind(this)
@@ -71,7 +73,7 @@ export default class Search extends Component {
  onSearchText(){
     this.setState({isLoading: true}, async () => {
       this.setState({isLoading:true,searchedResult:[], tabsData:[] })
-      let searchResultByBookName = await DbQueries.querySearchBookWithName("ULT", "ENG",this.state.text);
+      let searchResultByBookName = await DbQueries.querySearchBookWithName(this.state.versionCode, this.state.languageCode,this.state.text);
       if(searchResultByBookName && searchResultByBookName.length >0 ){
         for(var i = 0; i < searchResultByBookName.length ;i++ ){
           let reference = { bookId:searchResultByBookName[i].bookId,
@@ -79,8 +81,8 @@ export default class Search extends Component {
             bookNumber: getBookNumberFromMapping(searchResultByBookName[i].bookId),
             chapterNumber:1,
             verseNumber:"1",
-            versionCode:'ULT',
-            languageCode:'ENG',
+            versionCode:this.state.versionCode,
+            languageCode:this.state.languageCode,
             type: 'v',
             text: '',
             highlighted: 'false' }
@@ -93,7 +95,7 @@ export default class Search extends Component {
           
         }
        }
-       let searchResultByVerseText = await DbQueries.querySearchVerse("ULT","ENG",this.state.text)
+       let searchResultByVerseText = await DbQueries.querySearchVerse(this.state.versionCode, this.state.languageCode,this.state.text)
        if (searchResultByVerseText &&  searchResultByVerseText.length >0) {
          for(var i = 0; i < searchResultByVerseText.length ;i++ ){
            let reference = {bookId:searchResultByVerseText[i].bookId,

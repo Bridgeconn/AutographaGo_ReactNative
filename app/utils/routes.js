@@ -91,6 +91,7 @@ const StackNavigate = (styles) => StackNavigator(
       BackupRestore: {
         screen: BackupRestore
       },
+     
   },
   {
     navigationOptions: {

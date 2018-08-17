@@ -5,10 +5,12 @@ import {
   TouchableOpacity,
   FlatList,
   ActivityIndicator,
+  NetInfo
 } from 'react-native';
 import DownloadUtil from '../../utils/DownloadUtil'
 import {Card, CardItem} from 'native-base'
 import {downloadPageStyle} from './styles.js'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 export default class DownloadLanguage extends Component {
 
@@ -22,12 +24,24 @@ export default class DownloadLanguage extends Component {
             downloadData:[],
             isLoading: false,
             refreshing: false,
+            isConnected:false
         }
         this.styles = downloadPageStyle(this.props.screenProps.colorFile, this.props.screenProps.sizeFile);
     }
 
     componentDidMount() {
-        this.setState({isLoading:true}, () => {
+     this.downloadBible()
+    }
+    downloadBible(){
+        NetInfo.isConnected.fetch().then(isConnected => {
+            console.log("connected")
+            if(isConnected){
+            this.setState({isConnected:true})
+            }
+            console.log('First, is ' + (isConnected ? 'online' : 'offline'));
+          });
+        
+        this.setState({isLoading:true},() => {
             DownloadUtil.getLanguages()
             .then(res => {
                 console.log("res = " + JSON.stringify(res))
@@ -39,9 +53,7 @@ export default class DownloadLanguage extends Component {
                 this.setState({isLoading: false, refreshing: false})
             });
         })
-
     }
-    
     renderItem = ({item,index})=>{
         return(
             <Card style={this.styles.cardStyle}>
@@ -63,6 +75,13 @@ export default class DownloadLanguage extends Component {
                     animating={this.state.isLoading} 
                     size="large" 
                     color="#0000ff" /> 
+                    :  !this.state.isConnected && this.state.downloadData.length == 0 ? 
+                    <TouchableOpacity onPress={()=>this.downloadBible()} style={this.styles.emptyMessageContainer}>
+                        <Icon name="signal-wifi-off" style={this.styles.emptyMessageIcon}/>
+                        <Text style={this.styles.messageEmpty}>
+                            No Internet Connection
+                        </Text>
+                    </TouchableOpacity>
                     :
                 <FlatList
                     data={this.state.downloadData}

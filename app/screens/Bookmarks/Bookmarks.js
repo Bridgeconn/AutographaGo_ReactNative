@@ -116,7 +116,7 @@ export default class BookMarks extends Component {
               <Text style={this.styles.bookmarksText}>
                 {item.bookName} {item.chapterNumber}
               </Text>
-              <Icon name='delete-forever' style={this.styles.iconCustom}  size={28} onPress={() => {
+              <Icon name='delete-forever' style={this.styles.iconCustom}   onPress={() => {
                 this.removeBookmark(item.bookId, item.chapterNumber, index)
                 }
                 } 

@@ -6,6 +6,7 @@ import {
   FlatList,
   Alert,
   ActivityIndicator,
+  NetInfo
 } from 'react-native';
 import DownloadUtil from '../../utils/DownloadUtil'
 import {Card, CardItem} from 'native-base'
@@ -15,6 +16,7 @@ import USFMParser from '../../utils/USFMParser'
 import {downloadPageStyle} from './styles.js'
 import firebase from 'react-native-firebase';
 import { Platform } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 
 export default class DownloadVersion extends Component {
@@ -32,6 +34,7 @@ export default class DownloadVersion extends Component {
             isDownloading: false,
             downloadMetadata: {},
             isLoadingText: '',
+            isConnected:false
         }
         
         this.downloadZip = this.downloadZip.bind(this)
@@ -42,7 +45,18 @@ export default class DownloadVersion extends Component {
     }
 
     componentDidMount() {
-        this.setState({isLoading:true}, () => {
+        this.downloadBibleVer()
+    }
+    downloadBibleVer(){
+        NetInfo.isConnected.fetch().then(isConnected => {
+            console.log("connected")
+            if(isConnected){
+            this.setState({isConnected:true})
+            }
+            console.log('First, is ' + (isConnected ? 'online' : 'offline'));
+          });
+
+          this.setState({isLoading:true}, () => {
             DownloadUtil.getVersions(this.state.languageName)
             .then(res => {
                 console.log("res = " + JSON.stringify(res))
@@ -54,6 +68,7 @@ export default class DownloadVersion extends Component {
                 this.setState({isLoading: false, refreshing: false})
             });
         })
+          
     }
 
     downloadMetadata(language, version) {
@@ -214,6 +229,14 @@ export default class DownloadVersion extends Component {
                     animating={this.state.isLoading} 
                     size="large" 
                     color="#0000ff" /> 
+                    :
+                    !this.state.isConnected && this.state.downloadVersionList.length == 0 ?
+                    <TouchableOpacity onPress={()=>this.downloadBible()} style={this.styles.emptyMessageContainer}>
+                        <Icon name="signal-wifi-off" style={this.styles.emptyMessageIcon}/>
+                        <Text style={this.styles.messageEmpty}>
+                            No Internet Connection
+                        </Text>
+                    </TouchableOpacity>
                     :
                 <FlatList
                     data={this.state.downloadVersionList}
