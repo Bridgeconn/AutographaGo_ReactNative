@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import firebase from 'react-native-firebase';
 import AsyncStorageUtil from '../../utils/AsyncStorageUtil';
+import colorConstants from '../../utils/colorConstants'
 const AsyncStorageConstants = require('../../utils/AsyncStorageConstants')
 
 export default class Login extends Component {
@@ -67,21 +68,27 @@ export default class Login extends Component {
 
     render() {
         return (
-            <View style={{flex:1,margin:8}}>
-                <ActivityIndicator
-                    animating={this.state.isLoading == true ? true : false} 
-                    size="large" 
-                    color="#0000ff" /> 
-                <Text>Welcome to AutographaGo app!</Text>
-                <TextInput 
-                    style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-                    onChangeText={(text) => this.setState({email: text})}
-                    value={this.state.email}
-                />
-                <Button 
-                    onPress={this.doSignIn}
-                    title="SIGN IN, SEND LINK TO EMAIL"
-                    color="#841584" />
+            <View style={this.props.styles.container}>
+                <View style={this.props.styles.containerMargin}>
+                    <ActivityIndicator
+                        style={this.props.styles.loaderStyle}
+                        animating={this.state.isLoading == true ? true : false} 
+                        size="large" 
+                        color="#0000ff" /> 
+                    <Text style={this.props.styles.textStyle}>Welcome to AutographaGo app!</Text>
+                    <TextInput 
+                        style={this.props.styles.textInputStyle}
+                        onChangeText={(text) => this.setState({email: text})}
+                        value={this.state.email}
+                        placeholder="Enter email"
+                        placeholderTextColor={colorConstants.Light_Gray}
+                    />
+                    <Button 
+                        style={this.props.styles.buttonStyle}
+                        onPress={this.doSignIn}
+                        title="SIGN IN, SEND LINK TO EMAIL"
+                        color="#841584" />
+                </View>
             </View>
         );
     }

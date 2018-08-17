@@ -13,6 +13,7 @@ import {Card} from 'native-base'
 import firebase from 'react-native-firebase';
 import Login from './Login';
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import {backupPageStyle} from './styles.js'
 import AsyncStorageUtil from '../../utils/AsyncStorageUtil';
 const AsyncStorageConstants = require('../../utils/AsyncStorageConstants')
 var RNFS = require('react-native-fs');
@@ -24,6 +25,7 @@ export default class BackupRestore extends Component {
     });
 
     constructor(props){
+        console.log("backup page"+JSON.stringify(props.screenProps.colorFile)+"sizefile"+JSON.stringify(props.screenProps.sizeFile))
         super(props);
         this.unsubscriber = null;
 
@@ -33,7 +35,10 @@ export default class BackupRestore extends Component {
             user: firebase.auth().currentUser,
             url: props.navigation.getParam('url', null),
             dataSource: [],
+
         }
+        this.styles = backupPageStyle(this.props.screenProps.colorFile, this.props.screenProps.sizeFile);
+
     }
 
     async componentDidMount() {
@@ -242,11 +247,13 @@ export default class BackupRestore extends Component {
 
     renderItem = ({item,index})=>{
         return(
-            <Card style={{padding:8}}>
-                <TouchableOpacity onPress={()=> this.doRestore(item)} >
-                    <Text style={{margin:8, fontSize:20}}>
-                        {item.timestamp.toString()}    Size: {item.size}
+            <Card style={this.styles.cardStyle}>
+                <TouchableOpacity onPress={()=> this.doRestore(item)}>
+                <CardItem  style={this.styles.cardItemStyle}>
+                    <Text style={this.styles.textStyle} >
+                        {item.timestamp.toString()}   
                     </Text>
+                </CardItem>
                 </TouchableOpacity>
             </Card>
         )
@@ -254,30 +261,34 @@ export default class BackupRestore extends Component {
 
     render() {
         if (!this.state.user) {
-            return <Login />;
+            return <Login 
+                styles = {this.styles}
+            />;
         }
         return (
-            <View style={{flex:1,margin:8}}>
-                <ActivityIndicator
-                    animating={this.state.isLoading} 
-                    size="large" 
-                    color="#0000ff" /> 
-                <Text>Welcome to Autographa Go !</Text>
-                <Button 
-                    onPress={this.doBackup}
-                    title="BACKUP NOW"
-                    color="#841584" />
-                <Icon 
-                    onPress={() => {this.doList()}}
-                    name={"autorenew"}
-                    color={"red"} 
-                    size={32} 
-                    style={{margin:8, padding:8}}
-                />
-                <FlatList
-                    data={this.state.dataSource}
-                    renderItem={this.renderItem}
+            <View style={this.styles.container}>
+                <View style={this.styles.containerMargin}>
+                    <ActivityIndicator
+                        style={this.styles.loaderStyle}
+                        animating={this.state.isLoading} 
+                        size="large"
+                    /> 
+                    <Text style={this.styles.textStyle}>Welcome to Autographa Go !</Text>
+                    <Button 
+                        style={this.styles.buttonStyle}
+                        onPress={this.doBackup}
+                        title="BACKUP NOW"
+                       />
+                    <Icon 
+                        onPress={() => {this.doList()}}
+                        name={"autorenew"}
+                        style={this.styles.iconStyle}
                     />
+                    <FlatList
+                        data={this.state.dataSource}
+                        renderItem={this.renderItem}
+                        />
+                </View>
             </View>
         );
     }

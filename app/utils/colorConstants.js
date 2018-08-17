@@ -13,7 +13,7 @@ module.exports = {
         Semi_Trans_Black:'rgba(0,0,0,0.5)',
         Semi_Trans_White:'rgba(210,210,210,0.5)',
         Yellow:'#FFFF00',
-        NightYellow:'#999900'
+        NightYellow:'#999900',
 }
 
 

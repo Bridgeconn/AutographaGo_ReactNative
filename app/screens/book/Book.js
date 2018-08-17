@@ -331,7 +331,7 @@ export default class Book extends Component {
                                             ref={child => (this[`child_${item.chapterNumber}_${index}`] = child)}
                                             verseData = {item}
                                             index = {index}
-                                            styles = {this.styles.VerseText}
+                                            styles = {this.styles}
                                             selectedReferences = {this.state.selectedReferenceSet}
                                             getSelection = {(verseIndex, chapterNumber, verseNumber) => {
                                             this.getSelectedReferences(verseIndex, chapterNumber, verseNumber)
