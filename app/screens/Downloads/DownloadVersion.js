@@ -128,8 +128,12 @@ export default class DownloadVersion extends Component {
                             .catch((error) => {
                                 console.log(error)
                                 // show alert
+                                console.log("alert coming")
+                            Alert.alert("Something went wrong. Please try again")
                                 // delete floder
+                            RNFS.unlink(RNFS.DocumentDirectoryPath + '/AutoBibles/')
                                 // remove notification
+                            firebase.notifications().removeDeliveredNotification(curTime)
                             })
                 });
             });
@@ -205,6 +209,11 @@ export default class DownloadVersion extends Component {
             })
             .catch((err) => {
                 console.log(err.message, err.code);
+                Alert.alert("Something went wrong. Please try again")
+                // delete floder
+                RNFS.unlink(RNFS.DocumentDirectoryPath + '/AutoBibles/')
+                // remove notification
+                firebase.notifications().removeDeliveredNotification(notifId)
             });
     }
     
@@ -231,7 +240,7 @@ export default class DownloadVersion extends Component {
                     color="#0000ff" /> 
                     :
                     !this.state.isConnected && this.state.downloadVersionList.length == 0 ?
-                    <TouchableOpacity onPress={()=>this.downloadBible()} style={this.styles.emptyMessageContainer}>
+                    <TouchableOpacity onPress={()=>this.downloadBibleVer()} style={this.styles.emptyMessageContainer}>
                         <Icon name="signal-wifi-off" style={this.styles.emptyMessageIcon}/>
                         <Text style={this.styles.messageEmpty}>
                             No Internet Connection
