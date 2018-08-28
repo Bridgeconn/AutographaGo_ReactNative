@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "425517165648",
-    "firebase_url": "https://autographagoreactnative.firebaseio.com",
-    "project_id": "autographagoreactnative",
-    "storage_bucket": "autographagoreactnative.appspot.com"
+    "project_number": "214462916323",
+    "firebase_url": "https://autographago.firebaseio.com",
+    "project_id": "autographago",
+    "storage_bucket": "autographago.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:425517165648:android:2e465c19b833ab79",
+        "mobilesdk_app_id": "1:214462916323:android:fa8faf2c8d286806",
         "android_client_info": {
-          "package_name": "com.autographago_reactnative"
+          "package_name": "com.bridgeconn.autographago"
         }
       },
       "oauth_client": [
         {
-          "client_id": "425517165648-53g9c7gno99h0c5l2ul507lpktri8mu2.apps.googleusercontent.com",
+          "client_id": "214462916323-8kgfmpccrv5vu2470m0bh3tbus1tj59e.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDTVeRVr9oZEIRla3zY9d6iejmJ7iJyxlk"
+          "current_key": "AIzaSyAdLRd24cgVirkyfQDrQ9ImOmjGuKLZWl8"
         }
       ],
       "services": {

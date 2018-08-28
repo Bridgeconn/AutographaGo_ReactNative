@@ -98,7 +98,7 @@ def enableProguardInReleaseBuilds = true
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.autographago_reactnative"
+        applicationId "com.bridgeconn.autographago"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode versionMajor * 1000 + versionMinor * 10 + versionPatch
