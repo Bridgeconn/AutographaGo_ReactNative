@@ -3,16 +3,16 @@ package com.autographago_reactnative;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.rnfs.RNFSPackage;
 import io.realm.react.RealmReactPackage;
+import com.rnziparchive.RNZipArchivePackage;
+import com.github.alinz.reactnativewebviewbridge.WebViewBridgePackage;
 import com.oblador.vectoricons.VectorIconsPackage;
+import com.rnfs.RNFSPackage;
+import io.invertase.firebase.RNFirebasePackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.github.alinz.reactnativewebviewbridge.WebViewBridgePackage;
-import com.rnziparchive.RNZipArchivePackage;
-import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
@@ -34,11 +34,11 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RNFSPackage(),
             new RealmReactPackage(),
-            new VectorIconsPackage(),
-            new WebViewBridgePackage(),
             new RNZipArchivePackage(),
+            new WebViewBridgePackage(),
+            new VectorIconsPackage(),
+            new RNFSPackage(),
             new RNFirebasePackage(),
             new RNFirebaseAuthPackage(),
             new RNFirebaseStoragePackage(),
